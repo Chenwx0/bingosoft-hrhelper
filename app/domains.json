@@ -1,0 +1,10 @@
+{
+    "id":    "- 主键",
+    "title": "varchar(200) required - 标题",
+    "description": "varchar(2000) - 描述",
+    "expiresAt": "datetime optional - 过期时间",
+    "createdAt": "timestamp required value now update false - 创建时间",
+    "createdBy": "varchar(36) optional value user.id update false - 创建人标识",
+    "updatedAt": "timestamp required value now - 更新时间",
+    "updatedBy": "varchar(36) optional value user.id optional - 更新人标识"
+}

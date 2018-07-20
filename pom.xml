@@ -1,0 +1,359 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+    <groupId>services</groupId>
+	<artifactId>hrhelper</artifactId>
+	<packaging>jar</packaging>
+    <version>1.0.0-SNAPSHOT</version>
+
+    <properties>
+        <java.version>1.8</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>    
+
+        <!-- deps -->
+        <jmms.version>0.4.7</jmms.version>
+        <spring.version>1.5.8.RELEASE</spring.version>
+        <h2.version>1.3.172</h2.version>
+        <mysql.version>5.1.26</mysql.version>
+        <flyway.version>5.0.5</flyway.version>        
+
+        <!--jsw daemon -->
+        <daemon-name>services-hrhelper</daemon-name>
+        <daemon-ntservice-displayname>${daemon-name}</daemon-ntservice-displayname>
+        <daemon-ntservice-description>${daemon-name}</daemon-ntservice-description>
+        <daemon-mainClass>bingosoft.hrhelper.Application</daemon-mainClass>
+        <daemon-JAVA_Xms></daemon-JAVA_Xms>
+        <daemon-JAVA_Xmx></daemon-JAVA_Xmx>
+        <daemon-JAVA_OPS> </daemon-JAVA_OPS>
+    </properties>
+
+    <profiles>
+        <profile>
+            <id>springboot</id>  
+            <activation>  
+                <activeByDefault>true</activeByDefault>  
+            </activation>  
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <version>${spring.version}</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>repackage</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>  
+                </plugins>
+            </build>
+        </profile>
+
+        <!--<profile>
+            <id>jsw</id>  
+            <activation>  
+                <activeByDefault>false</activeByDefault>  
+            </activation>  
+            <build>  
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>appassembler-maven-plugin</artifactId>
+                        <version>2.0.0</version>
+                        <configuration>
+                            <target>${project.build.directory}</target>
+                            <repositoryLayout>flat</repositoryLayout>
+                            <logsDirectory>logs</logsDirectory>
+                            <configurationSourceDirectory>jsw/conf</configurationSourceDirectory>
+                            <configurationDirectory>conf</configurationDirectory>
+                            <copyConfigurationDirectory>true</copyConfigurationDirectory>
+                            <daemons>
+                                <daemon>
+                                    <id>${daemon-name}</id>
+                                    <mainClass>${daemon-mainClass}</mainClass>
+                                    <jvmSettings>
+                                        <initialMemorySize>${daemon-JAVA_Xms}</initialMemorySize>
+                                        <maxMemorySize>${daemon-JAVA_Xmx}</maxMemorySize>
+                                        <extraArguments>
+                                            &lt;!&ndash; Note : if the value is empty the plugin will throw NullPointerException&ndash;&gt;
+                                            <extraArgument>-Djava.wrapper=1 ${daemon-JAVA_OPS}</extraArgument>
+                                        </extraArguments>
+                                    </jvmSettings>
+                                    <platforms>
+                                        <platform>jsw</platform>
+                                    </platforms>
+                                    <generatorConfigurations>
+                                        <generatorConfiguration>
+                                            <generator>jsw</generator>
+                                            <includes>
+                                                <include>linux-x86-32</include>
+                                                <include>linux-x86-64</include>
+                                                <include>macosx-universal-32</include>
+                                                <include>macosx-universal-64</include>
+                                                <include>windows-x86-32</include>
+                                                <include>windows-x86-64</include>
+                                            </includes>
+                                            <configuration>
+                                                <property>
+                                                    <name>configuration.directory.in.classpath.first</name>
+                                                    <value>conf</value>
+                                                </property>
+                                                <property>
+                                                    <name>set.default.REPO_DIR</name>
+                                                    <value>lib</value>
+                                                </property>
+                                                <property>
+                                                    <name>wrapper.logfile</name>
+                                                    <value>logs/wrapper.log</value>
+                                                </property>
+                                                <property>
+                                                    <name>wrapper.startup.timeout</name>
+                                                    <value>1800</value>
+                                                </property>
+                                                <property>
+                                                    <name>wrapper.ping.timeout</name>
+                                                    <value>1800</value>
+                                                </property>
+                                                <property>
+                                                    <name>wrapper.ntservice.name</name>
+                                                    <value>${daemon-name}</value>
+                                                </property>
+                                                <property>
+                                                    <name>wrapper.ntservice.displayname</name>
+                                                    <value>${daemon-ntservice-displayname}</value>
+                                                </property>
+                                                <property>
+                                                    <name>wrapper.ntservice.description</name>
+                                                    <value>${daemon-ntservice-description}</value>
+                                                </property>
+                                                <property>
+                                                    <name>wrapper.console.title</name>
+                                                    <value>${daemon-ntservice-displayname}</value>
+                                                </property>
+                                                <property>
+                                                    <name>wrapper.java.additional.1</name>
+                                                    <value>-Djmms.config=./conf/config.json</value>
+                                                </property>
+                                                <property>
+                                                    <name>wrapper.java.additional.2</name>
+                                                    <value>-Dfile.encoding=UTF-8</value>
+                                                </property>                                                        
+                                            </configuration>
+                                        </generatorConfiguration>
+                                    </generatorConfigurations>
+                                </daemon>
+                            </daemons>
+                        </configuration>                        
+                        <executions>
+                            <execution>
+                                <id>generate-jsw-scripts</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>generate-daemons</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>1.8</version>
+                        <executions>
+                            <execution>
+                                <id>clean-jsw-logs</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <delete dir="${project.build.directory}/jsw/${project.groupId}-${project.artifactId}/logs"/>
+                                    </target>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>chmod-jsw-bin</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <chmod dir="${project.build.directory}/jsw/${project.groupId}-${project.artifactId}/bin" perm="u+rx" includes="*"/>
+                                    </target>
+                                </configuration>
+                            </execution>                            
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>  
+        </profile>-->
+    </profiles>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.7.0</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>dockerfile-maven-plugin</artifactId>
+                <version>1.3.6</version>
+                <configuration>
+                    <repository>${project.groupId}/${project.artifactId}</repository>
+                    <buildArgs>
+                        <JAR_FILE>target/${project.build.finalName}.jar</JAR_FILE>
+                    </buildArgs>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>add-resource</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>add-resource</goal>
+                        </goals>
+                        <configuration>
+                            <resources>
+                                <resource>
+                                    <directory>app</directory>
+                                    <targetPath>app</targetPath>
+                                    <excludes>
+                                        <exclude>config-dev.json</exclude>
+                                        <exclude>tests/**</exclude>
+                                        <exclude>fakes/**</exclude>
+                                    </excludes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.0.2</version>
+                <configuration>
+                    <excludes>
+                        <exclude>**/logback-test.xml</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+
+            <!-- mybatis generator 自动生成代码插件 -->
+            <plugin>
+                <groupId>org.mybatis.generator</groupId>
+                <artifactId>mybatis-generator-maven-plugin</artifactId>
+                <version>1.3.2</version>
+                <configuration>
+                    <configurationFile>${basedir}/src/main/resources/generator/generatorConfig.xml</configurationFile>
+                    <overwrite>true</overwrite>
+                    <verbose>true</verbose>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+	<dependencies>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <!--experimental-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <version>${spring.version}</version>
+            <optional>true</optional>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.leapframework</groupId>
+            <artifactId>spring-boot-starter-jmms</artifactId>
+            <version>${jmms.version}</version>
+        </dependency>       
+
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>${flyway.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.46</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.leapframework</groupId>
+            <artifactId>jmms-testing</artifactId>
+            <version>${jmms.version}</version>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.leapframework</groupId>
+            <artifactId>jmms-plugins-swagger-doc</artifactId>
+            <version>${jmms.version}</version>
+            <optional>true</optional>
+        </dependency>         
+
+        <!-- 自定义 -->
+       <!--<dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>-->
+
+      <!--<dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+            <version>5.0.7.RELEASE</version>
+        </dependency>
+-->
+        <!-- mybatis -->
+       <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <version>1.3.2</version>
+       </dependency>
+
+        <!-- 分页插件 -->
+      <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper-spring-boot-starter</artifactId>
+            <version>1.2.5</version>
+      </dependency>
+
+        <!-- alibaba的druid数据库连接池 -->
+      <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+            <version>1.1.10</version>
+      </dependency>
+
+        <!-- JavaMail -->
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>1.4.7</version>
+        </dependency>
+
+    </dependencies>
+</project>

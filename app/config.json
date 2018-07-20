@@ -1,0 +1,8 @@
+{
+    "api": {
+        "name": "hrhelper"
+    },
+    "docker": {
+        "image": "services/hrhelper"
+    }
+}
