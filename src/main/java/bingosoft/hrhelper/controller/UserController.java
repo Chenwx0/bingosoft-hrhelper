@@ -18,7 +18,6 @@ public class UserController {
 
     @Autowired
     UserMapper userMapper;
-
     @GetMapping(path = "/test")
     public String test(){
 

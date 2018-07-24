@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="bingosoft.hrhelper.mapper.EmployeeMapper" >
+  <resultMap id="BaseResultMap" type="bingosoft.hrhelper.model.Employee" >
+    <result column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="mail" property="mail" jdbcType="VARCHAR" />
+    <result column="department" property="department" jdbcType="VARCHAR" />
+    <result column="manager" property="manager" jdbcType="VARCHAR" />
+    <result column="fullmenber_day" property="fullmenberDay" jdbcType="DATE" />
+    <result column="plan_fullmenber_day" property="planFullmenberDay" jdbcType="DATE" />
+    <result column="entry_day" property="entryDay" jdbcType="DATE" />
+    <result column="recruit_class" property="recruitClass" jdbcType="VARCHAR" />
+    <result column="sign_count" property="signCount" jdbcType="INTEGER" />
+    <result column="day_of_work" property="dayOfWork" jdbcType="INTEGER" />
+    <result column="year_of_work" property="yearOfWork" jdbcType="INTEGER" />
+    <result column="contract_day" property="contractDay" jdbcType="DATE" />
+    <result column="sign_class" property="signClass" jdbcType="VARCHAR" />
+  </resultMap>
+  <insert id="insert" parameterType="bingosoft.hrhelper.model.Employee" >
+    insert into employee (id, name, mail, 
+      department, manager, fullmenber_day, 
+      plan_fullmenber_day, entry_day, recruit_class, 
+      sign_count, day_of_work, year_of_work, 
+      contract_day, sign_class)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{mail,jdbcType=VARCHAR}, 
+      #{department,jdbcType=VARCHAR}, #{manager,jdbcType=VARCHAR}, #{fullmenberDay,jdbcType=DATE}, 
+      #{planFullmenberDay,jdbcType=DATE}, #{entryDay,jdbcType=DATE}, #{recruitClass,jdbcType=VARCHAR}, 
+      #{signCount,jdbcType=INTEGER}, #{dayOfWork,jdbcType=INTEGER}, #{yearOfWork,jdbcType=INTEGER}, 
+      #{contractDay,jdbcType=DATE}, #{signClass,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="bingosoft.hrhelper.model.Employee" >
+    insert into employee
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="mail != null" >
+        mail,
+      </if>
+      <if test="department != null" >
+        department,
+      </if>
+      <if test="manager != null" >
+        manager,
+      </if>
+      <if test="fullmenberDay != null" >
+        fullmenber_day,
+      </if>
+      <if test="planFullmenberDay != null" >
+        plan_fullmenber_day,
+      </if>
+      <if test="entryDay != null" >
+        entry_day,
+      </if>
+      <if test="recruitClass != null" >
+        recruit_class,
+      </if>
+      <if test="signCount != null" >
+        sign_count,
+      </if>
+      <if test="dayOfWork != null" >
+        day_of_work,
+      </if>
+      <if test="yearOfWork != null" >
+        year_of_work,
+      </if>
+      <if test="contractDay != null" >
+        contract_day,
+      </if>
+      <if test="signClass != null" >
+        sign_class,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="mail != null" >
+        #{mail,jdbcType=VARCHAR},
+      </if>
+      <if test="department != null" >
+        #{department,jdbcType=VARCHAR},
+      </if>
+      <if test="manager != null" >
+        #{manager,jdbcType=VARCHAR},
+      </if>
+      <if test="fullmenberDay != null" >
+        #{fullmenberDay,jdbcType=DATE},
+      </if>
+      <if test="planFullmenberDay != null" >
+        #{planFullmenberDay,jdbcType=DATE},
+      </if>
+      <if test="entryDay != null" >
+        #{entryDay,jdbcType=DATE},
+      </if>
+      <if test="recruitClass != null" >
+        #{recruitClass,jdbcType=VARCHAR},
+      </if>
+      <if test="signCount != null" >
+        #{signCount,jdbcType=INTEGER},
+      </if>
+      <if test="dayOfWork != null" >
+        #{dayOfWork,jdbcType=INTEGER},
+      </if>
+      <if test="yearOfWork != null" >
+        #{yearOfWork,jdbcType=INTEGER},
+      </if>
+      <if test="contractDay != null" >
+        #{contractDay,jdbcType=DATE},
+      </if>
+      <if test="signClass != null" >
+        #{signClass,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

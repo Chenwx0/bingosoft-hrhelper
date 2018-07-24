@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="bingosoft.hrhelper.mapper.RuleMapper" >
+  <resultMap id="BaseResultMap" type="bingosoft.hrhelper.model.Rule" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="rule_name" property="ruleName" jdbcType="VARCHAR" />
+    <result column="sending_time" property="sendingTime" jdbcType="TIME" />
+    <result column="sending_counts" property="sendingCounts" jdbcType="VARCHAR" />
+    <result column="sending_interval" property="sendingInterval" jdbcType="VARCHAR" />
+    <result column="entry_distance" property="entryDistance" jdbcType="DATE" />
+    <result column="operation_id" property="operationId" jdbcType="INTEGER" />
+    <result column="model_id" property="modelId" jdbcType="INTEGER" />
+    <result column="rule_method" property="ruleMethod" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, rule_name, sending_time, sending_counts, sending_interval, entry_distance, operation_id, 
+    model_id, rule_method
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from rule
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from rule
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="bingosoft.hrhelper.model.Rule" >
+    insert into rule (id, rule_name, sending_time, 
+      sending_counts, sending_interval, entry_distance, 
+      operation_id, model_id, rule_method
+      )
+    values (#{id,jdbcType=INTEGER}, #{ruleName,jdbcType=VARCHAR}, #{sendingTime,jdbcType=TIME}, 
+      #{sendingCounts,jdbcType=VARCHAR}, #{sendingInterval,jdbcType=VARCHAR}, #{entryDistance,jdbcType=DATE}, 
+      #{operationId,jdbcType=INTEGER}, #{modelId,jdbcType=INTEGER}, #{ruleMethod,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="bingosoft.hrhelper.model.Rule" >
+    insert into rule
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="ruleName != null" >
+        rule_name,
+      </if>
+      <if test="sendingTime != null" >
+        sending_time,
+      </if>
+      <if test="sendingCounts != null" >
+        sending_counts,
+      </if>
+      <if test="sendingInterval != null" >
+        sending_interval,
+      </if>
+      <if test="entryDistance != null" >
+        entry_distance,
+      </if>
+      <if test="operationId != null" >
+        operation_id,
+      </if>
+      <if test="modelId != null" >
+        model_id,
+      </if>
+      <if test="ruleMethod != null" >
+        rule_method,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="ruleName != null" >
+        #{ruleName,jdbcType=VARCHAR},
+      </if>
+      <if test="sendingTime != null" >
+        #{sendingTime,jdbcType=TIME},
+      </if>
+      <if test="sendingCounts != null" >
+        #{sendingCounts,jdbcType=VARCHAR},
+      </if>
+      <if test="sendingInterval != null" >
+        #{sendingInterval,jdbcType=VARCHAR},
+      </if>
+      <if test="entryDistance != null" >
+        #{entryDistance,jdbcType=DATE},
+      </if>
+      <if test="operationId != null" >
+        #{operationId,jdbcType=INTEGER},
+      </if>
+      <if test="modelId != null" >
+        #{modelId,jdbcType=INTEGER},
+      </if>
+      <if test="ruleMethod != null" >
+        #{ruleMethod,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="bingosoft.hrhelper.model.Rule" >
+    update rule
+    <set >
+      <if test="ruleName != null" >
+        rule_name = #{ruleName,jdbcType=VARCHAR},
+      </if>
+      <if test="sendingTime != null" >
+        sending_time = #{sendingTime,jdbcType=TIME},
+      </if>
+      <if test="sendingCounts != null" >
+        sending_counts = #{sendingCounts,jdbcType=VARCHAR},
+      </if>
+      <if test="sendingInterval != null" >
+        sending_interval = #{sendingInterval,jdbcType=VARCHAR},
+      </if>
+      <if test="entryDistance != null" >
+        entry_distance = #{entryDistance,jdbcType=DATE},
+      </if>
+      <if test="operationId != null" >
+        operation_id = #{operationId,jdbcType=INTEGER},
+      </if>
+      <if test="modelId != null" >
+        model_id = #{modelId,jdbcType=INTEGER},
+      </if>
+      <if test="ruleMethod != null" >
+        rule_method = #{ruleMethod,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="bingosoft.hrhelper.model.Rule" >
+    update rule
+    set rule_name = #{ruleName,jdbcType=VARCHAR},
+      sending_time = #{sendingTime,jdbcType=TIME},
+      sending_counts = #{sendingCounts,jdbcType=VARCHAR},
+      sending_interval = #{sendingInterval,jdbcType=VARCHAR},
+      entry_distance = #{entryDistance,jdbcType=DATE},
+      operation_id = #{operationId,jdbcType=INTEGER},
+      model_id = #{modelId,jdbcType=INTEGER},
+      rule_method = #{ruleMethod,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

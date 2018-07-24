@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="bingosoft.hrhelper.mapper.ModelMapper" >
+  <resultMap id="BaseResultMap" type="bingosoft.hrhelper.model.Model" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="model_name" property="modelName" jdbcType="VARCHAR" />
+    <result column="model_content" property="modelContent" jdbcType="VARCHAR" />
+    <result column="attachment_href" property="attachmentHref" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, model_name, model_content, attachment_href
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from model
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from model
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="bingosoft.hrhelper.model.Model" >
+    insert into model (id, model_name, model_content, 
+      attachment_href)
+    values (#{id,jdbcType=INTEGER}, #{modelName,jdbcType=VARCHAR}, #{modelContent,jdbcType=VARCHAR}, 
+      #{attachmentHref,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="bingosoft.hrhelper.model.Model" >
+    insert into model
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="modelName != null" >
+        model_name,
+      </if>
+      <if test="modelContent != null" >
+        model_content,
+      </if>
+      <if test="attachmentHref != null" >
+        attachment_href,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="modelName != null" >
+        #{modelName,jdbcType=VARCHAR},
+      </if>
+      <if test="modelContent != null" >
+        #{modelContent,jdbcType=VARCHAR},
+      </if>
+      <if test="attachmentHref != null" >
+        #{attachmentHref,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="bingosoft.hrhelper.model.Model" >
+    update model
+    <set >
+      <if test="modelName != null" >
+        model_name = #{modelName,jdbcType=VARCHAR},
+      </if>
+      <if test="modelContent != null" >
+        model_content = #{modelContent,jdbcType=VARCHAR},
+      </if>
+      <if test="attachmentHref != null" >
+        attachment_href = #{attachmentHref,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="bingosoft.hrhelper.model.Model" >
+    update model
+    set model_name = #{modelName,jdbcType=VARCHAR},
+      model_content = #{modelContent,jdbcType=VARCHAR},
+      attachment_href = #{attachmentHref,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
