@@ -1,8 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
+
+    <!-- 日志级别 -->
+    <property name="logLevel" value="warn"></property>
+    <!-- 日志地址 -->
+    <property name="logPath" value="./logs"></property>
+    <!-- 最大保存时间 -->
+    <property name="maxHistory" value="10"/>
+    <!-- 异步缓冲队列的深度,该值会影响性能.默认值为256 -->
+    <property name="queueSize" value="512"></property>
     <!-- output pattern -->
     <property name="CONSOLE_LOG_PATTERN"
-              value="${CONSOLE_LOG_PATTERN:-%clr(%d{HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(%-30.30logger{30}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
+              value="%d{yyyy-MM-dd HH:mm:ss} %-4relative [%thread] %-5level %logger{35} - %msg %n"/>
+
+    <include resource="org/springframework/boot/logging/logback/base.xml" />
+
+    <!-- 控制台打印日志的相关配置 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- 日志格式 -->
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 文件保存日志的相关配置 -->
+    <appender name="WARN-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 保存日志文件的路径 -->
+        <file>${logPath}/warn.log</file>
+        <!-- 日志格式 -->
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <!-- 循环政策：基于时间创建日志文件 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 日志文件名格式 -->
+            <fileNamePattern>${logPath}/warn-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!-- 最大保存时间-->
+            <maxHistory>${maxHistory}</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+
+    <!--配置mybatis sql 日志-->
+    <logger name="bingosoft.hrhelper.mapper" level="DEBUG"/>
 
     <!-- custom jmms -->
     <logger name="leap.core.DefaultAppConfigSource"   level="WARN"/>
@@ -37,6 +82,9 @@
     <logger name="org.springframework.boot.logging.ClasspathLoggingApplicationListener"                     level="INFO"/>
     <logger name="org.springframework.boot.autoconfigure.logging.AutoConfigurationReportLoggingInitializer" level="INFO"/>
 
-    <!--default -->
-    <include resource="org/springframework/boot/logging/logback/base.xml" />
+    <root level="${logLevel}">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="FILE" />
+    </root>
+
 </configuration>
