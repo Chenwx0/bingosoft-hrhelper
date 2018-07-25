@@ -119,9 +119,9 @@
     <!-- 基于INFO处理日志：具体控制台或者文件对日志级别的处理还要看所在appender配置的filter，如果没有配置filter，则使用root配置 -->
     <root level="${logLevel}">
         <appender-ref ref="STDOUT" />
-        <appender-ref ref="WARN-FILE" />
+        <!--<appender-ref ref="WARN-FILE" />
         <appender-ref ref="ERROR-FILE" />
-        <appender-ref ref="ALL-FILE" />
+        <appender-ref ref="ALL-FILE" />-->
     </root>
 
 </configuration>
