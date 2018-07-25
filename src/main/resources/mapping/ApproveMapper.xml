@@ -2,19 +2,32 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="bingosoft.hrhelper.mapper.ApproveMapper" >
   <resultMap id="BaseResultMap" type="bingosoft.hrhelper.model.Approve" >
-    <result column="id" property="id" jdbcType="INTEGER" />
+    <id column="id" property="id" jdbcType="VARCHAR" />
     <result column="approver" property="approver" jdbcType="VARCHAR" />
     <result column="approve_object" property="approveObject" jdbcType="VARCHAR" />
-    <result column="mail" property="mail" jdbcType="VARCHAR" />
     <result column="status" property="status" jdbcType="INTEGER" />
-    <result column="operation_id" property="operationId" jdbcType="INTEGER" />
+    <result column="operation_id" property="operationId" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
   </resultMap>
+  <sql id="Base_Column_List" >
+    id, approver, approve_object, status, operation_id, create_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from approve
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from approve
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
   <insert id="insert" parameterType="bingosoft.hrhelper.model.Approve" >
     insert into approve (id, approver, approve_object, 
-      mail, status, operation_id
+      status, operation_id, create_time
       )
-    values (#{id,jdbcType=INTEGER}, #{approver,jdbcType=VARCHAR}, #{approveObject,jdbcType=VARCHAR}, 
-      #{mail,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{operationId,jdbcType=INTEGER}
+    values (#{id,jdbcType=VARCHAR}, #{approver,jdbcType=VARCHAR}, #{approveObject,jdbcType=VARCHAR}, 
+      #{status,jdbcType=INTEGER}, #{operationId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
       )
   </insert>
   <insert id="insertSelective" parameterType="bingosoft.hrhelper.model.Approve" >
@@ -29,19 +42,19 @@
       <if test="approveObject != null" >
         approve_object,
       </if>
-      <if test="mail != null" >
-        mail,
-      </if>
       <if test="status != null" >
         status,
       </if>
       <if test="operationId != null" >
         operation_id,
       </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
-        #{id,jdbcType=INTEGER},
+        #{id,jdbcType=VARCHAR},
       </if>
       <if test="approver != null" >
         #{approver,jdbcType=VARCHAR},
@@ -49,15 +62,45 @@
       <if test="approveObject != null" >
         #{approveObject,jdbcType=VARCHAR},
       </if>
-      <if test="mail != null" >
-        #{mail,jdbcType=VARCHAR},
-      </if>
       <if test="status != null" >
         #{status,jdbcType=INTEGER},
       </if>
       <if test="operationId != null" >
-        #{operationId,jdbcType=INTEGER},
+        #{operationId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="bingosoft.hrhelper.model.Approve" >
+    update approve
+    <set >
+      <if test="approver != null" >
+        approver = #{approver,jdbcType=VARCHAR},
+      </if>
+      <if test="approveObject != null" >
+        approve_object = #{approveObject,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="operationId != null" >
+        operation_id = #{operationId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="bingosoft.hrhelper.model.Approve" >
+    update approve
+    set approver = #{approver,jdbcType=VARCHAR},
+      approve_object = #{approveObject,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      operation_id = #{operationId,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
 </mapper>

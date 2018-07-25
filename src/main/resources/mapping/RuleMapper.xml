@@ -2,39 +2,52 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="bingosoft.hrhelper.mapper.RuleMapper" >
   <resultMap id="BaseResultMap" type="bingosoft.hrhelper.model.Rule" >
-    <id column="id" property="id" jdbcType="INTEGER" />
+    <id column="id" property="id" jdbcType="VARCHAR" />
     <result column="rule_name" property="ruleName" jdbcType="VARCHAR" />
-    <result column="sending_time" property="sendingTime" jdbcType="TIME" />
-    <result column="sending_counts" property="sendingCounts" jdbcType="VARCHAR" />
-    <result column="sending_interval" property="sendingInterval" jdbcType="VARCHAR" />
-    <result column="entry_distance" property="entryDistance" jdbcType="DATE" />
-    <result column="operation_id" property="operationId" jdbcType="INTEGER" />
-    <result column="model_id" property="modelId" jdbcType="INTEGER" />
+    <result column="sending_counts" property="sendingCounts" jdbcType="INTEGER" />
+    <result column="sending_interval" property="sendingInterval" jdbcType="DATE" />
+    <result column="operation_id" property="operationId" jdbcType="VARCHAR" />
+    <result column="model_id" property="modelId" jdbcType="VARCHAR" />
     <result column="rule_method" property="ruleMethod" jdbcType="VARCHAR" />
+    <result column="sending_minofhour" property="sendingMinofhour" jdbcType="INTEGER" />
+    <result column="sending_hourofday" property="sendingHourofday" jdbcType="INTEGER" />
+    <result column="entry_distance_y" property="entryDistanceY" jdbcType="INTEGER" />
+    <result column="entry_distance_m" property="entryDistanceM" jdbcType="INTEGER" />
+    <result column="entry_distance_d" property="entryDistanceD" jdbcType="INTEGER" />
+    <result column="entry_distance" property="entryDistance" jdbcType="DATE" />
+    <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, rule_name, sending_time, sending_counts, sending_interval, entry_distance, operation_id, 
-    model_id, rule_method
+    id, rule_name, sending_counts, sending_interval, operation_id, model_id, rule_method, 
+    sending_minofhour, sending_hourofday, entry_distance_y, entry_distance_m, entry_distance_d, 
+    entry_distance, create_by, create_time, update_by, update_time
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
     from rule
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from rule
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="bingosoft.hrhelper.model.Rule" >
-    insert into rule (id, rule_name, sending_time, 
-      sending_counts, sending_interval, entry_distance, 
-      operation_id, model_id, rule_method
-      )
-    values (#{id,jdbcType=INTEGER}, #{ruleName,jdbcType=VARCHAR}, #{sendingTime,jdbcType=TIME}, 
-      #{sendingCounts,jdbcType=VARCHAR}, #{sendingInterval,jdbcType=VARCHAR}, #{entryDistance,jdbcType=DATE}, 
-      #{operationId,jdbcType=INTEGER}, #{modelId,jdbcType=INTEGER}, #{ruleMethod,jdbcType=VARCHAR}
-      )
+    insert into rule (id, rule_name, sending_counts, 
+      sending_interval, operation_id, model_id, 
+      rule_method, sending_minofhour, sending_hourofday, 
+      entry_distance_y, entry_distance_m, entry_distance_d, 
+      entry_distance, create_by, create_time, 
+      update_by, update_time)
+    values (#{id,jdbcType=VARCHAR}, #{ruleName,jdbcType=VARCHAR}, #{sendingCounts,jdbcType=INTEGER}, 
+      #{sendingInterval,jdbcType=DATE}, #{operationId,jdbcType=VARCHAR}, #{modelId,jdbcType=VARCHAR}, 
+      #{ruleMethod,jdbcType=VARCHAR}, #{sendingMinofhour,jdbcType=INTEGER}, #{sendingHourofday,jdbcType=INTEGER}, 
+      #{entryDistanceY,jdbcType=INTEGER}, #{entryDistanceM,jdbcType=INTEGER}, #{entryDistanceD,jdbcType=INTEGER}, 
+      #{entryDistance,jdbcType=DATE}, #{createBy,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateBy,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="bingosoft.hrhelper.model.Rule" >
     insert into rule
@@ -45,17 +58,11 @@
       <if test="ruleName != null" >
         rule_name,
       </if>
-      <if test="sendingTime != null" >
-        sending_time,
-      </if>
       <if test="sendingCounts != null" >
         sending_counts,
       </if>
       <if test="sendingInterval != null" >
         sending_interval,
-      </if>
-      <if test="entryDistance != null" >
-        entry_distance,
       </if>
       <if test="operationId != null" >
         operation_id,
@@ -66,34 +73,88 @@
       <if test="ruleMethod != null" >
         rule_method,
       </if>
+      <if test="sendingMinofhour != null" >
+        sending_minofhour,
+      </if>
+      <if test="sendingHourofday != null" >
+        sending_hourofday,
+      </if>
+      <if test="entryDistanceY != null" >
+        entry_distance_y,
+      </if>
+      <if test="entryDistanceM != null" >
+        entry_distance_m,
+      </if>
+      <if test="entryDistanceD != null" >
+        entry_distance_d,
+      </if>
+      <if test="entryDistance != null" >
+        entry_distance,
+      </if>
+      <if test="createBy != null" >
+        create_by,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateBy != null" >
+        update_by,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
-        #{id,jdbcType=INTEGER},
+        #{id,jdbcType=VARCHAR},
       </if>
       <if test="ruleName != null" >
         #{ruleName,jdbcType=VARCHAR},
       </if>
-      <if test="sendingTime != null" >
-        #{sendingTime,jdbcType=TIME},
-      </if>
       <if test="sendingCounts != null" >
-        #{sendingCounts,jdbcType=VARCHAR},
+        #{sendingCounts,jdbcType=INTEGER},
       </if>
       <if test="sendingInterval != null" >
-        #{sendingInterval,jdbcType=VARCHAR},
+        #{sendingInterval,jdbcType=DATE},
+      </if>
+      <if test="operationId != null" >
+        #{operationId,jdbcType=VARCHAR},
+      </if>
+      <if test="modelId != null" >
+        #{modelId,jdbcType=VARCHAR},
+      </if>
+      <if test="ruleMethod != null" >
+        #{ruleMethod,jdbcType=VARCHAR},
+      </if>
+      <if test="sendingMinofhour != null" >
+        #{sendingMinofhour,jdbcType=INTEGER},
+      </if>
+      <if test="sendingHourofday != null" >
+        #{sendingHourofday,jdbcType=INTEGER},
+      </if>
+      <if test="entryDistanceY != null" >
+        #{entryDistanceY,jdbcType=INTEGER},
+      </if>
+      <if test="entryDistanceM != null" >
+        #{entryDistanceM,jdbcType=INTEGER},
+      </if>
+      <if test="entryDistanceD != null" >
+        #{entryDistanceD,jdbcType=INTEGER},
       </if>
       <if test="entryDistance != null" >
         #{entryDistance,jdbcType=DATE},
       </if>
-      <if test="operationId != null" >
-        #{operationId,jdbcType=INTEGER},
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
       </if>
-      <if test="modelId != null" >
-        #{modelId,jdbcType=INTEGER},
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="ruleMethod != null" >
-        #{ruleMethod,jdbcType=VARCHAR},
+      <if test="updateBy != null" >
+        #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -103,40 +164,72 @@
       <if test="ruleName != null" >
         rule_name = #{ruleName,jdbcType=VARCHAR},
       </if>
-      <if test="sendingTime != null" >
-        sending_time = #{sendingTime,jdbcType=TIME},
-      </if>
       <if test="sendingCounts != null" >
-        sending_counts = #{sendingCounts,jdbcType=VARCHAR},
+        sending_counts = #{sendingCounts,jdbcType=INTEGER},
       </if>
       <if test="sendingInterval != null" >
-        sending_interval = #{sendingInterval,jdbcType=VARCHAR},
-      </if>
-      <if test="entryDistance != null" >
-        entry_distance = #{entryDistance,jdbcType=DATE},
+        sending_interval = #{sendingInterval,jdbcType=DATE},
       </if>
       <if test="operationId != null" >
-        operation_id = #{operationId,jdbcType=INTEGER},
+        operation_id = #{operationId,jdbcType=VARCHAR},
       </if>
       <if test="modelId != null" >
-        model_id = #{modelId,jdbcType=INTEGER},
+        model_id = #{modelId,jdbcType=VARCHAR},
       </if>
       <if test="ruleMethod != null" >
         rule_method = #{ruleMethod,jdbcType=VARCHAR},
       </if>
+      <if test="sendingMinofhour != null" >
+        sending_minofhour = #{sendingMinofhour,jdbcType=INTEGER},
+      </if>
+      <if test="sendingHourofday != null" >
+        sending_hourofday = #{sendingHourofday,jdbcType=INTEGER},
+      </if>
+      <if test="entryDistanceY != null" >
+        entry_distance_y = #{entryDistanceY,jdbcType=INTEGER},
+      </if>
+      <if test="entryDistanceM != null" >
+        entry_distance_m = #{entryDistanceM,jdbcType=INTEGER},
+      </if>
+      <if test="entryDistanceD != null" >
+        entry_distance_d = #{entryDistanceD,jdbcType=INTEGER},
+      </if>
+      <if test="entryDistance != null" >
+        entry_distance = #{entryDistance,jdbcType=DATE},
+      </if>
+      <if test="createBy != null" >
+        create_by = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        update_by = #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="bingosoft.hrhelper.model.Rule" >
     update rule
     set rule_name = #{ruleName,jdbcType=VARCHAR},
-      sending_time = #{sendingTime,jdbcType=TIME},
-      sending_counts = #{sendingCounts,jdbcType=VARCHAR},
-      sending_interval = #{sendingInterval,jdbcType=VARCHAR},
+      sending_counts = #{sendingCounts,jdbcType=INTEGER},
+      sending_interval = #{sendingInterval,jdbcType=DATE},
+      operation_id = #{operationId,jdbcType=VARCHAR},
+      model_id = #{modelId,jdbcType=VARCHAR},
+      rule_method = #{ruleMethod,jdbcType=VARCHAR},
+      sending_minofhour = #{sendingMinofhour,jdbcType=INTEGER},
+      sending_hourofday = #{sendingHourofday,jdbcType=INTEGER},
+      entry_distance_y = #{entryDistanceY,jdbcType=INTEGER},
+      entry_distance_m = #{entryDistanceM,jdbcType=INTEGER},
+      entry_distance_d = #{entryDistanceD,jdbcType=INTEGER},
       entry_distance = #{entryDistance,jdbcType=DATE},
-      operation_id = #{operationId,jdbcType=INTEGER},
-      model_id = #{modelId,jdbcType=INTEGER},
-      rule_method = #{ruleMethod,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=INTEGER}
+      create_by = #{createBy,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_by = #{updateBy,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>

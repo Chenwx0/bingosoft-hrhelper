@@ -3,7 +3,7 @@ package bingosoft.hrhelper.model;
 import java.util.Date;
 
 public class Mail {
-    private Integer id;
+    private String id;
 
     private String mailName;
 
@@ -15,22 +15,34 @@ public class Mail {
 
     private String senderAddress;
 
-    private Integer operationId;
-
-    private Date sendTime;
-
     private String copyPeople;
 
     private String copyPeopleAddress;
 
-    private String status;
+    private String mailContent;
 
-    public Integer getId() {
+    private String mailAttachmentPath;
+
+    private String operationId;
+
+    private String appoveId;
+
+    private Integer status;
+
+    private String updateBy;
+
+    private Date createTime;
+
+    private Date planSendTime;
+
+    private Date sendTime;
+
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setId(String id) {
+        this.id = id == null ? null : id.trim();
     }
 
     public String getMailName() {
@@ -73,22 +85,6 @@ public class Mail {
         this.senderAddress = senderAddress == null ? null : senderAddress.trim();
     }
 
-    public Integer getOperationId() {
-        return operationId;
-    }
-
-    public void setOperationId(Integer operationId) {
-        this.operationId = operationId;
-    }
-
-    public Date getSendTime() {
-        return sendTime;
-    }
-
-    public void setSendTime(Date sendTime) {
-        this.sendTime = sendTime;
-    }
-
     public String getCopyPeople() {
         return copyPeople;
     }
@@ -105,11 +101,75 @@ public class Mail {
         this.copyPeopleAddress = copyPeopleAddress == null ? null : copyPeopleAddress.trim();
     }
 
-    public String getStatus() {
+    public String getMailContent() {
+        return mailContent;
+    }
+
+    public void setMailContent(String mailContent) {
+        this.mailContent = mailContent == null ? null : mailContent.trim();
+    }
+
+    public String getMailAttachmentPath() {
+        return mailAttachmentPath;
+    }
+
+    public void setMailAttachmentPath(String mailAttachmentPath) {
+        this.mailAttachmentPath = mailAttachmentPath == null ? null : mailAttachmentPath.trim();
+    }
+
+    public String getOperationId() {
+        return operationId;
+    }
+
+    public void setOperationId(String operationId) {
+        this.operationId = operationId == null ? null : operationId.trim();
+    }
+
+    public String getAppoveId() {
+        return appoveId;
+    }
+
+    public void setAppoveId(String appoveId) {
+        this.appoveId = appoveId == null ? null : appoveId.trim();
+    }
+
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
-        this.status = status == null ? null : status.trim();
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public String getUpdateBy() {
+        return updateBy;
+    }
+
+    public void setUpdateBy(String updateBy) {
+        this.updateBy = updateBy == null ? null : updateBy.trim();
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getPlanSendTime() {
+        return planSendTime;
+    }
+
+    public void setPlanSendTime(Date planSendTime) {
+        this.planSendTime = planSendTime;
+    }
+
+    public Date getSendTime() {
+        return sendTime;
+    }
+
+    public void setSendTime(Date sendTime) {
+        this.sendTime = sendTime;
     }
 }

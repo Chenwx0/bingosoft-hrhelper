@@ -1,24 +1,26 @@
 package bingosoft.hrhelper.model;
 
+import java.util.Date;
+
 public class Approve {
-    private Integer id;
+    private String id;
 
     private String approver;
 
     private String approveObject;
 
-    private String mail;
-
     private Integer status;
 
-    private Integer operationId;
+    private String operationId;
 
-    public Integer getId() {
+    private Date createTime;
+
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setId(String id) {
+        this.id = id == null ? null : id.trim();
     }
 
     public String getApprover() {
@@ -37,14 +39,6 @@ public class Approve {
         this.approveObject = approveObject == null ? null : approveObject.trim();
     }
 
-    public String getMail() {
-        return mail;
-    }
-
-    public void setMail(String mail) {
-        this.mail = mail == null ? null : mail.trim();
-    }
-
     public Integer getStatus() {
         return status;
     }
@@ -53,11 +47,19 @@ public class Approve {
         this.status = status;
     }
 
-    public Integer getOperationId() {
+    public String getOperationId() {
         return operationId;
     }
 
-    public void setOperationId(Integer operationId) {
-        this.operationId = operationId;
+    public void setOperationId(String operationId) {
+        this.operationId = operationId == null ? null : operationId.trim();
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }

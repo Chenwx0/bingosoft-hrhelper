@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class UserController {
     Logger logger = LoggerFactory.getLogger(getClass());
-
     @Autowired
     UserMapper userMapper;
     @GetMapping(path = "/test")
@@ -31,10 +30,6 @@ public class UserController {
         } catch (Exception e) {
             e.printStackTrace();
         }*/
-       logger.debug("debug");
-       logger.info("info");
-       logger.warn("warn");
-       logger.error("error");
        return "测试成功";
     };
 

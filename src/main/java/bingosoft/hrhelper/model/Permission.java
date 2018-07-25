@@ -3,9 +3,9 @@ package bingosoft.hrhelper.model;
 public class Permission {
     private String id;
 
-    private Integer operationId;
+    private String operationId;
 
-    private Integer userId;
+    private String userId;
 
     public String getId() {
         return id;
@@ -15,19 +15,19 @@ public class Permission {
         this.id = id == null ? null : id.trim();
     }
 
-    public Integer getOperationId() {
+    public String getOperationId() {
         return operationId;
     }
 
-    public void setOperationId(Integer operationId) {
-        this.operationId = operationId;
+    public void setOperationId(String operationId) {
+        this.operationId = operationId == null ? null : operationId.trim();
     }
 
-    public Integer getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setUserId(String userId) {
+        this.userId = userId == null ? null : userId.trim();
     }
 }

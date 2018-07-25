@@ -3,13 +3,13 @@ package bingosoft.hrhelper.mapper;
 import bingosoft.hrhelper.model.Mail;
 
 public interface MailMapper {
-    int deleteByPrimaryKey(Integer id);
+    int deleteByPrimaryKey(String id);
 
     int insert(Mail record);
 
     int insertSelective(Mail record);
 
-    Mail selectByPrimaryKey(Integer id);
+    Mail selectByPrimaryKey(String id);
 
     int updateByPrimaryKeySelective(Mail record);
 
