@@ -20,16 +20,6 @@ public class UserController {
     @GetMapping(path = "/test")
     public String test(){
 
-       /* MailUtil mailUtil = new MailUtil();
-        try {
-            mailUtil.sendMail();
-
-        }catch (ParamException e) {
-            e.printStackTrace();
-            return e.getMessage();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }*/
        return "测试成功";
     };
 

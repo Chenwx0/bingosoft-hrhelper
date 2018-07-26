@@ -115,14 +115,14 @@ public class MailUtil {
          * MimeMessage.RecipientType.CC：抄送
          * MimeMessage.RecipientType.BCC：密送
          */
-        if (recipientAddresses.length>0){
+        if (recipientAddresses!=null && recipientAddresses.length>0){
             for (String recipientAddress: recipientAddresses) {
                 msg.setRecipient(MimeMessage.RecipientType.TO,new InternetAddress(recipientAddress));
             }
         }else{
             throw new ParamException("收件人为空");
         }
-        if (copyToAddresses.length>0){
+        if (copyToAddresses!=null && copyToAddresses.length>0){
             for (String copyToAddress: copyToAddresses) {
                 msg.setRecipient(MimeMessage.RecipientType.CC,new InternetAddress(copyToAddress));
             }
@@ -139,7 +139,7 @@ public class MailUtil {
         MimeBodyPart body = new MimeBodyPart();
         body.setContent(content, "text/html;charset=UTF-8");
         mm.addBodyPart(body);     // 如果有多个附件，可以创建多个多次添加
-        if(attachmentPaths.length>0){
+        if(attachmentPaths!=null && attachmentPaths.length>0){
             for (String attachmentPath: attachmentPaths) {
                 // 9. 创建附件"节点"
                 MimeBodyPart attachment = new MimeBodyPart();
