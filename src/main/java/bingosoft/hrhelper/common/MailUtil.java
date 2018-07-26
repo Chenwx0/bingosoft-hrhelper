@@ -29,16 +29,7 @@ public class MailUtil {
     //邮件标题
     private String subject;
     //邮件正文
-    private String content = "<p style=\"font: 15px/26px '微软雅黑'; color: red; white-space: 2px;\">Hi，<br>" +
-            "今天是加入品高的第一天，过得还惬意么?感受到品高的活力了么？真诚地祝您在公司一切愉快！<br>" +
-            "有什么需要帮忙的么？试试下面的方法？<br>" +
-            "1）想了解部门对自己工作绩效的期望？需要开通公司系统某个模块的权限？想了解业务的接口人？<br>" +
-            "答：直属部门经理可以帮到你！“LINK-工作指南“可以帮到你！<br>" +
-            "2）\t想了解近段时间的工作安排？想尽快了解负责的业务、项目情况？<br>" +
-            "答：快去找你的导师帮忙吧！<br>" +
-            "3）入职提交的材料还有遗漏？社保公积金有疑惑？入职时介绍的办事流程还有疑惑？<br>" +
-            "答：欢迎咨询温柔可爱的HR小姐姐：）<br>" +
-            "HR小姐姐祝您工作顺利！生活愉快！幸福感爆棚！开启Bingo旅程！<br></p><br>" ;
+    private String content;
     //附件路径
     private String[] attachmentPaths;
 
@@ -148,16 +139,18 @@ public class MailUtil {
         MimeBodyPart body = new MimeBodyPart();
         body.setContent(content, "text/html;charset=UTF-8");
         mm.addBodyPart(body);     // 如果有多个附件，可以创建多个多次添加
-        for (String attachmentPath: attachmentPaths) {
-            // 9. 创建附件"节点"
-            MimeBodyPart attachment = new MimeBodyPart();
-            // 读取本地文件
-            DataHandler dh2 = new DataHandler(new FileDataSource(attachmentPath));
-            // 将附件数据添加到"节点"
-            attachment.setDataHandler(dh2);
-            // 设置附件的文件名（需要编码）
-            attachment.setFileName(MimeUtility.encodeText(dh2.getName()));
-            mm.addBodyPart(attachment);     // 如果有多个附件，可以创建多个多次添加
+        if(attachmentPaths.length>0){
+            for (String attachmentPath: attachmentPaths) {
+                // 9. 创建附件"节点"
+                MimeBodyPart attachment = new MimeBodyPart();
+                // 读取本地文件
+                DataHandler dh2 = new DataHandler(new FileDataSource(attachmentPath));
+                // 将附件数据添加到"节点"
+                attachment.setDataHandler(dh2);
+                // 设置附件的文件名（需要编码）
+                attachment.setFileName(MimeUtility.encodeText(dh2.getName()));
+                mm.addBodyPart(attachment);     // 如果有多个附件，可以创建多个多次添加
+            }
         }
         // 设置整个邮件的关系（将最终的混合"节点"作为邮件的内容添加到邮件对象）
         msg.setContent(mm);
