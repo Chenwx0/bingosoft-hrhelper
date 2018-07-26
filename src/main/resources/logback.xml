@@ -64,6 +64,7 @@
         </filter>
     </appender>
 
+    <!-- 全日志输出 -->
     <appender name="ALL-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <Prudent>true</Prudent>
         <rollingPolicy

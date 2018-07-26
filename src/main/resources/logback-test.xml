@@ -2,7 +2,7 @@
 <configuration>
 
     <!-- 日志级别 -->
-    <property name="logLevel" value="warn"/>
+    <property name="logLevel" value="info"/>
     <!-- 日志地址 -->
     <property name="logPath" value="./logs"/>
     <!-- 最大保存时间 -->
@@ -23,7 +23,7 @@
 
     <!-- 文件保存日志的相关配置 -->
 
-    <!-- warn日志输出 -->
+<!--    &lt;!&ndash; warn日志输出 &ndash;&gt;
     <appender name="WARN-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <Prudent>true</Prudent>
         <rollingPolicy
@@ -31,7 +31,7 @@
             <FileNamePattern>
                 ${logPath}/warn/warn-%d{yyyy-MM-dd}.log
             </FileNamePattern>
-            <!-- keep ${logback.maxhistory} days worth of history -->
+            &lt;!&ndash; keep ${logback.maxhistory} days worth of history &ndash;&gt;
             <MaxHistory>${maxHistory}</MaxHistory>
         </rollingPolicy>
         <encoder>
@@ -44,7 +44,7 @@
         </filter>
     </appender>
 
-    <!-- error日志输出 -->
+    &lt;!&ndash; error日志输出 &ndash;&gt;
     <appender name="ERROR-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <Prudent>true</Prudent>
         <rollingPolicy
@@ -52,7 +52,7 @@
             <FileNamePattern>
                 ${logPath}/error/error-%d{yyyy-MM-dd}.log
             </FileNamePattern>
-            <!-- keep ${logback.maxhistory} days worth of history -->
+            &lt;!&ndash; keep ${logback.maxhistory} days worth of history &ndash;&gt;
             <MaxHistory>${maxHistory}</MaxHistory>
         </rollingPolicy>
         <encoder>
@@ -64,7 +64,7 @@
             <onMismatch>DENY</onMismatch>
         </filter>
     </appender>
-
+    &lt;!&ndash; 全日志输出 &ndash;&gt;
     <appender name="ALL-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <Prudent>true</Prudent>
         <rollingPolicy
@@ -72,13 +72,13 @@
             <FileNamePattern>
                 ${logPath}/all/all-%d{yyyy-MM-dd}.log
             </FileNamePattern>
-            <!-- keep ${logback.maxhistory} days worth of history -->
+            &lt;!&ndash; keep ${logback.maxhistory} days worth of history &ndash;&gt;
             <MaxHistory>${maxHistory}</MaxHistory>
         </rollingPolicy>
         <encoder>
             <pattern>${CONSOLE_LOG_PATTERN}</pattern>
         </encoder>
-    </appender>
+    </appender>-->
 
     <!--配置mybatis sql 日志-->
     <logger name="bingosoft.hrhelper.mapper" level="DEBUG"/>
