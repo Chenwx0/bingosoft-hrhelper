@@ -77,7 +77,7 @@ public class MailUtil {
         // 设置传输协议
         props.setProperty("mail.transport.protocol", "smtp");
         // 设置发件人的SMTP服务器地址
-        props.setProperty("mail.smtp.host", "GW-MAIL-01.bingosoft.local");
+        props.setProperty("mail.smtp.host", "mail1.bingosoft.net");
         props.setProperty("mail.smtp.port", "587");
         // 创建定义整个应用程序所需的环境信息的 Session 对象
         Session session = Session.getInstance(props);
@@ -88,6 +88,12 @@ public class MailUtil {
         // 根据session对象获取邮件传输对象Transport
         Transport transport = session.getTransport();
         // 设置发件人的账户名和密码
+        if(senderAccount==null || senderAccount.isEmpty()){
+            throw new ParamException("发件人账户为空");
+        }
+        if(senderPassword==null || senderPassword.isEmpty()){
+            throw new ParamException("发件人密码为空");
+        }
         transport.connect(senderAccount, senderPassword);
         // 发送邮件，并发送到所有收件人地址，message.getAllRecipients() 获取到的是在创建邮件对象时添加的所有收件人, 抄送人, 密送人
         transport.sendMessage(msg,msg.getAllRecipients());
@@ -108,7 +114,12 @@ public class MailUtil {
         MimeMessage msg = new MimeMessage(session);
 
         // 设置发件人地址
-        msg.setFrom(new InternetAddress(senderAddress));
+        if (senderAddress!=null && !senderAddress.isEmpty()){
+            msg.setFrom(new InternetAddress(senderAddress));
+        }else{
+            throw new ParamException("发件人地址为空");
+        }
+
         /**
          * 设置收件人地址（可以增加多个收件人、抄送、密送），即下面这一行代码书写多行
          * MimeMessage.RecipientType.TO:发送
@@ -120,7 +131,7 @@ public class MailUtil {
                 msg.setRecipient(MimeMessage.RecipientType.TO,new InternetAddress(recipientAddress));
             }
         }else{
-            throw new ParamException("收件人为空");
+            throw new ParamException("收件人地址为空");
         }
         if (copyToAddresses!=null && copyToAddresses.length>0){
             for (String copyToAddress: copyToAddresses) {
@@ -128,27 +139,34 @@ public class MailUtil {
             }
         }
         // 设置邮件主题
-        msg.setSubject(subject,"UTF-8");
-        //下面是设置邮件正文
-
+        if (subject!=null && !subject.isEmpty()){
+            msg.setSubject(subject,"UTF-8");
+        }else{
+            throw new ParamException("邮件主题为空");
+        }
+        //设置邮件正文
         // 设置（文本+图片）和 附件 的关系（合成一个大的混合"节点" / Multipart ）
         MimeMultipart mm = new MimeMultipart();
         // 混合关系
         mm.setSubType("mixed");
         // 创建附件"节点"
         MimeBodyPart body = new MimeBodyPart();
-        body.setContent(content, "text/html;charset=UTF-8");
+        if (content!=null && !content.isEmpty()){
+            body.setContent(content, "text/html;charset=UTF-8");
+        }else{
+            throw new ParamException("邮件内容为空");
+        }
         mm.addBodyPart(body);     // 如果有多个附件，可以创建多个多次添加
         if(attachmentPaths!=null && attachmentPaths.length>0){
             for (String attachmentPath: attachmentPaths) {
-                // 9. 创建附件"节点"
+                // 创建附件"节点"
                 MimeBodyPart attachment = new MimeBodyPart();
                 // 读取本地文件
-                DataHandler dh2 = new DataHandler(new FileDataSource(attachmentPath));
+                DataHandler dh = new DataHandler(new FileDataSource(attachmentPath));
                 // 将附件数据添加到"节点"
-                attachment.setDataHandler(dh2);
+                attachment.setDataHandler(dh);
                 // 设置附件的文件名（需要编码）
-                attachment.setFileName(MimeUtility.encodeText(dh2.getName()));
+                attachment.setFileName(MimeUtility.encodeText(dh.getName()));
                 mm.addBodyPart(attachment);     // 如果有多个附件，可以创建多个多次添加
             }
         }
