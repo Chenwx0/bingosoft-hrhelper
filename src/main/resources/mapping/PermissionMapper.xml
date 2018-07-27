@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="bingosoft.hrhelper.mapper.PermissionMapper" >
   <resultMap id="BaseResultMap" type="bingosoft.hrhelper.model.Permission" >
-    <id column="id" property="id" jdbcType="VARCHAR" />
+    <id column="id" property="id" jdbcType="CHAR" />
     <result column="operation_id" property="operationId" jdbcType="VARCHAR" />
     <result column="user_id" property="userId" jdbcType="VARCHAR" />
   </resultMap>
@@ -13,16 +13,16 @@
     select 
     <include refid="Base_Column_List" />
     from permission
-    where id = #{id,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=CHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from permission
-    where id = #{id,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=CHAR}
   </delete>
   <insert id="insert" parameterType="bingosoft.hrhelper.model.Permission" >
     insert into permission (id, operation_id, user_id
       )
-    values (#{id,jdbcType=VARCHAR}, #{operationId,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}
+    values (#{id,jdbcType=CHAR}, #{operationId,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="bingosoft.hrhelper.model.Permission" >
@@ -40,7 +40,7 @@
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
-        #{id,jdbcType=VARCHAR},
+        #{id,jdbcType=CHAR},
       </if>
       <if test="operationId != null" >
         #{operationId,jdbcType=VARCHAR},
@@ -60,12 +60,12 @@
         user_id = #{userId,jdbcType=VARCHAR},
       </if>
     </set>
-    where id = #{id,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=CHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="bingosoft.hrhelper.model.Permission" >
     update permission
     set operation_id = #{operationId,jdbcType=VARCHAR},
       user_id = #{userId,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=CHAR}
   </update>
 </mapper>

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="bingosoft.hrhelper.mapper.RuleMapper" >
   <resultMap id="BaseResultMap" type="bingosoft.hrhelper.model.Rule" >
-    <id column="id" property="id" jdbcType="VARCHAR" />
+    <id column="id" property="id" jdbcType="CHAR" />
     <result column="rule_name" property="ruleName" jdbcType="VARCHAR" />
     <result column="sending_counts" property="sendingCounts" jdbcType="INTEGER" />
     <result column="sending_interval" property="sendingInterval" jdbcType="DATE" />
@@ -14,7 +14,7 @@
     <result column="entry_distance_y" property="entryDistanceY" jdbcType="INTEGER" />
     <result column="entry_distance_m" property="entryDistanceM" jdbcType="INTEGER" />
     <result column="entry_distance_d" property="entryDistanceD" jdbcType="INTEGER" />
-    <result column="entry_distance" property="entryDistance" jdbcType="DATE" />
+    <result column="entry_distance" property="entryDistance" jdbcType="TIMESTAMP" />
     <result column="create_by" property="createBy" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
@@ -34,11 +34,11 @@
     select 
     <include refid="Base_Column_List" />
     from rule
-    where id = #{id,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=CHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from rule
-    where id = #{id,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=CHAR}
   </delete>
   <insert id="insert" parameterType="bingosoft.hrhelper.model.Rule" >
     insert into rule (id, rule_name, sending_counts, 
@@ -47,11 +47,11 @@
       entry_distance_y, entry_distance_m, entry_distance_d, 
       entry_distance, create_by, create_time, 
       update_by, update_time)
-    values (#{id,jdbcType=VARCHAR}, #{ruleName,jdbcType=VARCHAR}, #{sendingCounts,jdbcType=INTEGER}, 
+    values (#{id,jdbcType=CHAR}, #{ruleName,jdbcType=VARCHAR}, #{sendingCounts,jdbcType=INTEGER}, 
       #{sendingInterval,jdbcType=DATE}, #{operationId,jdbcType=VARCHAR}, #{modelId,jdbcType=VARCHAR}, 
       #{ruleMethod,jdbcType=VARCHAR}, #{sendingMinofhour,jdbcType=INTEGER}, #{sendingHourofday,jdbcType=INTEGER}, 
       #{entryDistanceY,jdbcType=INTEGER}, #{entryDistanceM,jdbcType=INTEGER}, #{entryDistanceD,jdbcType=INTEGER}, 
-      #{entryDistance,jdbcType=DATE}, #{createBy,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{entryDistance,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateBy,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="bingosoft.hrhelper.model.Rule" >
@@ -111,7 +111,7 @@
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
-        #{id,jdbcType=VARCHAR},
+        #{id,jdbcType=CHAR},
       </if>
       <if test="ruleName != null" >
         #{ruleName,jdbcType=VARCHAR},
@@ -147,7 +147,7 @@
         #{entryDistanceD,jdbcType=INTEGER},
       </if>
       <if test="entryDistance != null" >
-        #{entryDistance,jdbcType=DATE},
+        #{entryDistance,jdbcType=TIMESTAMP},
       </if>
       <if test="createBy != null" >
         #{createBy,jdbcType=VARCHAR},
@@ -200,7 +200,7 @@
         entry_distance_d = #{entryDistanceD,jdbcType=INTEGER},
       </if>
       <if test="entryDistance != null" >
-        entry_distance = #{entryDistance,jdbcType=DATE},
+        entry_distance = #{entryDistance,jdbcType=TIMESTAMP},
       </if>
       <if test="createBy != null" >
         create_by = #{createBy,jdbcType=VARCHAR},
@@ -215,7 +215,7 @@
         update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
-    where id = #{id,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=CHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="bingosoft.hrhelper.model.Rule" >
     update rule
@@ -230,11 +230,11 @@
       entry_distance_y = #{entryDistanceY,jdbcType=INTEGER},
       entry_distance_m = #{entryDistanceM,jdbcType=INTEGER},
       entry_distance_d = #{entryDistanceD,jdbcType=INTEGER},
-      entry_distance = #{entryDistance,jdbcType=DATE},
+      entry_distance = #{entryDistance,jdbcType=TIMESTAMP},
       create_by = #{createBy,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_by = #{updateBy,jdbcType=VARCHAR},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
-    where id = #{id,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=CHAR}
   </update>
 </mapper>

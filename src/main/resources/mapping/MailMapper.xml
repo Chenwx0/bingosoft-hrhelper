@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="bingosoft.hrhelper.mapper.MailMapper" >
   <resultMap id="BaseResultMap" type="bingosoft.hrhelper.model.Mail" >
-    <id column="id" property="id" jdbcType="VARCHAR" />
+    <id column="id" property="id" jdbcType="CHAR" />
     <result column="mail_name" property="mailName" jdbcType="VARCHAR" />
     <result column="recipient" property="recipient" jdbcType="VARCHAR" />
     <result column="recipient_address" property="recipientAddress" jdbcType="VARCHAR" />
@@ -29,11 +29,11 @@
     select 
     <include refid="Base_Column_List" />
     from mail
-    where id = #{id,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=CHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from mail
-    where id = #{id,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=CHAR}
   </delete>
   <delete id="deleteAll" parameterType="java.lang.String" >
     delete from mail
@@ -45,7 +45,7 @@
       mail_attachment_path, operation_id, appove_id, 
       status, update_by, create_time, 
       plan_send_time, send_time)
-    values (#{id,jdbcType=VARCHAR}, #{mailName,jdbcType=VARCHAR}, #{recipient,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=CHAR}, #{mailName,jdbcType=VARCHAR}, #{recipient,jdbcType=VARCHAR}, 
       #{recipientAddress,jdbcType=VARCHAR}, #{sender,jdbcType=VARCHAR}, #{senderAddress,jdbcType=VARCHAR}, 
       #{copyPeople,jdbcType=VARCHAR}, #{copyPeopleAddress,jdbcType=VARCHAR}, #{mailContent,jdbcType=VARCHAR}, 
       #{mailAttachmentPath,jdbcType=VARCHAR}, #{operationId,jdbcType=VARCHAR}, #{appoveId,jdbcType=VARCHAR}, 
@@ -109,7 +109,7 @@
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
-        #{id,jdbcType=VARCHAR},
+        #{id,jdbcType=CHAR},
       </if>
       <if test="mailName != null" >
         #{mailName,jdbcType=VARCHAR},
@@ -213,7 +213,7 @@
         send_time = #{sendTime,jdbcType=TIMESTAMP},
       </if>
     </set>
-    where id = #{id,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=CHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="bingosoft.hrhelper.model.Mail" >
     update mail
@@ -233,6 +233,6 @@
       create_time = #{createTime,jdbcType=TIMESTAMP},
       plan_send_time = #{planSendTime,jdbcType=TIMESTAMP},
       send_time = #{sendTime,jdbcType=TIMESTAMP}
-    where id = #{id,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=CHAR}
   </update>
 </mapper>

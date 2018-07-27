@@ -133,6 +133,8 @@ public class Rule {
         this.entryDistanceD = entryDistanceD;
     }
 
+    
+
     public String getEntryDistance() {
 		return entryDistance;
 	}
