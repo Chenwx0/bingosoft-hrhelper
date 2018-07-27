@@ -1,5 +1,7 @@
 package bingosoft.hrhelper.mapper;
 
+import java.util.List;
+
 import bingosoft.hrhelper.model.Rule;
 
 public interface RuleMapper {
@@ -14,4 +16,6 @@ public interface RuleMapper {
     int updateByPrimaryKeySelective(Rule record);
 
     int updateByPrimaryKey(Rule record);
+
+	List<Rule> Base_Column_List();
 }

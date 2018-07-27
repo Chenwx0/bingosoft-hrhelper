@@ -27,7 +27,7 @@ public class Rule {
 
     private Integer entryDistanceD;
 
-    private Date entryDistance;
+    private String entryDistance;
 
     private String createBy;
 
@@ -133,15 +133,15 @@ public class Rule {
         this.entryDistanceD = entryDistanceD;
     }
 
-    public Date getEntryDistance() {
-        return entryDistance;
-    }
+    public String getEntryDistance() {
+		return entryDistance;
+	}
 
-    public void setEntryDistance(Date entryDistance) {
-        this.entryDistance = entryDistance;
-    }
+	public void setEntryDistance(String entryDistance) {
+		this.entryDistance = entryDistance;
+	}
 
-    public String getCreateBy() {
+	public String getCreateBy() {
         return createBy;
     }
 

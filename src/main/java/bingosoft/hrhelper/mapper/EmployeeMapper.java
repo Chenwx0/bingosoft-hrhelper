@@ -1,5 +1,7 @@
 package bingosoft.hrhelper.mapper;
 
+import java.util.List;
+
 import bingosoft.hrhelper.model.Employee;
 
 public interface EmployeeMapper {
@@ -14,4 +16,6 @@ public interface EmployeeMapper {
     int updateByPrimaryKeySelective(Employee record);
 
     int updateByPrimaryKey(Employee record);
+
+	List<Employee> Base_Column_List();
 }
