@@ -22,10 +22,14 @@ public class MailUtil {
     private String senderAccount;
     //发件人账户密码
     private String senderPassword;
-    //收件人地址
-    private String[] recipientAddresses;
-    //抄送人地址
-    private String[] copyToAddresses;
+    /**
+     * 收件人地址，多个以","隔开
+     */
+    private String recipientAddresses;
+    /**
+     * 抄送人地址，多个以","隔开
+     */
+    private String copyToAddresses;
     //邮件标题
     private String subject;
     //邮件正文
@@ -33,6 +37,10 @@ public class MailUtil {
     //附件路径
     private String[] attachmentPaths;
 
+    /**
+     * aaa
+     * @param senderAddress
+     */
     public void setSenderAddress(String senderAddress) {
         this.senderAddress = senderAddress;
     }
@@ -45,11 +53,11 @@ public class MailUtil {
         this.senderPassword = senderPassword;
     }
 
-    public void setRecipientAddresses(String[] recipientAddresses) {
+    public void setRecipientAddresses(String recipientAddresses) {
         this.recipientAddresses = recipientAddresses;
     }
 
-    public void setCopyToAddresses(String[] copyToAddresses) {
+    public void setCopyToAddresses(String copyToAddresses) {
         this.copyToAddresses = copyToAddresses;
     }
 
@@ -119,24 +127,21 @@ public class MailUtil {
         }else{
             throw new ParamException("发件人地址为空");
         }
-
         /**
          * 设置收件人地址（可以增加多个收件人、抄送、密送），即下面这一行代码书写多行
          * MimeMessage.RecipientType.TO:发送
          * MimeMessage.RecipientType.CC：抄送
          * MimeMessage.RecipientType.BCC：密送
          */
-        if (recipientAddresses!=null && recipientAddresses.length>0){
-            for (String recipientAddress: recipientAddresses) {
-                msg.setRecipient(MimeMessage.RecipientType.TO,new InternetAddress(recipientAddress));
-            }
-        }else{
+       if (recipientAddresses!=null && !recipientAddresses.isEmpty()){
+           InternetAddress[] recipients = new InternetAddress().parse(recipientAddresses);
+           msg.setRecipients(MimeMessage.RecipientType.TO, recipients);
+       }else{
             throw new ParamException("收件人地址为空");
         }
-        if (copyToAddresses!=null && copyToAddresses.length>0){
-            for (String copyToAddress: copyToAddresses) {
-                msg.setRecipient(MimeMessage.RecipientType.CC,new InternetAddress(copyToAddress));
-            }
+        if (copyToAddresses!=null && !copyToAddresses.isEmpty()){
+            InternetAddress[] copyTos = new InternetAddress().parse(copyToAddresses);
+            msg.setRecipients(MimeMessage.RecipientType.CC,copyTos);
         }
         // 设置邮件主题
         if (subject!=null && !subject.isEmpty()){
@@ -174,7 +179,7 @@ public class MailUtil {
         msg.setContent(mm);
         // 设置邮件的发送时间,默认立即发送
         msg.setSentDate(new Date());
-
+        msg.saveChanges();
         return msg;
     }
 
