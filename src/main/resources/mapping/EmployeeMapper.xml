@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="bingosoft.hrhelper.mapper.EmployeeMapper" >
   <resultMap id="BaseResultMap" type="bingosoft.hrhelper.model.Employee" >
-    <id column="id" property="id" jdbcType="VARCHAR" />
+    <id column="id" property="id" jdbcType="CHAR" />
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="mail" property="mail" jdbcType="VARCHAR" />
     <result column="department" property="department" jdbcType="VARCHAR" />
@@ -25,11 +25,11 @@
     select 
     <include refid="Base_Column_List" />
     from employee
-    where id = #{id,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=CHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from employee
-    where id = #{id,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=CHAR}
   </delete>
   <insert id="insert" parameterType="bingosoft.hrhelper.model.Employee" >
     insert into employee (id, name, mail, 
@@ -37,7 +37,7 @@
       plan_fullmenber_day, entry_day, recruit_class, 
       sign_count, day_of_work, year_of_work, 
       contract_day, sign_class)
-    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{mail,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=CHAR}, #{name,jdbcType=VARCHAR}, #{mail,jdbcType=VARCHAR}, 
       #{department,jdbcType=VARCHAR}, #{manager,jdbcType=VARCHAR}, #{fullmenberDay,jdbcType=DATE}, 
       #{planFullmenberDay,jdbcType=DATE}, #{entryDay,jdbcType=DATE}, #{recruitClass,jdbcType=VARCHAR}, 
       #{signCount,jdbcType=INTEGER}, #{dayOfWork,jdbcType=INTEGER}, #{yearOfWork,jdbcType=INTEGER}, 
@@ -91,7 +91,7 @@
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
-        #{id,jdbcType=VARCHAR},
+        #{id,jdbcType=CHAR},
       </if>
       <if test="name != null" >
         #{name,jdbcType=VARCHAR},
@@ -177,7 +177,7 @@
         sign_class = #{signClass,jdbcType=VARCHAR},
       </if>
     </set>
-    where id = #{id,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=CHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="bingosoft.hrhelper.model.Employee" >
     update employee
@@ -194,6 +194,6 @@
       year_of_work = #{yearOfWork,jdbcType=INTEGER},
       contract_day = #{contractDay,jdbcType=DATE},
       sign_class = #{signClass,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=CHAR}
   </update>
 </mapper>

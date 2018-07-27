@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="bingosoft.hrhelper.mapper.ApproveMapper" >
   <resultMap id="BaseResultMap" type="bingosoft.hrhelper.model.Approve" >
-    <id column="id" property="id" jdbcType="VARCHAR" />
+    <id column="id" property="id" jdbcType="CHAR" />
     <result column="approver" property="approver" jdbcType="VARCHAR" />
     <result column="approve_object" property="approveObject" jdbcType="VARCHAR" />
     <result column="status" property="status" jdbcType="INTEGER" />
@@ -16,17 +16,17 @@
     select 
     <include refid="Base_Column_List" />
     from approve
-    where id = #{id,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=CHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from approve
-    where id = #{id,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=CHAR}
   </delete>
   <insert id="insert" parameterType="bingosoft.hrhelper.model.Approve" >
     insert into approve (id, approver, approve_object, 
       status, operation_id, create_time
       )
-    values (#{id,jdbcType=VARCHAR}, #{approver,jdbcType=VARCHAR}, #{approveObject,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=CHAR}, #{approver,jdbcType=VARCHAR}, #{approveObject,jdbcType=VARCHAR}, 
       #{status,jdbcType=INTEGER}, #{operationId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
       )
   </insert>
@@ -54,7 +54,7 @@
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
-        #{id,jdbcType=VARCHAR},
+        #{id,jdbcType=CHAR},
       </if>
       <if test="approver != null" >
         #{approver,jdbcType=VARCHAR},
@@ -92,7 +92,7 @@
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
     </set>
-    where id = #{id,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=CHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="bingosoft.hrhelper.model.Approve" >
     update approve
@@ -101,6 +101,6 @@
       status = #{status,jdbcType=INTEGER},
       operation_id = #{operationId,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP}
-    where id = #{id,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=CHAR}
   </update>
 </mapper>
