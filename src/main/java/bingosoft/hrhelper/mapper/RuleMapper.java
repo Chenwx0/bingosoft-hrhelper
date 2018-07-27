@@ -17,5 +17,5 @@ public interface RuleMapper {
 
     int updateByPrimaryKey(Rule record);
 
-	List<Rule> Base_Column_List();
+	List<Rule> listAllRule();
 }

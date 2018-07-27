@@ -17,5 +17,5 @@ public interface EmployeeMapper {
 
     int updateByPrimaryKey(Employee record);
 
-	List<Employee> Base_Column_List();
+	List<Employee> listAllEmployee();
 }

@@ -35,6 +35,9 @@
     delete from mail
     where id = #{id,jdbcType=VARCHAR}
   </delete>
+  <delete id="deleteAll" parameterType="java.lang.String" >
+    delete from mail
+  </delete>
   <insert id="insert" parameterType="bingosoft.hrhelper.model.Mail" >
     insert into mail (id, mail_name, recipient, 
       recipient_address, sender, sender_address, 

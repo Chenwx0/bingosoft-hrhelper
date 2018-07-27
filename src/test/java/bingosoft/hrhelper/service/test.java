@@ -1,6 +1,8 @@
 package bingosoft.hrhelper.service;
 
+import bingosoft.hrhelper.common.UpdateMailTimer;
 import bingosoft.hrhelper.mapper.UserMapper;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +19,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class test {
 
     @Autowired
-    UserMapper userMapper;
+    UpdateMailTimer updateMailTimer;
     @Test
     public void test(){
-        System.out.println(userMapper);
+    	/*updateMailTimer.run(); */
         System.out.print("这是单元测试");
     }
 }

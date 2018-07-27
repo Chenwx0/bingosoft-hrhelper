@@ -21,6 +21,11 @@
     id, name, mail, department, manager, fullmenber_day, plan_fullmenber_day, entry_day, 
     recruit_class, sign_count, day_of_work, year_of_work, contract_day, sign_class
   </sql>
+  <select id="listAllEmployee" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from employee
+  </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />

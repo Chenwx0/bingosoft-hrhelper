@@ -25,6 +25,11 @@
     sending_minofhour, sending_hourofday, entry_distance_y, entry_distance_m, entry_distance_d, 
     entry_distance, create_by, create_time, update_by, update_time
   </sql>
+  <select id="listAllRule" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from rule
+  </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
