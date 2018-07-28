@@ -1,6 +1,5 @@
 package bingosoft.hrhelper.service;
 
-import bingosoft.hrhelper.common.UpdateMailTimer;
 import bingosoft.hrhelper.mapper.UserMapper;
 
 import org.junit.Test;
@@ -18,11 +17,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class test {
 
-    @Autowired
-    UpdateMailTimer updateMailTimer;
     @Test
     public void test(){
-    	/*updateMailTimer.run(); */
         System.out.print("这是单元测试");
     }
 }
