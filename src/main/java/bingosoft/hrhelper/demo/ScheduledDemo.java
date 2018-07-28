@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 @Component
 @Async//开启异步执行，可添加在类或者方法上
 public class ScheduledDemo {
-    Logger log = LoggerFactory.getLogger(getClass());
 
     /**
      * @Scheduled 以注解的方式指定定时任务执行规则
@@ -27,7 +26,7 @@ public class ScheduledDemo {
      initialDelay：任务首次执行延迟的时间，单位毫秒
      initialDelayString：同上，时间值是String类型
      */
-    @Scheduled(cron = "0/5 * * * * *")
+    /*@Scheduled(cron = "0/5 * * * * *")
     public void scheduled(){
         log.info("=====>>>>>使用cron  {}",System.currentTimeMillis());
         String name = Thread.currentThread().getName();
@@ -44,5 +43,5 @@ public class ScheduledDemo {
         log.info("=====>>>>>fixedDelay{}",System.currentTimeMillis());
         String name = Thread.currentThread().getName();
         System.out.println("线程id：" + name);
-    }
+    }*/
 }

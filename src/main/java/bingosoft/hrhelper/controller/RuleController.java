@@ -13,7 +13,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import bingosoft.hrhelper.common.UpdateMailTimer;
 import bingosoft.hrhelper.mapper.UserMapper;
 import bingosoft.hrhelper.model.Rule;
 import bingosoft.hrhelper.service.RuleService;

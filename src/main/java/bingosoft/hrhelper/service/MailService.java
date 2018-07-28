@@ -10,10 +10,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import bingosoft.hrhelper.common.UpdateMailTimer;
 import bingosoft.hrhelper.mapper.EmployeeMapper;
 import bingosoft.hrhelper.mapper.MailMapper;
 import bingosoft.hrhelper.mapper.RuleMapper;
@@ -34,9 +34,9 @@ public class MailService {
 	private Employee e;*/
 	@Autowired
 	MailMapper mm;
-	UpdateMailTimer u = new UpdateMailTimer();
-	
+
 	@Test
+	@Scheduled(cron = "0/5 * * * * *")
 	public void produceMail() throws ParseException{
 		/**
 		 * 1、遍历员工(2、嵌套遍历规则)
@@ -59,10 +59,7 @@ public class MailService {
 		/*EmployeeService e = new   */
 		System.out.println(UUID.randomUUID().toString());
 	}
-	
-	
-	
-	
+
 	//根据规则自动生成邮件的类，需导入实体 1：收件员工 2：具体规则
 	public Mail setMail(Rule rule,Employee e) throws ParseException{
 		Mail mail = new Mail();
