@@ -2,7 +2,9 @@ package bingosoft.hrhelper.service;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Currency;
 import java.util.Date;
+import java.util.UUID;
 
 import net.sf.jsqlparser.expression.DateTimeLiteralExpression.DateTime;
 
@@ -18,9 +20,27 @@ public class RuleService {
 	@Autowired
 	RuleMapper rm ;
 	
-	//规则：规则填写
+	//规则：根据规则方法，确定规则计算方式。
 	public void addRule(Rule rule){
-		rule.setEntryDistance(caculateRule(rule)); 
+		
+		Rule newRule = new Rule();
+		newRule.setId(UUID.randomUUID().toString());
+		newRule.setRuleName(rule.getRuleName());
+		newRule.setEntryDistanceY(rule.getEntryDistanceY());
+    	newRule.setEntryDistanceM(rule.getEntryDistanceM());
+    	newRule.setEntryDistanceD(rule.getEntryDistanceD());
+    	newRule.setSendingHourofday(rule.getSendingHourofday());
+    	newRule.setSendingMinofhour(rule.getSendingMinofhour());
+    	newRule.setModelId(rule.getModelId()); //对应的模板id
+    	newRule.setOperationId(rule.getOperationId());//对应的业务id
+		newRule.setCreateBy(rule.getCreateBy()); //创建人
+		newRule.setCreateTime(new Date()); //创建时间
+    	
+		if(rule.getRuleMethod().equals("1")){
+			rule.setEntryDistance(caculateRule_1(rule)); //方法1：入职时长计算
+		}else{
+			rule.setEarlyDay(caculateRule_2(rule)); //方法2：距离特殊日期计算
+		}
 		rm.insert(rule);
 	}
 	
@@ -33,21 +53,55 @@ public class RuleService {
 	public void updateRule(Rule rule){
 		rm.updateByPrimaryKey(rule);
 	}
-	
-	
-	/**
+    
+    /**
      * 业务：根据规则进行计算
      * @param rule 
      * @return 根据该规则，员工距离入职多长时间发送邮件
      */
-    public String caculateRule(Rule rule){
+    public String caculateRule_1(Rule rule){
+    	String entry_distance =  "入职"+rule.getEntryDistanceY()+"年"+
+    						rule.getEntryDistanceM()+"月"+
+    						rule.getEntryDistanceD()+"日 "+
+    						rule.getSendingHourofday()+"点"+
+    						rule.getSendingMinofhour()+"分时发送邮件";
+    	rule.setRuleMethod("入职多长时间");
+	  	return entry_distance;
+    }
+    
+    /**
+     * 业务：根据规则进行计算
+     * @param rule 
+     * @return 根据该规则，员工距离入职多长时间发送邮件
+     */
+    public String caculateRule_2(Rule rule){
+    	String entry_distance =  "距离"+"某一特殊的日子的"+
+				    						rule.getEntryDistanceY()+"年"+
+				    						rule.getEntryDistanceM()+"月"+
+				    						rule.getEntryDistanceD()+"日 的当天"+
+				    						rule.getSendingHourofday()+"点"+
+				    						rule.getSendingMinofhour()+"分时发送邮件";
+    	rule.setRuleMethod("根据某个日期提前");
+	  	return entry_distance;
+    }
+    
+    
+    
+    /**
+     * 业务：根据规则进行计算
+     * @param rule 
+     * @return 根据该规则，员工距离入职多长时间发送邮件
+     *//*
+    public String caculateRule2(Rule rule){
 
 	  	  Calendar sendTimeUntil = Calendar.getInstance();
 	  	  //获得规则确定的“距离入职后多久发送的日期”(日期)
 	      sendTimeUntil.set(0, 0, 0, 0, 0);
 	        
-	  	  //添加距离入职时间(年)
-	  	  sendTimeUntil.add(Calendar.YEAR,rule.getEntryDistanceY());
+	      System.out.println("时间日历"+Calendar.getInstance());
+	      
+	  	  //添加距离入职时间(年) 备注：年限传到数据库自动加1  原因：如果将0年传到数据库，显示年份为0001。
+	  	  sendTimeUntil.add(Calendar.YEAR,rule.getEntryDistanceY()+1);
 	  	  //添加距离入职时间(月)
 	  	  sendTimeUntil.add(Calendar.MONTH,rule.getEntryDistanceM());
 	  	  //添加距离入职时间(日)
@@ -64,56 +118,6 @@ public class RuleService {
 	  	  
 	  	  String dateStr = new SimpleDateFormat("yyyy-MM-dd hh:mm").format(date);
 	  	  
-	  	/* SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
-	  	  
-	  	 sdf.parse(arg0)
-	  	  
-	  	 
-	  	 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-		 Date d =new Date();
-		 //把日期转换为字符串
-		 String str=sdf.format(d);
-		 System.out.println(str);
-		 //将字符串转换为日期
-		 Date d1=sdf.parse("yyyy-mm-dd HH:mm");*/
-	  	 
-	  	//1、定义转换格式
-	    /*SimpleDateFormat formatter  = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");*/
-	    //2、调用formatter2.parse(),将"19570323"转化为date类型  输出为：Sat Mar 23 00:00:00 GMT+08:00 1957
-	    
-	   //3、将date类型  (Sat Mar 23 00:00:00 GMT+08:00 1957)转化为String类型 
-	    //注意现在用的是formatter来做转换,输出为String类型的："1957-03-23"
-	    /*String  dString = formatter.format(date);
-	    Date data = Date.valueOf(dString);
-	    //4、将String转化为date，需要注意java.sql.Date.valueOf()函数只能接受参数类型为yyyy-MM-dd类型的
-	    System.out.println("得到的日期2——"+data);*/
-	  	  
 	  	  return dateStr;
-    }
-    
-   
-	/*@Test
-    public void caculateRule(){
-
-	  	  Calendar sendTimeUntil = Calendar.getInstance();
-	  	  //获得规则确定的“距离入职后多久发送的日期”(日期)
-	        sendTimeUntil.set(0, 0, 0, 0, 0);
-	        
-	  	  //添加距离入职时间(年)
-	  	  sendTimeUntil.add(Calendar.YEAR,1);
-	  	  //添加距离入职时间(月)
-	  	  sendTimeUntil.add(Calendar.MONTH,1);
-	  	  //添加距离入职时间(日)
-	  	  sendTimeUntil.add(Calendar.DAY_OF_MONTH, 1);
-	  	  
-	  	  //添加当天准确时间(小时)
-	  	  sendTimeUntil.add(Calendar.HOUR_OF_DAY, 1);
-	  	  //添加当天准确时间(分钟)
-	  	  sendTimeUntil.add(Calendar.MINUTE, 1);
-	  	  
-	  	  Date date=sendTimeUntil.getTime();
-	  	  
-	  	  String dateStr = new SimpleDateFormat("yyyy-MM-dd hh:mm").format(date);
-	  	  System.out.println(dateStr);
     }*/
 }

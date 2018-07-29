@@ -1,5 +1,7 @@
 package bingosoft.hrhelper.mapper;
 
+import java.util.List;
+
 import bingosoft.hrhelper.model.Mail;
 
 public interface MailMapper {
@@ -16,4 +18,6 @@ public interface MailMapper {
     int updateByPrimaryKey(Mail record);
 
 	void deleteAll();
+
+	List<Mail> listAll();
 }

@@ -30,23 +30,24 @@ public class RuleController {
     @Autowired
     RuleService ruleService;
     
-    
     @Test
-    public void test(){
-    	Rule rule = new Rule();
-    	rule.setId(UUID.randomUUID().toString());
-    	rule.setEntryDistanceY(5);
-    	rule.setEntryDistanceM(6);
-    	rule.setEntryDistanceD(31);
-    	rule.setSendingHourofday(9);
-    	rule.setSendingMinofhour(30);
-    	
-    	ruleService.addRule(rule);
-       System.out.println(ruleService);
+    public void addRule(){
+    	Rule n = new Rule();
+    	ruleService.addRule(n);
     }
     
-    @GetMapping(path = "/test")
-    public String test1(){
-       return "测试成功";
-    };
+    @GetMapping(path = "/addRule")
+    public void addRule(Rule rule){
+    	ruleService.addRule(rule);
+    }
+    
+    @GetMapping(path = "/deleteRule")
+    public void deleteRule(String rule_id){
+    	ruleService.deleteRule(rule_id);
+    }
+    
+    @GetMapping(path = "/updateRule")
+    public void updateRule(Rule rule){
+    	ruleService.updateRule(rule);
+    }
 }
