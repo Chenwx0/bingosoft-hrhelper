@@ -33,6 +33,11 @@
     from rule
     where id = #{id,jdbcType=VARCHAR}
   </select>
+  <select id="listAllRule">
+    select 
+    <include refid="Base_Column_List" />
+    from Rule
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from rule
     where id = #{id,jdbcType=VARCHAR}

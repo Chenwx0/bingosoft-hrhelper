@@ -39,7 +39,7 @@ public class RuleService {
 		if(rule.getRuleMethod().equals("1")){
 			rule.setEntryDistance(caculateRule_1(rule)); //方法1：入职时长计算
 		}else{
-			//rule.setEarlyDay(caculateRule_2(rule)); //方法2：距离特殊日期计算
+			rule.setEarlyDay(caculateRule_2(rule)); //方法2：距离特殊日期计算
 		}
 		rm.insert(rule);
 	}

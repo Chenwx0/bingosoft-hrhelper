@@ -27,6 +27,11 @@
     from employee
     where id = #{id,jdbcType=VARCHAR}
   </select>
+  <select id="listAllEmployee">
+    select 
+    <include refid="Base_Column_List" />
+    from employee
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from employee
     where id = #{id,jdbcType=VARCHAR}

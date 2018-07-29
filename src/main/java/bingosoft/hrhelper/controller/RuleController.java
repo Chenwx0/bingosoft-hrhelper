@@ -30,6 +30,12 @@ public class RuleController {
     @Autowired
     RuleService ruleService;
     
+    @Test
+    public void addRule(){
+    	Rule n = new Rule();
+    	ruleService.addRule(n);
+    }
+    
     @GetMapping(path = "/addRule")
     public void addRule(Rule rule){
     	ruleService.addRule(rule);

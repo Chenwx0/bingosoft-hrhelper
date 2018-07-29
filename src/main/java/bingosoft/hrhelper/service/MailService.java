@@ -62,17 +62,17 @@ public class MailService {
 	public void setMail(Rule r,Employee e) throws ParseException{
 		Mail mail = new Mail();
 		mail.setPlanSendTime(sendTimeCountMethod_1(r,e));
-	
+		//判断该邮件是否在生成日期区间
 		if(judgeProduce(mail)){
 			//传入规则和具体员工生成邮件
 			setMailContent(r,e,mail);
 			mm.insert(mail);
 		}
-		
+		//根据规则方法计算邮件拟发送时间
 		if(r.getRuleMethod().equals("1")){
 			mail.setPlanSendTime(sendTimeCountMethod_1(r,e));
 		}else{
-			/*mail.setPlanSendTime(sendTimeCountMethod_2(new Date(),1));  需要特殊日期和提前的时间*/
+			mail.setPlanSendTime(sendTimeCountMethod_2(new Date(),r)); //特殊日期&根据规则计算提前的时间
 		}
 	}
 	
@@ -95,9 +95,8 @@ public class MailService {
 		if(r.getRuleMethod().equals("1")){
 			mail.setPlanSendTime(sendTimeCountMethod_1(r,e));
 		}else{
-			/*mail.setPlanSendTime(sendTimeCountMethod_2(new Date(),1));  需要特殊日期和提前的时间*/
+			mail.setPlanSendTime(sendTimeCountMethod_2(new Date(),r));  //需要特殊日期和提前的时间
 		}
-		
 		return mail;
 	}
 	
@@ -108,7 +107,6 @@ public class MailService {
 	 * 入职日期：      e.getEntryDay()              : 格式"yyyy-MM-dd"           
 	 */ 
 	public Date sendTimeCountMethod_1(Rule rule,Employee e) throws ParseException{
-		
 				//流程：Date→Calendar
 				Calendar entrydayCal = Calendar.getInstance();
 				entrydayCal.setTime(e.getEntryDay());
@@ -126,13 +124,29 @@ public class MailService {
 				return sendTime;
 	}
 	
+	
 	/**
 	 * 方法：邮件拟发送时间计算 方式二：在某一个特殊日期提前多久发送
 	 * 确定某一特殊日期 ：rule.getSpecialDay : 格式"yyyy-MM-dd"
-	 * 提前几天 earlyDay
+	 * 提前多久 earlyDate
 	 */ 
-	public Date sendTimeCountMethod_2(Date specailDay,int earlyDay) throws ParseException{
-		return earlyDayUtil(specailDay,earlyDay);
+	public Date sendTimeCountMethod_2(Date specailDay,Rule rule) throws ParseException{
+		
+		//流程：Date→Calendar
+		Calendar specailDayCal = Calendar.getInstance();
+		specailDayCal.setTime(specailDay);
+		
+		// (特殊日期-提前时间) + 当天发送时间(具体到分)
+		specailDayCal.add(Calendar.YEAR, -rule.getEntryDistanceY());
+		specailDayCal.add(Calendar.MONTH, -rule.getEntryDistanceM());
+		specailDayCal.add(Calendar.DAY_OF_MONTH,- rule.getEntryDistanceD());
+		specailDayCal.add(Calendar.HOUR, rule.getSendingHourofday());
+		specailDayCal.add(Calendar.MINUTE, rule.getSendingMinofhour());
+		
+		Date sendTime=specailDayCal.getTime();
+		
+		//邮件拟发送时间
+		return sendTime;
 	}
 	
 	/**
@@ -194,52 +208,4 @@ public class MailService {
 	public void setRm(RuleMapper rm) {
 		this.rm = rm;
 	}
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-/**
- * 废弃方法：邮件拟发送时间计算 方式三：入职多长时间发送
- * @throws ParseException 
- * 距离入职时间：rule.getEntry_distance() : 格式"yyyy-MM-dd hh:mm" 
- * 入职日期：      e.getEntryDay()              : 格式"yyyy-MM-dd"           
- */ 
-/*public Date sendTimeCountMethod1(Rule rule,Employee e) throws ParseException{
-	
-			//流程：Date→Calendar
-			Calendar entrydayCal = Calendar.getInstance();
-			entrydayCal.setTime(e.getEntryDay());
-			
-			
-			//流程：String→Date→Calendar类型转换(计算出结果后)→Date返回类型
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
-			Date date = sdf.parse(rule.getEntryDistance().toString());
-			Calendar entrydisCal = Calendar.getInstance();
-			entrydisCal.setTime(date);
-			
-			// 入职日期(具体到日) +入职后时长(具体到分)
-			entrydisCal.add(Calendar.YEAR, -1);
-			entrydisCal.add(Calendar.YEAR, entrydayCal.get(Calendar.YEAR));
-			entrydisCal.add(Calendar.MONTH, entrydayCal.get(Calendar.MONTH));
-			entrydisCal.add(Calendar.DAY_OF_MONTH, entrydayCal.get(Calendar.DAY_OF_MONTH));
-			
-			Date sendTime=entrydisCal.getTime();
-			
-			System.out.println("入职日期"+entrydayCal);
-			System.out.println("入职后时长"+entrydisCal);
-			System.out.println("拟发送时间"+sendTime);
-			
-			//邮件拟发送时间
-			return sendTime;
-}*/
