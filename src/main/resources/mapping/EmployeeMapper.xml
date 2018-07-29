@@ -1,42 +1,237 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="bingosoft.hrhelper.mapper.EmployeeMapper" >
-  <resultMap id="BaseResultMap" type="bingosoft.hrhelper.model.Employee" >
-    <id column="id" property="id" jdbcType="CHAR" />
-    <result column="name" property="name" jdbcType="VARCHAR" />
-    <result column="mail" property="mail" jdbcType="VARCHAR" />
-    <result column="department" property="department" jdbcType="VARCHAR" />
-    <result column="manager" property="manager" jdbcType="VARCHAR" />
-    <result column="fullmenber_day" property="fullmenberDay" jdbcType="DATE" />
-    <result column="plan_fullmenber_day" property="planFullmenberDay" jdbcType="DATE" />
-    <result column="entry_day" property="entryDay" jdbcType="DATE" />
-    <result column="recruit_class" property="recruitClass" jdbcType="VARCHAR" />
-    <result column="sign_count" property="signCount" jdbcType="INTEGER" />
-    <result column="day_of_work" property="dayOfWork" jdbcType="INTEGER" />
-    <result column="year_of_work" property="yearOfWork" jdbcType="INTEGER" />
-    <result column="contract_day" property="contractDay" jdbcType="DATE" />
-    <result column="sign_class" property="signClass" jdbcType="VARCHAR" />
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="bingosoft.hrhelper.mapper.EmployeeMapper">
+  <resultMap id="BaseResultMap" type="bingosoft.hrhelper.model.Employee">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="mail" jdbcType="VARCHAR" property="mail" />
+    <result column="department" jdbcType="VARCHAR" property="department" />
+    <result column="manager" jdbcType="VARCHAR" property="manager" />
+    <result column="fullmenber_day" jdbcType="DATE" property="fullmenberDay" />
+    <result column="plan_fullmenber_day" jdbcType="DATE" property="planFullmenberDay" />
+    <result column="entry_day" jdbcType="DATE" property="entryDay" />
+    <result column="recruit_class" jdbcType="VARCHAR" property="recruitClass" />
+    <result column="sign_count" jdbcType="INTEGER" property="signCount" />
+    <result column="day_of_work" jdbcType="INTEGER" property="dayOfWork" />
+    <result column="year_of_work" jdbcType="INTEGER" property="yearOfWork" />
+    <result column="contract_day" jdbcType="DATE" property="contractDay" />
+    <result column="sign_class" jdbcType="VARCHAR" property="signClass" />
   </resultMap>
-  <sql id="Base_Column_List" >
+  <sql id="Base_Column_List">
     id, name, mail, department, manager, fullmenber_day, plan_fullmenber_day, entry_day, 
     recruit_class, sign_count, day_of_work, year_of_work, contract_day, sign_class
   </sql>
-  <select id="listAllEmployee" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from employee
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from employee
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="bingosoft.hrhelper.model.Employee">
+    insert into employee (id, name, mail, 
+      department, manager, fullmenber_day, 
+      plan_fullmenber_day, entry_day, recruit_class, 
+      sign_count, day_of_work, year_of_work, 
+      contract_day, sign_class)
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{mail,jdbcType=VARCHAR}, 
+      #{department,jdbcType=VARCHAR}, #{manager,jdbcType=VARCHAR}, #{fullmenberDay,jdbcType=DATE}, 
+      #{planFullmenberDay,jdbcType=DATE}, #{entryDay,jdbcType=DATE}, #{recruitClass,jdbcType=VARCHAR}, 
+      #{signCount,jdbcType=INTEGER}, #{dayOfWork,jdbcType=INTEGER}, #{yearOfWork,jdbcType=INTEGER}, 
+      #{contractDay,jdbcType=DATE}, #{signClass,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="bingosoft.hrhelper.model.Employee">
+    insert into employee
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="mail != null">
+        mail,
+      </if>
+      <if test="department != null">
+        department,
+      </if>
+      <if test="manager != null">
+        manager,
+      </if>
+      <if test="fullmenberDay != null">
+        fullmenber_day,
+      </if>
+      <if test="planFullmenberDay != null">
+        plan_fullmenber_day,
+      </if>
+      <if test="entryDay != null">
+        entry_day,
+      </if>
+      <if test="recruitClass != null">
+        recruit_class,
+      </if>
+      <if test="signCount != null">
+        sign_count,
+      </if>
+      <if test="dayOfWork != null">
+        day_of_work,
+      </if>
+      <if test="yearOfWork != null">
+        year_of_work,
+      </if>
+      <if test="contractDay != null">
+        contract_day,
+      </if>
+      <if test="signClass != null">
+        sign_class,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="mail != null">
+        #{mail,jdbcType=VARCHAR},
+      </if>
+      <if test="department != null">
+        #{department,jdbcType=VARCHAR},
+      </if>
+      <if test="manager != null">
+        #{manager,jdbcType=VARCHAR},
+      </if>
+      <if test="fullmenberDay != null">
+        #{fullmenberDay,jdbcType=DATE},
+      </if>
+      <if test="planFullmenberDay != null">
+        #{planFullmenberDay,jdbcType=DATE},
+      </if>
+      <if test="entryDay != null">
+        #{entryDay,jdbcType=DATE},
+      </if>
+      <if test="recruitClass != null">
+        #{recruitClass,jdbcType=VARCHAR},
+      </if>
+      <if test="signCount != null">
+        #{signCount,jdbcType=INTEGER},
+      </if>
+      <if test="dayOfWork != null">
+        #{dayOfWork,jdbcType=INTEGER},
+      </if>
+      <if test="yearOfWork != null">
+        #{yearOfWork,jdbcType=INTEGER},
+      </if>
+      <if test="contractDay != null">
+        #{contractDay,jdbcType=DATE},
+      </if>
+      <if test="signClass != null">
+        #{signClass,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="bingosoft.hrhelper.model.Employee">
+    update employee
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="mail != null">
+        mail = #{mail,jdbcType=VARCHAR},
+      </if>
+      <if test="department != null">
+        department = #{department,jdbcType=VARCHAR},
+      </if>
+      <if test="manager != null">
+        manager = #{manager,jdbcType=VARCHAR},
+      </if>
+      <if test="fullmenberDay != null">
+        fullmenber_day = #{fullmenberDay,jdbcType=DATE},
+      </if>
+      <if test="planFullmenberDay != null">
+        plan_fullmenber_day = #{planFullmenberDay,jdbcType=DATE},
+      </if>
+      <if test="entryDay != null">
+        entry_day = #{entryDay,jdbcType=DATE},
+      </if>
+      <if test="recruitClass != null">
+        recruit_class = #{recruitClass,jdbcType=VARCHAR},
+      </if>
+      <if test="signCount != null">
+        sign_count = #{signCount,jdbcType=INTEGER},
+      </if>
+      <if test="dayOfWork != null">
+        day_of_work = #{dayOfWork,jdbcType=INTEGER},
+      </if>
+      <if test="yearOfWork != null">
+        year_of_work = #{yearOfWork,jdbcType=INTEGER},
+      </if>
+      <if test="contractDay != null">
+        contract_day = #{contractDay,jdbcType=DATE},
+      </if>
+      <if test="signClass != null">
+        sign_class = #{signClass,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="bingosoft.hrhelper.model.Employee">
+    update employee
+    set name = #{name,jdbcType=VARCHAR},
+      mail = #{mail,jdbcType=VARCHAR},
+      department = #{department,jdbcType=VARCHAR},
+      manager = #{manager,jdbcType=VARCHAR},
+      fullmenber_day = #{fullmenberDay,jdbcType=DATE},
+      plan_fullmenber_day = #{planFullmenberDay,jdbcType=DATE},
+      entry_day = #{entryDay,jdbcType=DATE},
+      recruit_class = #{recruitClass,jdbcType=VARCHAR},
+      sign_count = #{signCount,jdbcType=INTEGER},
+      day_of_work = #{dayOfWork,jdbcType=INTEGER},
+      year_of_work = #{yearOfWork,jdbcType=INTEGER},
+      contract_day = #{contractDay,jdbcType=DATE},
+      sign_class = #{signClass,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <resultMap id="BaseResultMap" type="bingosoft.hrhelper.model.Employee">
+    <id column="id" jdbcType="CHAR" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="mail" jdbcType="VARCHAR" property="mail" />
+    <result column="department" jdbcType="VARCHAR" property="department" />
+    <result column="manager" jdbcType="VARCHAR" property="manager" />
+    <result column="fullmenber_day" jdbcType="DATE" property="fullmenberDay" />
+    <result column="plan_fullmenber_day" jdbcType="DATE" property="planFullmenberDay" />
+    <result column="entry_day" jdbcType="DATE" property="entryDay" />
+    <result column="recruit_class" jdbcType="VARCHAR" property="recruitClass" />
+    <result column="sign_count" jdbcType="INTEGER" property="signCount" />
+    <result column="day_of_work" jdbcType="INTEGER" property="dayOfWork" />
+    <result column="year_of_work" jdbcType="INTEGER" property="yearOfWork" />
+    <result column="contract_day" jdbcType="DATE" property="contractDay" />
+    <result column="sign_class" jdbcType="VARCHAR" property="signClass" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, name, mail, department, manager, fullmenber_day, plan_fullmenber_day, entry_day, 
+    recruit_class, sign_count, day_of_work, year_of_work, contract_day, sign_class
+  </sql>
+  <select id="listAllEmployee" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from employee
   </select>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from employee
     where id = #{id,jdbcType=CHAR}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from employee
     where id = #{id,jdbcType=CHAR}
   </delete>
-  <insert id="insert" parameterType="bingosoft.hrhelper.model.Employee" >
+  <insert id="insert" parameterType="bingosoft.hrhelper.model.Employee">
     insert into employee (id, name, mail, 
       department, manager, fullmenber_day, 
       plan_fullmenber_day, entry_day, recruit_class, 
@@ -48,143 +243,143 @@
       #{signCount,jdbcType=INTEGER}, #{dayOfWork,jdbcType=INTEGER}, #{yearOfWork,jdbcType=INTEGER}, 
       #{contractDay,jdbcType=DATE}, #{signClass,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="bingosoft.hrhelper.model.Employee" >
+  <insert id="insertSelective" parameterType="bingosoft.hrhelper.model.Employee">
     insert into employee
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
         id,
       </if>
-      <if test="name != null" >
+      <if test="name != null">
         name,
       </if>
-      <if test="mail != null" >
+      <if test="mail != null">
         mail,
       </if>
-      <if test="department != null" >
+      <if test="department != null">
         department,
       </if>
-      <if test="manager != null" >
+      <if test="manager != null">
         manager,
       </if>
-      <if test="fullmenberDay != null" >
+      <if test="fullmenberDay != null">
         fullmenber_day,
       </if>
-      <if test="planFullmenberDay != null" >
+      <if test="planFullmenberDay != null">
         plan_fullmenber_day,
       </if>
-      <if test="entryDay != null" >
+      <if test="entryDay != null">
         entry_day,
       </if>
-      <if test="recruitClass != null" >
+      <if test="recruitClass != null">
         recruit_class,
       </if>
-      <if test="signCount != null" >
+      <if test="signCount != null">
         sign_count,
       </if>
-      <if test="dayOfWork != null" >
+      <if test="dayOfWork != null">
         day_of_work,
       </if>
-      <if test="yearOfWork != null" >
+      <if test="yearOfWork != null">
         year_of_work,
       </if>
-      <if test="contractDay != null" >
+      <if test="contractDay != null">
         contract_day,
       </if>
-      <if test="signClass != null" >
+      <if test="signClass != null">
         sign_class,
       </if>
     </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
         #{id,jdbcType=CHAR},
       </if>
-      <if test="name != null" >
+      <if test="name != null">
         #{name,jdbcType=VARCHAR},
       </if>
-      <if test="mail != null" >
+      <if test="mail != null">
         #{mail,jdbcType=VARCHAR},
       </if>
-      <if test="department != null" >
+      <if test="department != null">
         #{department,jdbcType=VARCHAR},
       </if>
-      <if test="manager != null" >
+      <if test="manager != null">
         #{manager,jdbcType=VARCHAR},
       </if>
-      <if test="fullmenberDay != null" >
+      <if test="fullmenberDay != null">
         #{fullmenberDay,jdbcType=DATE},
       </if>
-      <if test="planFullmenberDay != null" >
+      <if test="planFullmenberDay != null">
         #{planFullmenberDay,jdbcType=DATE},
       </if>
-      <if test="entryDay != null" >
+      <if test="entryDay != null">
         #{entryDay,jdbcType=DATE},
       </if>
-      <if test="recruitClass != null" >
+      <if test="recruitClass != null">
         #{recruitClass,jdbcType=VARCHAR},
       </if>
-      <if test="signCount != null" >
+      <if test="signCount != null">
         #{signCount,jdbcType=INTEGER},
       </if>
-      <if test="dayOfWork != null" >
+      <if test="dayOfWork != null">
         #{dayOfWork,jdbcType=INTEGER},
       </if>
-      <if test="yearOfWork != null" >
+      <if test="yearOfWork != null">
         #{yearOfWork,jdbcType=INTEGER},
       </if>
-      <if test="contractDay != null" >
+      <if test="contractDay != null">
         #{contractDay,jdbcType=DATE},
       </if>
-      <if test="signClass != null" >
+      <if test="signClass != null">
         #{signClass,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="bingosoft.hrhelper.model.Employee" >
+  <update id="updateByPrimaryKeySelective" parameterType="bingosoft.hrhelper.model.Employee">
     update employee
-    <set >
-      <if test="name != null" >
+    <set>
+      <if test="name != null">
         name = #{name,jdbcType=VARCHAR},
       </if>
-      <if test="mail != null" >
+      <if test="mail != null">
         mail = #{mail,jdbcType=VARCHAR},
       </if>
-      <if test="department != null" >
+      <if test="department != null">
         department = #{department,jdbcType=VARCHAR},
       </if>
-      <if test="manager != null" >
+      <if test="manager != null">
         manager = #{manager,jdbcType=VARCHAR},
       </if>
-      <if test="fullmenberDay != null" >
+      <if test="fullmenberDay != null">
         fullmenber_day = #{fullmenberDay,jdbcType=DATE},
       </if>
-      <if test="planFullmenberDay != null" >
+      <if test="planFullmenberDay != null">
         plan_fullmenber_day = #{planFullmenberDay,jdbcType=DATE},
       </if>
-      <if test="entryDay != null" >
+      <if test="entryDay != null">
         entry_day = #{entryDay,jdbcType=DATE},
       </if>
-      <if test="recruitClass != null" >
+      <if test="recruitClass != null">
         recruit_class = #{recruitClass,jdbcType=VARCHAR},
       </if>
-      <if test="signCount != null" >
+      <if test="signCount != null">
         sign_count = #{signCount,jdbcType=INTEGER},
       </if>
-      <if test="dayOfWork != null" >
+      <if test="dayOfWork != null">
         day_of_work = #{dayOfWork,jdbcType=INTEGER},
       </if>
-      <if test="yearOfWork != null" >
+      <if test="yearOfWork != null">
         year_of_work = #{yearOfWork,jdbcType=INTEGER},
       </if>
-      <if test="contractDay != null" >
+      <if test="contractDay != null">
         contract_day = #{contractDay,jdbcType=DATE},
       </if>
-      <if test="signClass != null" >
+      <if test="signClass != null">
         sign_class = #{signClass,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=CHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="bingosoft.hrhelper.model.Employee" >
+  <update id="updateByPrimaryKey" parameterType="bingosoft.hrhelper.model.Employee">
     update employee
     set name = #{name,jdbcType=VARCHAR},
       mail = #{mail,jdbcType=VARCHAR},

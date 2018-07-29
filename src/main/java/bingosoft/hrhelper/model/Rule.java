@@ -27,8 +27,6 @@ public class Rule {
 
     private Integer entryDistanceD;
 
-    private String entryDistance;
-
     private String createBy;
 
     private Date createTime;
@@ -36,6 +34,12 @@ public class Rule {
     private String updateBy;
 
     private Date updateTime;
+
+    private String earlyDay;
+
+    private String entryDistance;
+
+    private String specialdayDistance;
 
     public String getId() {
         return id;
@@ -133,17 +137,7 @@ public class Rule {
         this.entryDistanceD = entryDistanceD;
     }
 
-    
-
-    public String getEntryDistance() {
-		return entryDistance;
-	}
-
-	public void setEntryDistance(String entryDistance) {
-		this.entryDistance = entryDistance;
-	}
-
-	public String getCreateBy() {
+    public String getCreateBy() {
         return createBy;
     }
 
@@ -163,7 +157,7 @@ public class Rule {
         return updateBy;
     }
 
-    public void Create(String updateBy) {
+    public void setUpdateBy(String updateBy) {
         this.updateBy = updateBy == null ? null : updateBy.trim();
     }
 
@@ -173,5 +167,29 @@ public class Rule {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getEarlyDay() {
+        return earlyDay;
+    }
+
+    public void setEarlyDay(String earlyDay) {
+        this.earlyDay = earlyDay == null ? null : earlyDay.trim();
+    }
+
+    public String getEntryDistance() {
+        return entryDistance;
+    }
+
+    public void setEntryDistance(String entryDistance) {
+        this.entryDistance = entryDistance == null ? null : entryDistance.trim();
+    }
+
+    public String getSpecialdayDistance() {
+        return specialdayDistance;
+    }
+
+    public void setSpecialdayDistance(String specialdayDistance) {
+        this.specialdayDistance = specialdayDistance == null ? null : specialdayDistance.trim();
     }
 }

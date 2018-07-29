@@ -30,17 +30,17 @@ public class RuleController {
     @Autowired
     RuleService ruleService;
     
-    @GetMapping(path = "/test")
+    @GetMapping(path = "/addRule")
     public void addRule(Rule rule){
     	ruleService.addRule(rule);
     }
     
-    @GetMapping(path = "/test")
+    @GetMapping(path = "/deleteRule")
     public void deleteRule(String rule_id){
     	ruleService.deleteRule(rule_id);
     }
     
-    @GetMapping(path = "/test")
+    @GetMapping(path = "/updateRule")
     public void updateRule(Rule rule){
     	ruleService.updateRule(rule);
     }

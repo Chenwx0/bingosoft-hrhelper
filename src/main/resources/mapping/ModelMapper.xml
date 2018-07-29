@@ -1,31 +1,156 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="bingosoft.hrhelper.mapper.ModelMapper" >
-  <resultMap id="BaseResultMap" type="bingosoft.hrhelper.model.Model" >
-    <id column="id" property="id" jdbcType="CHAR" />
-    <result column="model_name" property="modelName" jdbcType="VARCHAR" />
-    <result column="model_content" property="modelContent" jdbcType="VARCHAR" />
-    <result column="attachment_href" property="attachmentHref" jdbcType="VARCHAR" />
-    <result column="create_by" property="createBy" jdbcType="VARCHAR" />
-    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-    <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
-    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="bingosoft.hrhelper.mapper.ModelMapper">
+  <resultMap id="BaseResultMap" type="bingosoft.hrhelper.model.Model">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="model_name" jdbcType="VARCHAR" property="modelName" />
+    <result column="model_content" jdbcType="VARCHAR" property="modelContent" />
+    <result column="attachment_href" jdbcType="VARCHAR" property="attachmentHref" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
-  <sql id="Base_Column_List" >
+  <sql id="Base_Column_List">
     id, model_name, model_content, attachment_href, create_by, create_time, update_by, 
     update_time
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from model
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from model
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="bingosoft.hrhelper.model.Model">
+    insert into model (id, model_name, model_content, 
+      attachment_href, create_by, create_time, 
+      update_by, update_time)
+    values (#{id,jdbcType=VARCHAR}, #{modelName,jdbcType=VARCHAR}, #{modelContent,jdbcType=VARCHAR}, 
+      #{attachmentHref,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateBy,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="bingosoft.hrhelper.model.Model">
+    insert into model
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="modelName != null">
+        model_name,
+      </if>
+      <if test="modelContent != null">
+        model_content,
+      </if>
+      <if test="attachmentHref != null">
+        attachment_href,
+      </if>
+      <if test="createBy != null">
+        create_by,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateBy != null">
+        update_by,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="modelName != null">
+        #{modelName,jdbcType=VARCHAR},
+      </if>
+      <if test="modelContent != null">
+        #{modelContent,jdbcType=VARCHAR},
+      </if>
+      <if test="attachmentHref != null">
+        #{attachmentHref,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null">
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null">
+        #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="bingosoft.hrhelper.model.Model">
+    update model
+    <set>
+      <if test="modelName != null">
+        model_name = #{modelName,jdbcType=VARCHAR},
+      </if>
+      <if test="modelContent != null">
+        model_content = #{modelContent,jdbcType=VARCHAR},
+      </if>
+      <if test="attachmentHref != null">
+        attachment_href = #{attachmentHref,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null">
+        create_by = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null">
+        update_by = #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="bingosoft.hrhelper.model.Model">
+    update model
+    set model_name = #{modelName,jdbcType=VARCHAR},
+      model_content = #{modelContent,jdbcType=VARCHAR},
+      attachment_href = #{attachmentHref,jdbcType=VARCHAR},
+      create_by = #{createBy,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_by = #{updateBy,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <resultMap id="BaseResultMap" type="bingosoft.hrhelper.model.Model">
+    <id column="id" jdbcType="CHAR" property="id" />
+    <result column="model_name" jdbcType="VARCHAR" property="modelName" />
+    <result column="model_content" jdbcType="VARCHAR" property="modelContent" />
+    <result column="attachment_href" jdbcType="VARCHAR" property="attachmentHref" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, model_name, model_content, attachment_href, create_by, create_time, update_by, 
+    update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from model
     where id = #{id,jdbcType=CHAR}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from model
     where id = #{id,jdbcType=CHAR}
   </delete>
-  <insert id="insert" parameterType="bingosoft.hrhelper.model.Model" >
+  <insert id="insert" parameterType="bingosoft.hrhelper.model.Model">
     insert into model (id, model_name, model_content, 
       attachment_href, create_by, create_time, 
       update_by, update_time)
@@ -33,89 +158,89 @@
       #{attachmentHref,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateBy,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="bingosoft.hrhelper.model.Model" >
+  <insert id="insertSelective" parameterType="bingosoft.hrhelper.model.Model">
     insert into model
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
         id,
       </if>
-      <if test="modelName != null" >
+      <if test="modelName != null">
         model_name,
       </if>
-      <if test="modelContent != null" >
+      <if test="modelContent != null">
         model_content,
       </if>
-      <if test="attachmentHref != null" >
+      <if test="attachmentHref != null">
         attachment_href,
       </if>
-      <if test="createBy != null" >
+      <if test="createBy != null">
         create_by,
       </if>
-      <if test="createTime != null" >
+      <if test="createTime != null">
         create_time,
       </if>
-      <if test="updateBy != null" >
+      <if test="updateBy != null">
         update_by,
       </if>
-      <if test="updateTime != null" >
+      <if test="updateTime != null">
         update_time,
       </if>
     </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
         #{id,jdbcType=CHAR},
       </if>
-      <if test="modelName != null" >
+      <if test="modelName != null">
         #{modelName,jdbcType=VARCHAR},
       </if>
-      <if test="modelContent != null" >
+      <if test="modelContent != null">
         #{modelContent,jdbcType=VARCHAR},
       </if>
-      <if test="attachmentHref != null" >
+      <if test="attachmentHref != null">
         #{attachmentHref,jdbcType=VARCHAR},
       </if>
-      <if test="createBy != null" >
+      <if test="createBy != null">
         #{createBy,jdbcType=VARCHAR},
       </if>
-      <if test="createTime != null" >
+      <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="updateBy != null" >
+      <if test="updateBy != null">
         #{updateBy,jdbcType=VARCHAR},
       </if>
-      <if test="updateTime != null" >
+      <if test="updateTime != null">
         #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="bingosoft.hrhelper.model.Model" >
+  <update id="updateByPrimaryKeySelective" parameterType="bingosoft.hrhelper.model.Model">
     update model
-    <set >
-      <if test="modelName != null" >
+    <set>
+      <if test="modelName != null">
         model_name = #{modelName,jdbcType=VARCHAR},
       </if>
-      <if test="modelContent != null" >
+      <if test="modelContent != null">
         model_content = #{modelContent,jdbcType=VARCHAR},
       </if>
-      <if test="attachmentHref != null" >
+      <if test="attachmentHref != null">
         attachment_href = #{attachmentHref,jdbcType=VARCHAR},
       </if>
-      <if test="createBy != null" >
+      <if test="createBy != null">
         create_by = #{createBy,jdbcType=VARCHAR},
       </if>
-      <if test="createTime != null" >
+      <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="updateBy != null" >
+      <if test="updateBy != null">
         update_by = #{updateBy,jdbcType=VARCHAR},
       </if>
-      <if test="updateTime != null" >
+      <if test="updateTime != null">
         update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=CHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="bingosoft.hrhelper.model.Model" >
+  <update id="updateByPrimaryKey" parameterType="bingosoft.hrhelper.model.Model">
     update model
     set model_name = #{modelName,jdbcType=VARCHAR},
       model_content = #{modelContent,jdbcType=VARCHAR},

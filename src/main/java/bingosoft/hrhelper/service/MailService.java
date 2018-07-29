@@ -32,8 +32,6 @@ public class MailService {
 	EmployeeMapper em;
 	@Autowired
 	RuleMapper rm;
-	/*@Autowired
-	private Employee e;*/
 	@Autowired
 	MailMapper mm;
 	int i=0;
@@ -51,25 +49,6 @@ public class MailService {
 		for(Employee e : em.listAllEmployee() ){
 			for(Rule r : rm.listAllRule()){
 				setMail(r,e);
-				/*if((拟发送日期-当前日期)<=7天){
-					邮件生成
-				}
-				在这里判断，而不是在模板生成的时候判断，可以减少系统大部分的负载。
-				（每天的模板都要生成吗）*/
-				
-				//发送时间大于当前的 留着
-				/*mail.getSendTime().after(new Date());
-				
-				//拟发送时间在 对比 七天后 为提前true
-				//计算是否生成的日期计算抽出为一个方法
-				//判断是否为已经发送
-				mail.getSendTime().before(new Date()+7); 拟发送时间如果比当前时间加七天早，就要生成
-				如果状态为已发送，则不操作;
-				if((mail.getSendTime()-当前日期)<=7天){
-					//邮件生成
-				}
-				//在这里判断，而不是在模板生成的时候判断，可以减少系统大部分的负载。
-				（每天的模板都要生成吗）*/
 			}
 		}
 	}
@@ -90,37 +69,37 @@ public class MailService {
 			mm.insert(mail);
 		}
 		
-		
-		/*mm.insert(mail);*/
-		
-		/*if(rule.getRuleMethod().equals("1")){
-			mail.setPlanSendTime(sendTimeCountMethod1(rule,e));
+		if(r.getRuleMethod().equals("1")){
+			mail.setPlanSendTime(sendTimeCountMethod_1(r,e));
+		}else{
+			/*mail.setPlanSendTime(sendTimeCountMethod_2(new Date(),1));  需要特殊日期和提前的时间*/
 		}
-		
-		if(rule.getRuleMethod().equals("2")){
-			mail.setPlanSendTime(sendTimeCountMethod2(new Date(),rule.getTiqianday()));
-		}*/
 	}
 	
-	public Mail setMailContent(Rule rule,Employee e,Mail mail) throws ParseException{
-		
+	public Mail setMailContent(Rule r,Employee e,Mail mail) throws ParseException{
+
 		//规则在数据库拿_每个规则_另外写一个方法
 		//员工在数据库拿_每个员工_进行遍历
 		mail.setId(UUID.randomUUID().toString());
-		mail.setMailName(rule.getRuleName());
+		mail.setMailName(r.getRuleName());
 		mail.setRecipient(e.getName());
 		mail.setRecipientAddress(e.getMail());
 		mail.setSender("人力资源部");
 		mail.setSenderAddress("Hr@BingoSoft.com");
 		mail.setCopyPeople("抄送人");
 		mail.setCopyPeopleAddress("抄送人邮箱");
-		mail.setOperationId(rule.getOperationId());
+		mail.setOperationId(r.getOperationId());
 		mail.setStatus(0);//默认为0：待审核。如果发生员工在审批前离职的情况，则由人工取消邮件发送。
 		mail.setOperationId("");/*业务id*/
+		
+		if(r.getRuleMethod().equals("1")){
+			mail.setPlanSendTime(sendTimeCountMethod_1(r,e));
+		}else{
+			/*mail.setPlanSendTime(sendTimeCountMethod_2(new Date(),1));  需要特殊日期和提前的时间*/
+		}
+		
 		return mail;
 	}
-	
-	
 	
 	/**
 	 * 方法：邮件拟发送时间计算 方式一：入职多长时间发送
@@ -142,8 +121,6 @@ public class MailService {
 				entrydayCal.add(Calendar.MINUTE, rule.getSendingMinofhour());
 				
 				Date sendTime=entrydayCal.getTime();
-				
-				/*s*/
 				
 				//邮件拟发送时间
 				return sendTime;
@@ -183,14 +160,11 @@ public class MailService {
 		* 获得以 yyyy-MM-dd 为形式的当前时间
 		* 将String转化成date 格式
 		*/
-		/*Date today = DateTransferUtils.pStringToDate(DateTransferUtils.getCurrentTimeByDay());*/
 		
 		//生成"yyyy-MM-dd"的当前时间
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		String nowdayTime = dateFormat.format(new Date());
 		Date today = dateFormat.parse(nowdayTime);
-		
-		/*Date today = new Date();*/
 		
 		//转换为日历类型并加上7天，再转换为普通的Date类型。
 		Calendar c = Calendar.getInstance();
@@ -198,7 +172,7 @@ public class MailService {
 		c.add(Calendar.DAY_OF_MONTH, 7);
 		Date compareDay = c.getTime();
 		
-		System.out.println("今天是"+DateTransferUtils.fDateCNYRSFM(compareDay)+"计划发送日期是"+DateTransferUtils.fDateCNYRSFM(mail.getPlanSendTime()));
+		System.out.println("七天后是"+DateTransferUtils.fDateCNYRSFM(compareDay)+"计划发送日期是"+DateTransferUtils.fDateCNYRSFM(mail.getPlanSendTime()));
 		
 		/*拟发送时间如果比当前时间加七天早，并且比今天晚，返回true*/
 		return compareDay.after(mail.getPlanSendTime())&&mail.getPlanSendTime().after(today);
