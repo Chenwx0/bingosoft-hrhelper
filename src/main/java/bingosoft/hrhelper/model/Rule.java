@@ -163,7 +163,7 @@ public class Rule {
         return updateBy;
     }
 
-    public void setUpdateBy(String updateBy) {
+    public void Create(String updateBy) {
         this.updateBy = updateBy == null ? null : updateBy.trim();
     }
 
