@@ -37,7 +37,7 @@ public class MailService {
 	int i=0;
 	
 	@Test
-	@Scheduled(cron = "0 30 2 * * ?") /*每天晚上2:30更新邮件表*/
+	@Scheduled(cron = "0 30 2 * * ?") //*每天晚上2:30更新邮件表
 	public void produceMail() throws ParseException{
 		/**
 		 * 1、遍历员工(2、嵌套遍历规则)
@@ -66,9 +66,21 @@ public class MailService {
 		if(judgeProduce(mail)){
 			//传入规则和具体员工生成邮件
 			setMailContent(r,e,mail);
+			//根据规则方法计算邮件拟发送时间
+			setPlanSendTime(r,e,mail);
+			//邮件生成
 			mm.insert(mail);
 		}
-		//根据规则方法计算邮件拟发送时间
+	}
+	
+	/**
+	 * 根据规则方法计算邮件拟发送时间     规则方法1：入职后多久    规则方法2：在某一时间多久之前
+	 * @param r
+	 * @param e
+	 * @param mail
+	 * @throws ParseException
+	 */
+	public void setPlanSendTime(Rule r,Employee e,Mail mail) throws ParseException{
 		if(r.getRuleMethod().equals("1")){
 			mail.setPlanSendTime(sendTimeCountMethod_1(r,e));
 		}else{
@@ -76,8 +88,15 @@ public class MailService {
 		}
 	}
 	
+	/**
+	 * 设置邮件的具体内容
+	 * @param r
+	 * @param e
+	 * @param mail
+	 * @return
+	 * @throws ParseException
+	 */
 	public Mail setMailContent(Rule r,Employee e,Mail mail) throws ParseException{
-
 		//规则在数据库拿_每个规则_另外写一个方法
 		//员工在数据库拿_每个员工_进行遍历
 		mail.setId(UUID.randomUUID().toString());
@@ -92,11 +111,6 @@ public class MailService {
 		mail.setStatus(0);//默认为0：待审核。如果发生员工在审批前离职的情况，则由人工取消邮件发送。
 		mail.setOperationId("");/*业务id*/
 		
-		if(r.getRuleMethod().equals("1")){
-			mail.setPlanSendTime(sendTimeCountMethod_1(r,e));
-		}else{
-			mail.setPlanSendTime(sendTimeCountMethod_2(new Date(),r));  //需要特殊日期和提前的时间
-		}
 		return mail;
 	}
 	

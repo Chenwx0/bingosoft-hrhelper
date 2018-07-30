@@ -16,7 +16,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class test {
-
+	
+	
     @Test
     public void test(){
         System.out.print("这是单元测试");
