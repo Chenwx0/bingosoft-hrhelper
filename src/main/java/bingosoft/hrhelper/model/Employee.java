@@ -142,4 +142,37 @@ public class Employee {
     public void setSignClass(String signClass) {
         this.signClass = signClass == null ? null : signClass.trim();
     }
+
+    public String getValue(String field){
+        String result = "";
+        if (field.equals("id"))
+            result = this.id;
+        if (field.equals("name"))
+            result = this.name;
+        if (field.equals("mail"))
+            result = this.mail;
+        if (field.equals("department"))
+            result = this.department;
+        if (field.equals("manager"))
+            result = this.manager;
+        if (field.equals("fullmenberDay"))
+            result = this.fullmenberDay.toString();
+        if (field.equals("planFullmenberDay"))
+            result = this.planFullmenberDay.toString();
+        if (field.equals("entryDay"))
+            result = this.entryDay.toString();
+        if (field.equals("recruitClass"))
+            result = this.recruitClass;
+        if (field.equals("signCount"))
+            result = this.signCount.toString();
+        if (field.equals("dayOfWork"))
+            result = this.dayOfWork.toString();
+        if (field.equals("yearOfWork"))
+            result = this.yearOfWork.toString();
+        if (field.equals("contractDay"))
+            result = this.contractDay.toString();
+        if (field.equals("signClass"))
+            result = this.signClass;
+        return result;
+    }
 }
