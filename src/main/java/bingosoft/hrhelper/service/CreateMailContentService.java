@@ -29,15 +29,15 @@ import java.util.regex.Pattern;
 public class CreateMailContentService {
 
     //定义以“#[XX]#”模式的正则表达式
-    private String regex = "#\\[[^*]+\\]#";
+    private String regex = "convert#[^*]+#";
 
     //特殊字段
     //工作月份，向上取整
-    private String workMath = "#[WorkMonth]#";
+    private String workMath = "convert#WorkMonth#";
     //截至日期
-    private String deadline = "#[Deadline]#";
+    private String deadline = "convert#Deadline#";
     //发送时间
-    private String sendDate = "#[SendDate]#";
+    private String sendDate = "convert#SendDate#";
 
 
     @Autowired
@@ -55,7 +55,7 @@ public class CreateMailContentService {
         Map<String, String> map = new HashMap<>();
         while (matcher.find()){
             String key = matcher.group(0);
-            String value = employee.getValue(key.substring(2,key.length()-2));
+            String value = employee.getValue(key.substring(8,key.length()-1));
             if (!value.equals("")){
                 map.put(key,value);
             }
