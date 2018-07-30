@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="bingosoft.hrhelper.mapper.AlreadySendMailMapper" >
+  <resultMap id="BaseResultMap" type="bingosoft.hrhelper.model.AlreadySendMail" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="mail_name" property="mailName" jdbcType="VARCHAR" />
+    <result column="recipient" property="recipient" jdbcType="VARCHAR" />
+    <result column="recipient_address" property="recipientAddress" jdbcType="VARCHAR" />
+    <result column="sender" property="sender" jdbcType="VARCHAR" />
+    <result column="sender_address" property="senderAddress" jdbcType="VARCHAR" />
+    <result column="copy_people" property="copyPeople" jdbcType="VARCHAR" />
+    <result column="copy_people_address" property="copyPeopleAddress" jdbcType="VARCHAR" />
+    <result column="mail_content" property="mailContent" jdbcType="VARCHAR" />
+    <result column="mail_attachment_path" property="mailAttachmentPath" jdbcType="VARCHAR" />
+    <result column="operation_id" property="operationId" jdbcType="VARCHAR" />
+    <result column="appove_id" property="appoveId" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="plan_send_time" property="planSendTime" jdbcType="TIMESTAMP" />
+    <result column="send_time" property="sendTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, mail_name, recipient, recipient_address, sender, sender_address, copy_people, 
+    copy_people_address, mail_content, mail_attachment_path, operation_id, appove_id, 
+    status, update_by, create_time, plan_send_time, send_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from already_send_mail
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from already_send_mail
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="bingosoft.hrhelper.model.AlreadySendMail" >
+    insert into already_send_mail (id, mail_name, recipient, 
+      recipient_address, sender, sender_address, 
+      copy_people, copy_people_address, mail_content, 
+      mail_attachment_path, operation_id, appove_id, 
+      status, update_by, create_time, 
+      plan_send_time, send_time)
+    values (#{id,jdbcType=VARCHAR}, #{mailName,jdbcType=VARCHAR}, #{recipient,jdbcType=VARCHAR}, 
+      #{recipientAddress,jdbcType=VARCHAR}, #{sender,jdbcType=VARCHAR}, #{senderAddress,jdbcType=VARCHAR}, 
+      #{copyPeople,jdbcType=VARCHAR}, #{copyPeopleAddress,jdbcType=VARCHAR}, #{mailContent,jdbcType=VARCHAR}, 
+      #{mailAttachmentPath,jdbcType=VARCHAR}, #{operationId,jdbcType=VARCHAR}, #{appoveId,jdbcType=VARCHAR}, 
+      #{status,jdbcType=INTEGER}, #{updateBy,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{planSendTime,jdbcType=TIMESTAMP}, #{sendTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="bingosoft.hrhelper.model.AlreadySendMail" >
+    insert into already_send_mail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="mailName != null" >
+        mail_name,
+      </if>
+      <if test="recipient != null" >
+        recipient,
+      </if>
+      <if test="recipientAddress != null" >
+        recipient_address,
+      </if>
+      <if test="sender != null" >
+        sender,
+      </if>
+      <if test="senderAddress != null" >
+        sender_address,
+      </if>
+      <if test="copyPeople != null" >
+        copy_people,
+      </if>
+      <if test="copyPeopleAddress != null" >
+        copy_people_address,
+      </if>
+      <if test="mailContent != null" >
+        mail_content,
+      </if>
+      <if test="mailAttachmentPath != null" >
+        mail_attachment_path,
+      </if>
+      <if test="operationId != null" >
+        operation_id,
+      </if>
+      <if test="appoveId != null" >
+        appove_id,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="updateBy != null" >
+        update_by,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="planSendTime != null" >
+        plan_send_time,
+      </if>
+      <if test="sendTime != null" >
+        send_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="mailName != null" >
+        #{mailName,jdbcType=VARCHAR},
+      </if>
+      <if test="recipient != null" >
+        #{recipient,jdbcType=VARCHAR},
+      </if>
+      <if test="recipientAddress != null" >
+        #{recipientAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="sender != null" >
+        #{sender,jdbcType=VARCHAR},
+      </if>
+      <if test="senderAddress != null" >
+        #{senderAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="copyPeople != null" >
+        #{copyPeople,jdbcType=VARCHAR},
+      </if>
+      <if test="copyPeopleAddress != null" >
+        #{copyPeopleAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="mailContent != null" >
+        #{mailContent,jdbcType=VARCHAR},
+      </if>
+      <if test="mailAttachmentPath != null" >
+        #{mailAttachmentPath,jdbcType=VARCHAR},
+      </if>
+      <if test="operationId != null" >
+        #{operationId,jdbcType=VARCHAR},
+      </if>
+      <if test="appoveId != null" >
+        #{appoveId,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="updateBy != null" >
+        #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="planSendTime != null" >
+        #{planSendTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sendTime != null" >
+        #{sendTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="bingosoft.hrhelper.model.AlreadySendMail" >
+    update already_send_mail
+    <set >
+      <if test="mailName != null" >
+        mail_name = #{mailName,jdbcType=VARCHAR},
+      </if>
+      <if test="recipient != null" >
+        recipient = #{recipient,jdbcType=VARCHAR},
+      </if>
+      <if test="recipientAddress != null" >
+        recipient_address = #{recipientAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="sender != null" >
+        sender = #{sender,jdbcType=VARCHAR},
+      </if>
+      <if test="senderAddress != null" >
+        sender_address = #{senderAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="copyPeople != null" >
+        copy_people = #{copyPeople,jdbcType=VARCHAR},
+      </if>
+      <if test="copyPeopleAddress != null" >
+        copy_people_address = #{copyPeopleAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="mailContent != null" >
+        mail_content = #{mailContent,jdbcType=VARCHAR},
+      </if>
+      <if test="mailAttachmentPath != null" >
+        mail_attachment_path = #{mailAttachmentPath,jdbcType=VARCHAR},
+      </if>
+      <if test="operationId != null" >
+        operation_id = #{operationId,jdbcType=VARCHAR},
+      </if>
+      <if test="appoveId != null" >
+        appove_id = #{appoveId,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="updateBy != null" >
+        update_by = #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="planSendTime != null" >
+        plan_send_time = #{planSendTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sendTime != null" >
+        send_time = #{sendTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="bingosoft.hrhelper.model.AlreadySendMail" >
+    update already_send_mail
+    set mail_name = #{mailName,jdbcType=VARCHAR},
+      recipient = #{recipient,jdbcType=VARCHAR},
+      recipient_address = #{recipientAddress,jdbcType=VARCHAR},
+      sender = #{sender,jdbcType=VARCHAR},
+      sender_address = #{senderAddress,jdbcType=VARCHAR},
+      copy_people = #{copyPeople,jdbcType=VARCHAR},
+      copy_people_address = #{copyPeopleAddress,jdbcType=VARCHAR},
+      mail_content = #{mailContent,jdbcType=VARCHAR},
+      mail_attachment_path = #{mailAttachmentPath,jdbcType=VARCHAR},
+      operation_id = #{operationId,jdbcType=VARCHAR},
+      appove_id = #{appoveId,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      update_by = #{updateBy,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      plan_send_time = #{planSendTime,jdbcType=TIMESTAMP},
+      send_time = #{sendTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>
