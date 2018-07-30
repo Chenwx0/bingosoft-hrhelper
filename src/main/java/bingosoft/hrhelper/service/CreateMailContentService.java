@@ -55,7 +55,7 @@ public class CreateMailContentService {
         Map<String, String> map = new HashMap<>();
         while (matcher.find()){
             String key = matcher.group(0);
-            String value = employee.getValue(key.substring(1,key.length()-1));
+            String value = employee.getValue(key.substring(2,key.length()-2));
             if (!value.equals("")){
                 map.put(key,value);
             }
