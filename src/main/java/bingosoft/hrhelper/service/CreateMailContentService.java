@@ -56,7 +56,9 @@ public class CreateMailContentService {
         while (matcher.find()){
             String key = matcher.group(0);
             String value = employee.getValue(key.substring(1,key.length()-1));
-            map.put(key,value);
+            if (!value.equals("")){
+                map.put(key,value);
+            }
         }
         //替换map中的值对
         for (String key : map.keySet()){
