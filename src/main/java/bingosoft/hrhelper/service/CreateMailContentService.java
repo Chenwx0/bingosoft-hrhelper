@@ -28,16 +28,16 @@ import java.util.regex.Pattern;
 @Service
 public class CreateMailContentService {
 
-    //定义以“#XX#”模式的正则表达式
-    private String regex = "#[^#]+#";
+    //定义以“#[XX]#”模式的正则表达式
+    private String regex = "#\\[[^*]+\\]#";
 
     //特殊字段
     //工作月份，向上取整
-    private String workMath = "#WorkMonth#";
+    private String workMath = "#[WorkMonth]#";
     //截至日期
-    private String deadline = "#Deadline#";
+    private String deadline = "#[Deadline]#";
     //发送时间
-    private String sendDate = "#SendDate#";
+    private String sendDate = "#[SendDate]#";
 
 
     @Autowired
@@ -65,7 +65,7 @@ public class CreateMailContentService {
             String value = map.get(key);
             content = content.replaceAll(key,value);
         }
-        //替换"#WorkMonth#"
+        //替换"WorkMonth"
         if (content.contains(workMath)){
             content = replaceWorkMonth(employee, content);
         }
