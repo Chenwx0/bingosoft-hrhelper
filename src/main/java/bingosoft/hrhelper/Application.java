@@ -10,7 +10,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @MapperScan("bingosoft.hrhelper.mapper")
 @EnableScheduling
 public class Application {
-
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
        

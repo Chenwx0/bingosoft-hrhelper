@@ -26,7 +26,7 @@ import bingosoft.hrhelper.model.Rule;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Service
-public class MailService {
+public class MailProductService {
 	
 	@Autowired
 	EmployeeMapper em;
@@ -34,10 +34,13 @@ public class MailService {
 	RuleMapper rm;
 	@Autowired
 	MailMapper mm;
+	@Autowired
+	CreateMailContentService cmcs;
 	int i=0;
 	
+	/*@Scheduled(cron = "0 30 2 * * ?")*/ //*每天晚上2:30更新邮件表
 	@Test
-	@Scheduled(cron = "0 30 2 * * ?") //*每天晚上2:30更新邮件表
+	@Scheduled(cron = "0 0/2 * * * ? ")
 	public void produceMail() throws ParseException{
 		/**
 		 * 1、遍历员工(2、嵌套遍历规则)
@@ -105,11 +108,13 @@ public class MailService {
 		mail.setRecipientAddress(e.getMail());
 		mail.setSender("人力资源部");
 		mail.setSenderAddress("Hr@BingoSoft.com");
-		mail.setCopyPeople("抄送人");
-		mail.setCopyPeopleAddress("抄送人邮箱");
+		mail.setCopyPeople(e.getManager());//抄送人：员工所属上级
+		mail.setCopyPeopleAddress("");
 		mail.setOperationId(r.getOperationId());
 		mail.setStatus(0);//默认为0：待审核。如果发生员工在审批前离职的情况，则由人工取消邮件发送。
-		mail.setOperationId("");/*业务id*/
+		mail.setOperationId(r.getOperationId());
+		
+		mail.setMailContent(cmcs.getMailContent(e.getId(), r.getModelId(), DateTransferUtils.dateTimeFormat(mail.getPlanSendTime()),"截止日期"));
 		
 		return mail;
 	}
@@ -203,7 +208,8 @@ public class MailService {
 		System.out.println("七天后是"+DateTransferUtils.fDateCNYRSFM(compareDay)+"计划发送日期是"+DateTransferUtils.fDateCNYRSFM(mail.getPlanSendTime()));
 		
 		/*拟发送时间如果比当前时间加七天早，并且比今天晚，返回true*/
-		return compareDay.after(mail.getPlanSendTime())&&mail.getPlanSendTime().after(today);
+		return compareDay.after(mail.getPlanSendTime()) &&
+				   (mail.getPlanSendTime().after(today));
 	}
 
 

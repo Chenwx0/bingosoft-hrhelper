@@ -3,6 +3,8 @@ package bingosoft.hrhelper.service;
 import java.util.Date;
 
 
+
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,16 +14,23 @@ import org.springframework.stereotype.Service;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import bingosoft.hrhelper.common.MailUtil;
+import bingosoft.hrhelper.mapper.AlreadySendMailMapper;
 import bingosoft.hrhelper.mapper.MailMapper;
+import bingosoft.hrhelper.model.AlreadySendMail;
 import bingosoft.hrhelper.model.Mail;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Service
 public class MailSendService {
+	
 	MailUtil mu = new MailUtil();
+	AlreadySendMail asm = new AlreadySendMail();
+	
 	@Autowired
 	MailMapper mm;
+	@Autowired
+	AlreadySendMailMapper asmm;
 	
 	/**
 	 * 需要从Mail表拿到拟运行时间 并监控
@@ -33,6 +42,7 @@ public class MailSendService {
 			//如果当前时间超过拟发送时间
 			System.out.println("一分钟到了__"+new Date());
 			if(new Date().after(mail.getPlanSendTime())){
+				//发送邮件
 				sendMail(mail);
 				System.out.println("正在发送"+mail.getMailName()+"到员工"+mail.getRecipient());
 			}
@@ -51,12 +61,38 @@ public class MailSendService {
 			mu.setRecipientAddresses(mail.getRecipientAddress()); //设置收件人地址
 			mu.setCopyToAddresses(mail.getCopyPeopleAddress());//设置抄送人地址
 			mu.setContent(mail.getMailContent());						  //设置邮件内容
-			
 			/*mu.setAttachmentPaths(mail.getMailAttachmentPath());*///设置附件路径
+			
 			mu.sendMail();
+			addAlreadySendMail(mail);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * 将邮件表中已经发送的邮件 转移 到已发送邮件表中
+	 * @param mail
+	 */
+	public void addAlreadySendMail(Mail mail){
+		//此处应该加锁!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		//在邮件表中删除该邮件
+		asm.setId(mail.getId());
+		asm.setAppoveId(mail.getAppoveId());
+		asm.setCopyPeople(mail.getCopyPeople());
+		asm.setCreateTime(mail.getCreateTime());
+		asm.setMailAttachmentPath(mail.getMailAttachmentPath());
+		asm.setMailContent(mail.getMailContent());
+		asm.setMailName(mail.getMailName());
+		asm.setOperationId(mail.getOperationId());
+		asm.setRecipient(mail.getRecipient());
+		asm.setRecipientAddress(mail.getRecipientAddress());
+		asm.setSender(mail.getSender());
+		asm.setSendTime(mail.getSendTime());
+		asm.setStatus(mail.getStatus());
+		asm.setUpdateBy(mail.getUpdateBy());
+		
+		mm.deleteByPrimaryKey(mail.getId());
+		asmm.insert(asm);
 	}
 }
