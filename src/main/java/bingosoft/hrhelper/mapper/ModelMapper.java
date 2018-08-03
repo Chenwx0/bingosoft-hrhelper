@@ -13,5 +13,7 @@ public interface ModelMapper {
 
     int updateByPrimaryKeySelective(Model record);
 
+    int updateByPrimaryKeyWithBLOBs(Model record);
+
     int updateByPrimaryKey(Model record);
 }

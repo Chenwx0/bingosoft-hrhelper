@@ -13,5 +13,7 @@ public interface AlreadySendMailMapper {
 
     int updateByPrimaryKeySelective(AlreadySendMail record);
 
+    int updateByPrimaryKeyWithBLOBs(AlreadySendMail record);
+
     int updateByPrimaryKey(AlreadySendMail record);
 }

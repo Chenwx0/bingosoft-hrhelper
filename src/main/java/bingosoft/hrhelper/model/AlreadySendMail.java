@@ -19,8 +19,6 @@ public class AlreadySendMail {
 
     private String copyPeopleAddress;
 
-    private String mailContent;
-
     private String mailAttachmentPath;
 
     private String operationId;
@@ -36,6 +34,8 @@ public class AlreadySendMail {
     private Date planSendTime;
 
     private Date sendTime;
+
+    private String mailContent;
 
     public String getId() {
         return id;
@@ -101,14 +101,6 @@ public class AlreadySendMail {
         this.copyPeopleAddress = copyPeopleAddress == null ? null : copyPeopleAddress.trim();
     }
 
-    public String getMailContent() {
-        return mailContent;
-    }
-
-    public void setMailContent(String mailContent) {
-        this.mailContent = mailContent == null ? null : mailContent.trim();
-    }
-
     public String getMailAttachmentPath() {
         return mailAttachmentPath;
     }
@@ -171,5 +163,13 @@ public class AlreadySendMail {
 
     public void setSendTime(Date sendTime) {
         this.sendTime = sendTime;
+    }
+
+    public String getMailContent() {
+        return mailContent;
+    }
+
+    public void setMailContent(String mailContent) {
+        this.mailContent = mailContent == null ? null : mailContent.trim();
     }
 }

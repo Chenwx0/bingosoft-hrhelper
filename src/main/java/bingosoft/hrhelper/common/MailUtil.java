@@ -36,7 +36,7 @@ public class MailUtil {
     private String content;
     //附件路径
     private String[] attachmentPaths;
-
+    																																									
     /**
      * aaa
      * @param senderAddress
@@ -72,7 +72,7 @@ public class MailUtil {
     public void setAttachmentPaths(String[] attachmentPaths) {
         this.attachmentPaths = attachmentPaths;
     }
-
+    			
     /**
      * 邮件发送
      * @throws Exception
@@ -82,7 +82,7 @@ public class MailUtil {
         Properties props = new Properties();
         // 设置用户的认证方式
         props.setProperty("mail.smtp.auth", "true");
-        // 设置传输协议
+        // 设置传输协议(JavaMail规范要求)
         props.setProperty("mail.transport.protocol", "smtp");
         // 设置发件人的SMTP服务器地址
         props.setProperty("mail.smtp.host", "mail1.bingosoft.net");

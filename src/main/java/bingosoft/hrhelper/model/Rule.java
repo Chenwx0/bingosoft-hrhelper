@@ -7,10 +7,6 @@ public class Rule {
 
     private String ruleName;
 
-    private Integer sendingCounts;
-
-    private Date sendingInterval;
-
     private String operationId;
 
     private String modelId;
@@ -21,11 +17,11 @@ public class Rule {
 
     private Integer sendingHourofday;
 
-    private Integer entryDistanceY;
+    private Integer distanceY;
 
-    private Integer entryDistanceM;
+    private Integer distanceM;
 
-    private Integer entryDistanceD;
+    private Integer distanceD;
 
     private String createBy;
 
@@ -35,7 +31,7 @@ public class Rule {
 
     private Date updateTime;
 
-    private String earlyDay;
+    private Integer earlyDay;
 
     private String entryDistance;
 
@@ -55,22 +51,6 @@ public class Rule {
 
     public void setRuleName(String ruleName) {
         this.ruleName = ruleName == null ? null : ruleName.trim();
-    }
-
-    public Integer getSendingCounts() {
-        return sendingCounts;
-    }
-
-    public void setSendingCounts(Integer sendingCounts) {
-        this.sendingCounts = sendingCounts;
-    }
-
-    public Date getSendingInterval() {
-        return sendingInterval;
-    }
-
-    public void setSendingInterval(Date sendingInterval) {
-        this.sendingInterval = sendingInterval;
     }
 
     public String getOperationId() {
@@ -113,28 +93,28 @@ public class Rule {
         this.sendingHourofday = sendingHourofday;
     }
 
-    public Integer getEntryDistanceY() {
-        return entryDistanceY;
+    public Integer getDistanceY() {
+        return distanceY;
     }
 
-    public void setEntryDistanceY(Integer entryDistanceY) {
-        this.entryDistanceY = entryDistanceY;
+    public void setDistanceY(Integer distanceY) {
+        this.distanceY = distanceY;
     }
 
-    public Integer getEntryDistanceM() {
-        return entryDistanceM;
+    public Integer getDistanceM() {
+        return distanceM;
     }
 
-    public void setEntryDistanceM(Integer entryDistanceM) {
-        this.entryDistanceM = entryDistanceM;
+    public void setDistanceM(Integer distanceM) {
+        this.distanceM = distanceM;
     }
 
-    public Integer getEntryDistanceD() {
-        return entryDistanceD;
+    public Integer getDistanceD() {
+        return distanceD;
     }
 
-    public void setEntryDistanceD(Integer entryDistanceD) {
-        this.entryDistanceD = entryDistanceD;
+    public void setDistanceD(Integer distanceD) {
+        this.distanceD = distanceD;
     }
 
     public String getCreateBy() {
@@ -169,12 +149,12 @@ public class Rule {
         this.updateTime = updateTime;
     }
 
-    public String getEarlyDay() {
+    public Integer getEarlyDay() {
         return earlyDay;
     }
 
-    public void setEarlyDay(String earlyDay) {
-        this.earlyDay = earlyDay == null ? null : earlyDay.trim();
+    public void setEarlyDay(Integer earlyDay) {
+        this.earlyDay = earlyDay;
     }
 
     public String getEntryDistance() {

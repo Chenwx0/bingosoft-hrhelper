@@ -142,7 +142,7 @@ public class Employee {
     public void setSignClass(String signClass) {
         this.signClass = signClass == null ? null : signClass.trim();
     }
-
+    
     public String getValue(String field){
         String result = "";
         if (field.equals("id"))

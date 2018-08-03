@@ -14,6 +14,11 @@ import org.springframework.stereotype.Service;
 import bingosoft.hrhelper.mapper.RuleMapper;
 import bingosoft.hrhelper.model.Rule;
 
+/**
+ * @创建人 zhangyx
+ * @功能描述 规则计算服务
+ * @创建时间 2018-08-03 14:08:08
+ */
 @Service
 public class RuleService {
 	
@@ -26,9 +31,9 @@ public class RuleService {
 		Rule newRule = new Rule();
 		newRule.setId(UUID.randomUUID().toString());
 		newRule.setRuleName(rule.getRuleName());
-		newRule.setEntryDistanceY(rule.getEntryDistanceY());
-    	newRule.setEntryDistanceM(rule.getEntryDistanceM());
-    	newRule.setEntryDistanceD(rule.getEntryDistanceD());
+		newRule.setDistanceY(rule.getDistanceY());
+    	newRule.setDistanceM(rule.getDistanceM());
+    	newRule.setDistanceD(rule.getDistanceD());
     	newRule.setSendingHourofday(rule.getSendingHourofday());
     	newRule.setSendingMinofhour(rule.getSendingMinofhour());
     	newRule.setModelId(rule.getModelId()); //对应的模板id
@@ -39,7 +44,7 @@ public class RuleService {
 		if(rule.getRuleMethod().equals("1")){
 			rule.setEntryDistance(caculateRule_1(rule)); //方法1：入职时长计算
 		}else{
-			rule.setEarlyDay(caculateRule_2(rule)); //方法2：距离特殊日期计算
+			rule.setSpecialdayDistance(caculateRule_2(rule)); //方法2：距离特殊日期计算
 		}
 		rm.insert(rule);
 	}
@@ -60,9 +65,9 @@ public class RuleService {
      * @return 根据该规则，员工距离入职多长时间发送邮件
      */
     public String caculateRule_1(Rule rule){
-    	String entry_distance =  "入职"+rule.getEntryDistanceY()+"年"+
-    						rule.getEntryDistanceM()+"月"+
-    						rule.getEntryDistanceD()+"日 "+
+    	String entry_distance =  "入职"+rule.getDistanceY()+"年"+
+    						rule.getDistanceM()+"月"+
+    						rule.getDistanceD()+"日 "+
     						rule.getSendingHourofday()+"点"+
     						rule.getSendingMinofhour()+"分时发送邮件";
     	rule.setRuleMethod("入职多长时间");
@@ -76,9 +81,9 @@ public class RuleService {
      */
     public String caculateRule_2(Rule rule){
     	String entry_distance =  "距离"+"某一特殊的日子的"+
-				    						rule.getEntryDistanceY()+"年"+
-				    						rule.getEntryDistanceM()+"月"+
-				    						rule.getEntryDistanceD()+"日 的当天"+
+				    						rule.getDistanceY()+"年"+
+				    						rule.getDistanceM()+"月"+
+				    						rule.getDistanceD()+"日 的当天"+
 				    						rule.getSendingHourofday()+"点"+
 				    						rule.getSendingMinofhour()+"分时发送邮件";
     	rule.setRuleMethod("根据某个日期提前");

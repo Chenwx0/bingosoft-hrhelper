@@ -7,8 +7,6 @@ public class Model {
 
     private String modelName;
 
-    private String modelContent;
-
     private String attachmentHref;
 
     private String createBy;
@@ -18,6 +16,8 @@ public class Model {
     private String updateBy;
 
     private Date updateTime;
+
+    private String modelContent;
 
     public String getId() {
         return id;
@@ -33,14 +33,6 @@ public class Model {
 
     public void setModelName(String modelName) {
         this.modelName = modelName == null ? null : modelName.trim();
-    }
-
-    public String getModelContent() {
-        return modelContent;
-    }
-
-    public void setModelContent(String modelContent) {
-        this.modelContent = modelContent == null ? null : modelContent.trim();
     }
 
     public String getAttachmentHref() {
@@ -81,5 +73,13 @@ public class Model {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getModelContent() {
+        return modelContent;
+    }
+
+    public void setModelContent(String modelContent) {
+        this.modelContent = modelContent == null ? null : modelContent.trim();
     }
 }

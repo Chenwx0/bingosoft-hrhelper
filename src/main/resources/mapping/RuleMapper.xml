@@ -4,59 +4,56 @@
   <resultMap id="BaseResultMap" type="bingosoft.hrhelper.model.Rule" >
     <id column="id" property="id" jdbcType="VARCHAR" />
     <result column="rule_name" property="ruleName" jdbcType="VARCHAR" />
-    <result column="sending_counts" property="sendingCounts" jdbcType="INTEGER" />
-    <result column="sending_interval" property="sendingInterval" jdbcType="DATE" />
     <result column="operation_id" property="operationId" jdbcType="VARCHAR" />
     <result column="model_id" property="modelId" jdbcType="VARCHAR" />
     <result column="rule_method" property="ruleMethod" jdbcType="VARCHAR" />
     <result column="sending_minofhour" property="sendingMinofhour" jdbcType="INTEGER" />
     <result column="sending_hourofday" property="sendingHourofday" jdbcType="INTEGER" />
-    <result column="entry_distance_y" property="entryDistanceY" jdbcType="INTEGER" />
-    <result column="entry_distance_m" property="entryDistanceM" jdbcType="INTEGER" />
-    <result column="entry_distance_d" property="entryDistanceD" jdbcType="INTEGER" />
+    <result column="distance_y" property="distanceY" jdbcType="INTEGER" />
+    <result column="distance_m" property="distanceM" jdbcType="INTEGER" />
+    <result column="distance_d" property="distanceD" jdbcType="INTEGER" />
     <result column="create_by" property="createBy" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
-    <result column="early_day" property="earlyDay" jdbcType="VARCHAR" />
+    <result column="early_day" property="earlyDay" jdbcType="INTEGER" />
     <result column="entry_distance" property="entryDistance" jdbcType="VARCHAR" />
     <result column="specialday_distance" property="specialdayDistance" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, rule_name, sending_counts, sending_interval, operation_id, model_id, rule_method, 
-    sending_minofhour, sending_hourofday, entry_distance_y, entry_distance_m, entry_distance_d, 
-    create_by, create_time, update_by, update_time, early_day, entry_distance, specialday_distance
+    id, rule_name, operation_id, model_id, rule_method, sending_minofhour, sending_hourofday, 
+    distance_y, distance_m, distance_d, create_by, create_time, update_by, update_time, 
+    early_day, entry_distance, specialday_distance
   </sql>
-  <select id="listAllRule" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from rule
-  </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
     from rule
     where id = #{id,jdbcType=VARCHAR}
   </select>
+  <select id="listAllRule" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from rule
+  </select>
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from rule
     where id = #{id,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="bingosoft.hrhelper.model.Rule" >
-    insert into rule (id, rule_name, sending_counts, 
-      sending_interval, operation_id, model_id, 
-      rule_method, sending_minofhour, sending_hourofday, 
-      entry_distance_y, entry_distance_m, entry_distance_d, 
-      create_by, create_time, update_by, 
-      update_time, early_day, entry_distance, 
-      specialday_distance)
-    values (#{id,jdbcType=VARCHAR}, #{ruleName,jdbcType=VARCHAR}, #{sendingCounts,jdbcType=INTEGER}, 
-      #{sendingInterval,jdbcType=DATE}, #{operationId,jdbcType=VARCHAR}, #{modelId,jdbcType=VARCHAR}, 
-      #{ruleMethod,jdbcType=VARCHAR}, #{sendingMinofhour,jdbcType=INTEGER}, #{sendingHourofday,jdbcType=INTEGER}, 
-      #{entryDistanceY,jdbcType=INTEGER}, #{entryDistanceM,jdbcType=INTEGER}, #{entryDistanceD,jdbcType=INTEGER}, 
-      #{createBy,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, 
-      #{updateTime,jdbcType=TIMESTAMP}, #{earlyDay,jdbcType=VARCHAR}, #{entryDistance,jdbcType=VARCHAR}, 
-      #{specialdayDistance,jdbcType=VARCHAR})
+    insert into rule (id, rule_name, operation_id, 
+      model_id, rule_method, sending_minofhour, 
+      sending_hourofday, distance_y, distance_m, 
+      distance_d, create_by, create_time, 
+      update_by, update_time, early_day, 
+      entry_distance, specialday_distance)
+    values (#{id,jdbcType=VARCHAR}, #{ruleName,jdbcType=VARCHAR}, #{operationId,jdbcType=VARCHAR}, 
+      #{modelId,jdbcType=VARCHAR}, #{ruleMethod,jdbcType=VARCHAR}, #{sendingMinofhour,jdbcType=INTEGER}, 
+      #{sendingHourofday,jdbcType=INTEGER}, #{distanceY,jdbcType=INTEGER}, #{distanceM,jdbcType=INTEGER}, 
+      #{distanceD,jdbcType=INTEGER}, #{createBy,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateBy,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{earlyDay,jdbcType=INTEGER}, 
+      #{entryDistance,jdbcType=VARCHAR}, #{specialdayDistance,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="bingosoft.hrhelper.model.Rule" >
     insert into rule
@@ -66,12 +63,6 @@
       </if>
       <if test="ruleName != null" >
         rule_name,
-      </if>
-      <if test="sendingCounts != null" >
-        sending_counts,
-      </if>
-      <if test="sendingInterval != null" >
-        sending_interval,
       </if>
       <if test="operationId != null" >
         operation_id,
@@ -88,14 +79,14 @@
       <if test="sendingHourofday != null" >
         sending_hourofday,
       </if>
-      <if test="entryDistanceY != null" >
-        entry_distance_y,
+      <if test="distanceY != null" >
+        distance_y,
       </if>
-      <if test="entryDistanceM != null" >
-        entry_distance_m,
+      <if test="distanceM != null" >
+        distance_m,
       </if>
-      <if test="entryDistanceD != null" >
-        entry_distance_d,
+      <if test="distanceD != null" >
+        distance_d,
       </if>
       <if test="createBy != null" >
         create_by,
@@ -126,12 +117,6 @@
       <if test="ruleName != null" >
         #{ruleName,jdbcType=VARCHAR},
       </if>
-      <if test="sendingCounts != null" >
-        #{sendingCounts,jdbcType=INTEGER},
-      </if>
-      <if test="sendingInterval != null" >
-        #{sendingInterval,jdbcType=DATE},
-      </if>
       <if test="operationId != null" >
         #{operationId,jdbcType=VARCHAR},
       </if>
@@ -147,14 +132,14 @@
       <if test="sendingHourofday != null" >
         #{sendingHourofday,jdbcType=INTEGER},
       </if>
-      <if test="entryDistanceY != null" >
-        #{entryDistanceY,jdbcType=INTEGER},
+      <if test="distanceY != null" >
+        #{distanceY,jdbcType=INTEGER},
       </if>
-      <if test="entryDistanceM != null" >
-        #{entryDistanceM,jdbcType=INTEGER},
+      <if test="distanceM != null" >
+        #{distanceM,jdbcType=INTEGER},
       </if>
-      <if test="entryDistanceD != null" >
-        #{entryDistanceD,jdbcType=INTEGER},
+      <if test="distanceD != null" >
+        #{distanceD,jdbcType=INTEGER},
       </if>
       <if test="createBy != null" >
         #{createBy,jdbcType=VARCHAR},
@@ -169,7 +154,7 @@
         #{updateTime,jdbcType=TIMESTAMP},
       </if>
       <if test="earlyDay != null" >
-        #{earlyDay,jdbcType=VARCHAR},
+        #{earlyDay,jdbcType=INTEGER},
       </if>
       <if test="entryDistance != null" >
         #{entryDistance,jdbcType=VARCHAR},
@@ -184,12 +169,6 @@
     <set >
       <if test="ruleName != null" >
         rule_name = #{ruleName,jdbcType=VARCHAR},
-      </if>
-      <if test="sendingCounts != null" >
-        sending_counts = #{sendingCounts,jdbcType=INTEGER},
-      </if>
-      <if test="sendingInterval != null" >
-        sending_interval = #{sendingInterval,jdbcType=DATE},
       </if>
       <if test="operationId != null" >
         operation_id = #{operationId,jdbcType=VARCHAR},
@@ -206,14 +185,14 @@
       <if test="sendingHourofday != null" >
         sending_hourofday = #{sendingHourofday,jdbcType=INTEGER},
       </if>
-      <if test="entryDistanceY != null" >
-        entry_distance_y = #{entryDistanceY,jdbcType=INTEGER},
+      <if test="distanceY != null" >
+        distance_y = #{distanceY,jdbcType=INTEGER},
       </if>
-      <if test="entryDistanceM != null" >
-        entry_distance_m = #{entryDistanceM,jdbcType=INTEGER},
+      <if test="distanceM != null" >
+        distance_m = #{distanceM,jdbcType=INTEGER},
       </if>
-      <if test="entryDistanceD != null" >
-        entry_distance_d = #{entryDistanceD,jdbcType=INTEGER},
+      <if test="distanceD != null" >
+        distance_d = #{distanceD,jdbcType=INTEGER},
       </if>
       <if test="createBy != null" >
         create_by = #{createBy,jdbcType=VARCHAR},
@@ -228,7 +207,7 @@
         update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
       <if test="earlyDay != null" >
-        early_day = #{earlyDay,jdbcType=VARCHAR},
+        early_day = #{earlyDay,jdbcType=INTEGER},
       </if>
       <if test="entryDistance != null" >
         entry_distance = #{entryDistance,jdbcType=VARCHAR},
@@ -242,21 +221,19 @@
   <update id="updateByPrimaryKey" parameterType="bingosoft.hrhelper.model.Rule" >
     update rule
     set rule_name = #{ruleName,jdbcType=VARCHAR},
-      sending_counts = #{sendingCounts,jdbcType=INTEGER},
-      sending_interval = #{sendingInterval,jdbcType=DATE},
       operation_id = #{operationId,jdbcType=VARCHAR},
       model_id = #{modelId,jdbcType=VARCHAR},
       rule_method = #{ruleMethod,jdbcType=VARCHAR},
       sending_minofhour = #{sendingMinofhour,jdbcType=INTEGER},
       sending_hourofday = #{sendingHourofday,jdbcType=INTEGER},
-      entry_distance_y = #{entryDistanceY,jdbcType=INTEGER},
-      entry_distance_m = #{entryDistanceM,jdbcType=INTEGER},
-      entry_distance_d = #{entryDistanceD,jdbcType=INTEGER},
+      distance_y = #{distanceY,jdbcType=INTEGER},
+      distance_m = #{distanceM,jdbcType=INTEGER},
+      distance_d = #{distanceD,jdbcType=INTEGER},
       create_by = #{createBy,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_by = #{updateBy,jdbcType=VARCHAR},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
-      early_day = #{earlyDay,jdbcType=VARCHAR},
+      early_day = #{earlyDay,jdbcType=INTEGER},
       entry_distance = #{entryDistance,jdbcType=VARCHAR},
       specialday_distance = #{specialdayDistance,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}

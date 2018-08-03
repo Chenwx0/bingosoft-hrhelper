@@ -19,6 +19,11 @@ import bingosoft.hrhelper.mapper.MailMapper;
 import bingosoft.hrhelper.model.AlreadySendMail;
 import bingosoft.hrhelper.model.Mail;
 
+/**
+ * @创建人 zhangyx
+ * @功能描述 邮件发送服务
+ * @创建时间 2018-08-03 14:08:08
+ */
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Service
@@ -88,7 +93,7 @@ public class MailSendService {
 		asm.setRecipient(mail.getRecipient());
 		asm.setRecipientAddress(mail.getRecipientAddress());
 		asm.setSender(mail.getSender());
-		asm.setSendTime(mail.getSendTime());
+		asm.setSendTime(new Date());
 		asm.setStatus(mail.getStatus());
 		asm.setUpdateBy(mail.getUpdateBy());
 		

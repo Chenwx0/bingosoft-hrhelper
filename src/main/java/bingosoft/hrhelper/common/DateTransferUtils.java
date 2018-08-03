@@ -8,9 +8,8 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * 通用类
- * 
- * @author root
+ * 日期，日历，字符串转换工具类
+ * @author zhangyx
  */
 public class DateTransferUtils {
     private static SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");

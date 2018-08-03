@@ -15,9 +15,11 @@ public interface MailMapper {
 
     int updateByPrimaryKeySelective(Mail record);
 
+    int updateByPrimaryKeyWithBLOBs(Mail record);
+
     int updateByPrimaryKey(Mail record);
 
-	void deleteAll();
-
 	List<Mail> listAll();
+
+	void deleteAll();
 }

@@ -4,20 +4,26 @@
   <resultMap id="BaseResultMap" type="bingosoft.hrhelper.model.Model" >
     <id column="id" property="id" jdbcType="VARCHAR" />
     <result column="model_name" property="modelName" jdbcType="VARCHAR" />
-    <result column="model_content" property="modelContent" jdbcType="VARCHAR" />
     <result column="attachment_href" property="attachmentHref" jdbcType="VARCHAR" />
     <result column="create_by" property="createBy" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="bingosoft.hrhelper.model.Model" extends="BaseResultMap" >
+    <result column="model_content" property="modelContent" jdbcType="LONGVARCHAR" />
+  </resultMap>
   <sql id="Base_Column_List" >
-    id, model_name, model_content, attachment_href, create_by, create_time, update_by, 
-    update_time
+    id, model_name, attachment_href, create_by, create_time, update_by, update_time
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  <sql id="Blob_Column_List" >
+    model_content
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
     from model
     where id = #{id,jdbcType=VARCHAR}
   </select>
@@ -26,12 +32,12 @@
     where id = #{id,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="bingosoft.hrhelper.model.Model" >
-    insert into model (id, model_name, model_content, 
-      attachment_href, create_by, create_time, 
-      update_by, update_time)
-    values (#{id,jdbcType=VARCHAR}, #{modelName,jdbcType=VARCHAR}, #{modelContent,jdbcType=VARCHAR}, 
-      #{attachmentHref,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateBy,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    insert into model (id, model_name, attachment_href, 
+      create_by, create_time, update_by, 
+      update_time, model_content)
+    values (#{id,jdbcType=VARCHAR}, #{modelName,jdbcType=VARCHAR}, #{attachmentHref,jdbcType=VARCHAR}, 
+      #{createBy,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{modelContent,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="bingosoft.hrhelper.model.Model" >
     insert into model
@@ -41,9 +47,6 @@
       </if>
       <if test="modelName != null" >
         model_name,
-      </if>
-      <if test="modelContent != null" >
-        model_content,
       </if>
       <if test="attachmentHref != null" >
         attachment_href,
@@ -60,6 +63,9 @@
       <if test="updateTime != null" >
         update_time,
       </if>
+      <if test="modelContent != null" >
+        model_content,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -67,9 +73,6 @@
       </if>
       <if test="modelName != null" >
         #{modelName,jdbcType=VARCHAR},
-      </if>
-      <if test="modelContent != null" >
-        #{modelContent,jdbcType=VARCHAR},
       </if>
       <if test="attachmentHref != null" >
         #{attachmentHref,jdbcType=VARCHAR},
@@ -86,6 +89,9 @@
       <if test="updateTime != null" >
         #{updateTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="modelContent != null" >
+        #{modelContent,jdbcType=LONGVARCHAR},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="bingosoft.hrhelper.model.Model" >
@@ -93,9 +99,6 @@
     <set >
       <if test="modelName != null" >
         model_name = #{modelName,jdbcType=VARCHAR},
-      </if>
-      <if test="modelContent != null" >
-        model_content = #{modelContent,jdbcType=VARCHAR},
       </if>
       <if test="attachmentHref != null" >
         attachment_href = #{attachmentHref,jdbcType=VARCHAR},
@@ -112,13 +115,26 @@
       <if test="updateTime != null" >
         update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="modelContent != null" >
+        model_content = #{modelContent,jdbcType=LONGVARCHAR},
+      </if>
     </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="bingosoft.hrhelper.model.Model" >
+    update model
+    set model_name = #{modelName,jdbcType=VARCHAR},
+      attachment_href = #{attachmentHref,jdbcType=VARCHAR},
+      create_by = #{createBy,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_by = #{updateBy,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      model_content = #{modelContent,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="bingosoft.hrhelper.model.Model" >
     update model
     set model_name = #{modelName,jdbcType=VARCHAR},
-      model_content = #{modelContent,jdbcType=VARCHAR},
       attachment_href = #{attachmentHref,jdbcType=VARCHAR},
       create_by = #{createBy,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
