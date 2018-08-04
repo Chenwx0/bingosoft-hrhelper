@@ -100,4 +100,17 @@ public class MailSendService {
 		mm.deleteByPrimaryKey(mail.getId());
 		asmm.insert(asm);
 	}
+	
+	/**
+	 * 取消发送邮件
+	 * @param mail
+	 */
+	public void cancelSendMail(String id){
+		//将邮件表中该邮件的状态修改 为4：取消发送
+		Mail mail = mm.selectByPrimaryKey(id);
+		mail.setStatus(4);
+		//将该邮件添加到已发送邮件中
+		addAlreadySendMail(mail);
+		//将改邮件信息储存到取消发送记录表
+	}
 }
