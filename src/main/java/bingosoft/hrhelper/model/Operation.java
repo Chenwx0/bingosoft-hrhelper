@@ -5,7 +5,7 @@ import java.util.Date;
 public class Operation {
     private String id;
 
-    private String opeartionName;
+    private String operationName;
 
     private String createBy;
 
@@ -23,12 +23,12 @@ public class Operation {
         this.id = id == null ? null : id.trim();
     }
 
-    public String getOpeartionName() {
-        return opeartionName;
+    public String getOperationName() {
+        return operationName;
     }
 
-    public void setOpeartionName(String opeartionName) {
-        this.opeartionName = opeartionName == null ? null : opeartionName.trim();
+    public void setOperationName(String operationName) {
+        this.operationName = operationName == null ? null : operationName.trim();
     }
 
     public String getCreateBy() {
