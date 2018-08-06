@@ -3,14 +3,14 @@
 <mapper namespace="bingosoft.hrhelper.mapper.OperationMapper" >
   <resultMap id="BaseResultMap" type="bingosoft.hrhelper.model.Operation" >
     <id column="id" property="id" jdbcType="VARCHAR" />
-    <result column="opeartion_name" property="opeartionName" jdbcType="VARCHAR" />
+    <result column="operation_name" property="operationName" jdbcType="VARCHAR" />
     <result column="create_by" property="createBy" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, opeartion_name, create_by, create_time, update_by, update_time
+    id, operation_name, create_by, create_time, update_by, update_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -23,10 +23,10 @@
     where id = #{id,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="bingosoft.hrhelper.model.Operation" >
-    insert into operation (id, opeartion_name, create_by, 
+    insert into operation (id, operation_name, create_by, 
       create_time, update_by, update_time
       )
-    values (#{id,jdbcType=VARCHAR}, #{opeartionName,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=VARCHAR}, #{operationName,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
       )
   </insert>
@@ -36,8 +36,8 @@
       <if test="id != null" >
         id,
       </if>
-      <if test="opeartionName != null" >
-        opeartion_name,
+      <if test="operationName != null" >
+        operation_name,
       </if>
       <if test="createBy != null" >
         create_by,
@@ -56,8 +56,8 @@
       <if test="id != null" >
         #{id,jdbcType=VARCHAR},
       </if>
-      <if test="opeartionName != null" >
-        #{opeartionName,jdbcType=VARCHAR},
+      <if test="operationName != null" >
+        #{operationName,jdbcType=VARCHAR},
       </if>
       <if test="createBy != null" >
         #{createBy,jdbcType=VARCHAR},
@@ -76,8 +76,8 @@
   <update id="updateByPrimaryKeySelective" parameterType="bingosoft.hrhelper.model.Operation" >
     update operation
     <set >
-      <if test="opeartionName != null" >
-        opeartion_name = #{opeartionName,jdbcType=VARCHAR},
+      <if test="operationName != null" >
+        operation_name = #{operationName,jdbcType=VARCHAR},
       </if>
       <if test="createBy != null" >
         create_by = #{createBy,jdbcType=VARCHAR},
@@ -96,7 +96,7 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="bingosoft.hrhelper.model.Operation" >
     update operation
-    set opeartion_name = #{opeartionName,jdbcType=VARCHAR},
+    set operation_name = #{operationName,jdbcType=VARCHAR},
       create_by = #{createBy,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_by = #{updateBy,jdbcType=VARCHAR},
