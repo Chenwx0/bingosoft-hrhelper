@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="bingosoft.hrhelper.mapper.CancelRecordMapper">
+  <resultMap id="BaseResultMap" type="bingosoft.hrhelper.model.CancelRecord">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="recipient_address" jdbcType="VARCHAR" property="recipientAddress" />
+    <result column="operation_id" jdbcType="VARCHAR" property="operationId" />
+    <result column="plan_send_time" jdbcType="TIMESTAMP" property="planSendTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, recipient_address, operation_id, plan_send_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from cancel_record
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="list" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from cancel_record
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from cancel_record
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="bingosoft.hrhelper.model.CancelRecord">
+    insert into cancel_record (id, recipient_address, operation_id, 
+      plan_send_time)
+    values (#{id,jdbcType=VARCHAR}, #{recipientAddress,jdbcType=VARCHAR}, #{operationId,jdbcType=VARCHAR}, 
+      #{planSendTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="bingosoft.hrhelper.model.CancelRecord">
+    insert into cancel_record
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="recipientAddress != null">
+        recipient_address,
+      </if>
+      <if test="operationId != null">
+        operation_id,
+      </if>
+      <if test="planSendTime != null">
+        plan_send_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="recipientAddress != null">
+        #{recipientAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="operationId != null">
+        #{operationId,jdbcType=VARCHAR},
+      </if>
+      <if test="planSendTime != null">
+        #{planSendTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="bingosoft.hrhelper.model.CancelRecord">
+    update cancel_record
+    <set>
+      <if test="recipientAddress != null">
+        recipient_address = #{recipientAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="operationId != null">
+        operation_id = #{operationId,jdbcType=VARCHAR},
+      </if>
+      <if test="planSendTime != null">
+        plan_send_time = #{planSendTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="bingosoft.hrhelper.model.CancelRecord">
+    update cancel_record
+    set recipient_address = #{recipientAddress,jdbcType=VARCHAR},
+      operation_id = #{operationId,jdbcType=VARCHAR},
+      plan_send_time = #{planSendTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

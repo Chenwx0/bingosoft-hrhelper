@@ -22,4 +22,8 @@ public interface MailMapper {
 	List<Mail> listAll();
 
 	void deleteAll();
+
+	void deleteCancelMail();
+
+	void deleteCancelMail(Mail record);
 }

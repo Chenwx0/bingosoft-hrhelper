@@ -5,6 +5,10 @@ import java.util.Date;
 
 
 
+
+
+import java.util.UUID;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +19,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import bingosoft.hrhelper.common.MailUtil;
 import bingosoft.hrhelper.mapper.AlreadySendMailMapper;
+import bingosoft.hrhelper.mapper.CancelRecordMapper;
 import bingosoft.hrhelper.mapper.MailMapper;
 import bingosoft.hrhelper.model.AlreadySendMail;
+import bingosoft.hrhelper.model.CancelRecord;
 import bingosoft.hrhelper.model.Mail;
 
 /**
@@ -34,6 +40,8 @@ public class MailSendService {
 	
 	@Autowired
 	MailMapper mm;
+	@Autowired
+	CancelRecordMapper crm;
 	@Autowired
 	AlreadySendMailMapper asmm;
 	
@@ -99,5 +107,29 @@ public class MailSendService {
 		
 		mm.deleteByPrimaryKey(mail.getId());
 		asmm.insert(asm);
+	}
+	
+	/**
+	 * 取消发送邮件
+	 * @param mail
+	 */
+	public void cancelSendMail(String id){
+		
+		//将邮件表中该邮件的状态修改 为0：取消发送
+		Mail mail = mm.selectByPrimaryKey(id);
+		mail.setStatus(0);
+		mm.updateByPrimaryKey(mail);
+		
+		//将该邮件添加到已发送邮件中
+		addAlreadySendMail(mail);
+		
+		//将改邮件信息储存到取消发送记录表
+		CancelRecord cr = new CancelRecord();
+		cr.setId(UUID.randomUUID().toString());
+		cr.setOperationId(mail.getOperationId());
+		cr.setPlanSendTime(mail.getPlanSendTime());
+		cr.setRecipientAddress(mail.getRecipientAddress());
+		
+		crm.insert(cr);
 	}
 }
