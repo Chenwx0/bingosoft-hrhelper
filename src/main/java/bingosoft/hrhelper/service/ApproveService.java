@@ -5,8 +5,12 @@ import org.springframework.stereotype.Service;
 
 import bingosoft.hrhelper.common.MailUtil;
 import bingosoft.hrhelper.mapper.AlreadySendMailMapper;
+import bingosoft.hrhelper.mapper.ApproveMapper;
 import bingosoft.hrhelper.mapper.MailMapper;
+import bingosoft.hrhelper.mapper.OperationMapper;
 import bingosoft.hrhelper.model.AlreadySendMail;
+import bingosoft.hrhelper.model.Approve;
+import bingosoft.hrhelper.model.Operation;
 
 @Service
 public class ApproveService {
@@ -15,19 +19,40 @@ public class ApproveService {
 	AlreadySendMail asm = new AlreadySendMail();
 	
 	@Autowired
-	MailMapper mm;
+	ApproveMapper am;
 	@Autowired
-	AlreadySendMailMapper asmm;
+	OperationMapper om;
 	
-	// 经理点击按钮的时候，调用mail表中的status更改为2(已通过)/3(未通过)
-	public void sendStatus(String id){
-		asm = asmm.selectByPrimaryKey(id);
-		asm.setStatus(2);
+	// 经理点击按钮的时候，调用approve表中的status更改为0(待审核)/1(已通过)/2(未通过)
+	public void sendStatus(Approve a){
+		//若未通过，则更新审批表。
+		if(a.getStatus()==2){
+			am.updateByPrimaryKey(a);
+		}
+		//如果通过，则更新审批表，并触发邮件。
+		else if(a.getStatus()==1){
+			am.updateByPrimaryKey(a);
+			sendApproveMail(a);
+		}
 	}
-	// 如果是2，则调用邮件生成方法，并调用邮件发送方法。
-	// 生成
-	// 发送
 	
-	// 如果是3，则邮件状态改变。
+	/**
+	 * 方法：审批并发送单封邮件
+	 */
+	public void sendApproveMail(Approve a){
+		try {
+			//
+			MailUtil mu = new MailUtil();
+			String operationName = om.selectByPrimaryKey(a.getId()).getOpeartionName();
+			
+			mu.setSubject(a.getApproveObject()+operationName);
+			mu.setContent("从邮件模板表中得到"); 
+			mu.sendMail();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	
+	//工作流需要传进来什么？
+	//通过工作流传进来一个审批ID
 }
