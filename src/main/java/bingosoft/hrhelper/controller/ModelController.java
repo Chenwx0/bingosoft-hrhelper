@@ -2,10 +2,10 @@ package bingosoft.hrhelper.controller;
 
 import bingosoft.hrhelper.model.Model;
 import bingosoft.hrhelper.service.ModelService;
-import leap.web.annotation.Controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 模板编辑类
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author cc
  * @date 2018-08-04 15:51:51
  */
-@Controller
+@RestController
 @RequestMapping(path = "/model")
 public class ModelController {
 
