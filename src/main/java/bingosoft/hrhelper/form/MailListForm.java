@@ -1,5 +1,6 @@
 package bingosoft.hrhelper.form;
 
+import bingosoft.hrhelper.model.Rule;
 import leap.core.doc.annotation.Doc;
 
 import java.util.Date;
