@@ -43,7 +43,7 @@ public class ApproveService {
 		try {
 			//
 			MailUtil mu = new MailUtil();
-			String operationName = om.selectByPrimaryKey(a.getId()).getOpeartionName();
+			String operationName = om.selectByPrimaryKey(a.getId()).getOperationName();
 			
 			mu.setSubject(a.getApproveObject()+operationName);
 			mu.setContent("从邮件模板表中得到"); 

@@ -134,7 +134,7 @@ public class MailProductService {
 		m.setCopyPeople(e.getManager());//抄送人：员工所属上级
 		m.setCopyPeopleAddress("");
 		m.setOperationId(r.getOperationId());
-		m.setStatus(0);//默认为0：待审核。如果发生员工在审批前离职的情况，则由人工取消邮件发送。
+		m.setStatus(1);//默认为1：待发送。如果管理员点击取消，则变为0。
 		m.setOperationId(r.getOperationId());
 		
 		//根据规则方法与员工信息 生成邮件模板

@@ -7,6 +7,7 @@ import java.util.Date;
 
 
 
+import java.util.List;
 import java.util.UUID;
 
 import org.junit.Test;
@@ -113,8 +114,8 @@ public class MailSendService {
 	 * 取消发送邮件
 	 * @param mail
 	 */
+	@Test
 	public void cancelSendMail(String id){
-		
 		//将邮件表中该邮件的状态修改 为0：取消发送
 		Mail mail = mm.selectByPrimaryKey(id);
 		mail.setStatus(0);

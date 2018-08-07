@@ -19,15 +19,17 @@ import bingosoft.hrhelper.service.RuleService;
  * @功能描述
  * @创建时间 2018-07-26 10:54:54
  */
+@RunWith(SpringRunner.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Controller
-public class MailController {
+public class MailController1 {
 	Logger logger = LoggerFactory.getLogger(getClass());
-    @Autowired
+    /*@Autowired*/
     MailSendService mailSendService;
     
     
     @GetMapping(path = "/cancelSend")
-    public void updateRule(String id){
+    public void cancelSendMail(String id){
     	mailSendService.cancelSendMail(id);
     }
 }
