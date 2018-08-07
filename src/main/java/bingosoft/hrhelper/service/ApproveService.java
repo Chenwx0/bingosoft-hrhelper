@@ -45,9 +45,9 @@ public class ApproveService {
 			MailUtil mu = new MailUtil();
 			String operationName = om.selectByPrimaryKey(a.getId()).getOperationName();
 			
-			mu.setSubject(a.getApproveObject()+operationName);
+			/*mu.setSubject(a.getApproveObject()+operationName);
 			mu.setContent("从邮件模板表中得到"); 
-			mu.sendMail();
+			mu.sendMail();*/
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -19,12 +19,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import bingosoft.hrhelper.common.MailUtil;
+import bingosoft.hrhelper.common.ReadxmlByDom;
 import bingosoft.hrhelper.mapper.AlreadySendMailMapper;
 import bingosoft.hrhelper.mapper.CancelRecordMapper;
 import bingosoft.hrhelper.mapper.MailMapper;
 import bingosoft.hrhelper.model.AlreadySendMail;
 import bingosoft.hrhelper.model.CancelRecord;
 import bingosoft.hrhelper.model.Mail;
+import bingosoft.hrhelper.model.MailConfig;
 
 /**
  * @创建人 zhangyx
@@ -63,12 +65,11 @@ public class MailSendService {
 		}
 	}
 	
+	/**
+	 * 获取配置并发送邮件
+	 */
 	public void sendMail(Mail mail){
 		try {
-			//填写发件人信息
-			mu.setSenderAccount("zhangyx@bingosoft.net");
-			mu.setSenderAddress("zhangyx@bingosoft.net");
-			mu.setSenderPassword("user@2018");
 			
 			//设置接收人和内容
 			mu.setSubject(mail.getMailName());
@@ -112,7 +113,7 @@ public class MailSendService {
 	
 	/**
 	 * 取消发送邮件
-	 * @param mail
+	 * @param mail 
 	 */
 	@Test
 	public void cancelSendMail(String id){

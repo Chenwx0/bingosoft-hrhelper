@@ -7,6 +7,12 @@ import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.*;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import bingosoft.hrhelper.model.MailConfig;
+
 import java.util.Date;
 import java.util.Properties;
 
@@ -16,12 +22,7 @@ import java.util.Properties;
  * @创建时间 2018-07-18 14:08:08
  */
 public class MailUtil {
-    //发件人地址
-    private String senderAddress;
-    //发件人账户名
-    private String senderAccount;
-    //发件人账户密码
-    private String senderPassword;
+	
     /**
      * 收件人地址，多个以","隔开
      */
@@ -36,23 +37,11 @@ public class MailUtil {
     private String content;
     //附件路径
     private String[] attachmentPaths;
-    																																									
-    /**
-     * aaa
-     * @param senderAddress
-     */
-    public void setSenderAddress(String senderAddress) {
-        this.senderAddress = senderAddress;
-    }
-
-    public void setSenderAccount(String senderAccount) {
-        this.senderAccount = senderAccount;
-    }
-
-    public void setSenderPassword(String senderPassword) {
-        this.senderPassword = senderPassword;
-    }
-
+    //邮件发送记录工具
+    public static Log logger = LogFactory.getLog(MailUtil.class);
+    //邮件配置对象
+    static MailConfig mc = new MailConfig();
+    	
     public void setRecipientAddresses(String recipientAddresses) {
         this.recipientAddresses = recipientAddresses;
     }
@@ -78,37 +67,50 @@ public class MailUtil {
      * @throws Exception
      */
     public void sendMail() throws Exception {
-        // 连接邮件服务器的参数配置
-        Properties props = new Properties();
-        // 设置用户的认证方式
-        props.setProperty("mail.smtp.auth", "true");
-        // 设置传输协议(JavaMail规范要求)
-        props.setProperty("mail.transport.protocol", "smtp");
-        // 设置发件人的SMTP服务器地址
-        props.setProperty("mail.smtp.host", "mail1.bingosoft.net");
-        props.setProperty("mail.smtp.port", "587");
-        // 创建定义整个应用程序所需的环境信息的 Session 对象
-        Session session = Session.getInstance(props);
-        // 设置调试信息在控制台打印出来
-        session.setDebug(true);
-        // 创建邮件的实例对象
-        Message msg = getMimeMessage(session);
-        // 根据session对象获取邮件传输对象Transport
-        Transport transport = session.getTransport();
-        // 设置发件人的账户名和密码
-        if(senderAccount==null || senderAccount.isEmpty()){
-            throw new ParamException("发件人账户为空");
-        }
-        if(senderPassword==null || senderPassword.isEmpty()){
-            throw new ParamException("发件人密码为空");
-        }
-        transport.connect(senderAccount, senderPassword);
-        // 发送邮件，并发送到所有收件人地址，message.getAllRecipients() 获取到的是在创建邮件对象时添加的所有收件人, 抄送人, 密送人
-        transport.sendMessage(msg,msg.getAllRecipients());
-
-        // 关闭邮件连接
-        transport.close();
-    }
+    	try{
+    		mc = ReadxmlByDom.getMailConfig("mailConfig.xml");
+	        // 连接邮件服务器的参数配置
+	        Properties props = new Properties();
+	        // 设置用户的认证方式
+	        props.setProperty("mail.smtp.auth", mc.getMailAuth());
+	        // 设置传输协议(JavaMail规范要求)
+	        props.setProperty("mail.transport.protocol", mc.getMailTransferProtocol());
+	        // 设置发件人的SMTP服务器地址
+	        props.setProperty("mail.smtp.host", mc.getMailServerAddress());//     网易服务器：smtp.163.com      品高服务器：mail1.bingosoft.net  备注：使用邮箱登录密码应当填写授权码，授权码是用于登录第三方邮件客户端的专用密码。 适用于登录以下服务: POP3/IMAP/SMTP/Exchange/CardDAV/CalDAV服务。
+	        props.setProperty("mail.smtp.port",mc.getMailPort());// 一般端口：25   品高端口：587
+	        // 创建定义整个应用程序所需的环境信息的 Session 对象
+	        Session session = Session.getInstance(props);
+	        // 设置调试信息在控制台打印出来
+	        session.setDebug(true);
+	        // 创建邮件的实例对象
+	        Message msg = getMimeMessage(session);
+	        // 根据session对象获取邮件传输对象Transport
+	        Transport transport = session.getTransport();
+	        // 设置发件人的账户名和密码
+	        if(mc.getSenderAccount()==null || mc.getSenderAccount().isEmpty()){
+	            throw new ParamException("发件人账户为空");
+	        }
+	        if(mc.getSenderPassword()==null || mc.getSenderPassword().isEmpty()){
+	            throw new ParamException("发件人密码为空");
+	        }
+	        System.out.println(mc.getSenderAccount()+mc.getSenderPassword());
+	        transport.connect(mc.getSenderAccount(), mc.getSenderPassword());
+	        // 发送邮件，并发送到所有收件人地址，message.getAllRecipients() 获取到的是在创建邮件对象时添加的所有收件人, 抄送人, 密送人
+	        transport.sendMessage(msg,msg.getAllRecipients());
+	        logger.info(new Date()+"_邮件发送成功 收件人:"+recipientAddresses+" 抄送人:"+copyToAddresses);
+	        logger.info(" 邮件主题:"+subject+" 邮件内容:"+content);
+	        logger.error("------------------------------------------不同邮件分割线------------------------------------------");
+	        
+	        // 关闭邮件连接
+	        transport.close();
+    	}catch(Exception e){
+    		e.printStackTrace();
+    		logger.error("邮件发送失败,收件人:"+recipientAddresses+" 抄送人:"+copyToAddresses);
+    		logger.error("邮件主题:"+subject+" 邮件内容:"+content);
+    		logger.error("错误信息:"+e.getMessage());
+    		logger.error("------------------------------------------不同邮件分割线------------------------------------------");
+    	}
+	}
 
     /**
      * 获取邮件的实例对象
@@ -122,8 +124,8 @@ public class MailUtil {
         MimeMessage msg = new MimeMessage(session);
 
         // 设置发件人地址
-        if (senderAddress!=null && !senderAddress.isEmpty()){
-            msg.setFrom(new InternetAddress(senderAddress));
+        if (mc.getSenderAddress()!=null && !mc.getSenderAddress().isEmpty()){
+            msg.setFrom(new InternetAddress(mc.getSenderAddress()));
         }else{
             throw new ParamException("发件人地址为空");
         }

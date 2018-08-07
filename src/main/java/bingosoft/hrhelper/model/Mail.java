@@ -100,15 +100,15 @@ public class Mail {
         this.copyPeopleAddress = copyPeopleAddress == null ? null : copyPeopleAddress.trim();
     }
 
-    public String getMailAttachmentPath() {
-        return mailAttachmentPath;
-    }
+	public String getMailAttachmentPath() {
+		return mailAttachmentPath;
+	}
 
-    public void setMailAttachmentPath(String mailAttachmentPath) {
-        this.mailAttachmentPath = mailAttachmentPath == null ? null : mailAttachmentPath.trim();
-    }
+	public void setMailAttachmentPath(String mailAttachmentPath) {
+		this.mailAttachmentPath = mailAttachmentPath;
+	}
 
-    public String getOperationId() {
+	public String getOperationId() {
         return operationId;
     }
 
@@ -151,6 +151,7 @@ public class Mail {
     public Date getPlanSendTime() {
         return planSendTime;
     }
+    
 
     public void setPlanSendTime(Date planSendTime) {
         this.planSendTime = planSendTime;

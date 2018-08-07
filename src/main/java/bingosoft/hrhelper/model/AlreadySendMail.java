@@ -101,15 +101,11 @@ public class AlreadySendMail {
         this.copyPeopleAddress = copyPeopleAddress == null ? null : copyPeopleAddress.trim();
     }
 
-    public String getMailAttachmentPath() {
-        return mailAttachmentPath;
-    }
+   
 
-    public void setMailAttachmentPath(String mailAttachmentPath) {
-        this.mailAttachmentPath = mailAttachmentPath == null ? null : mailAttachmentPath.trim();
-    }
+    
 
-    public String getOperationId() {
+	public String getOperationId() {
         return operationId;
     }
 
@@ -172,4 +168,13 @@ public class AlreadySendMail {
     public void setMailContent(String mailContent) {
         this.mailContent = mailContent == null ? null : mailContent.trim();
     }
+
+	public String getMailAttachmentPath() {
+		return mailAttachmentPath;
+	}
+
+	public void setMailAttachmentPath(String mailAttachmentPath) {
+		this.mailAttachmentPath = mailAttachmentPath;
+	}
+
 }

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mail>
+	<account>
+		 <senderAccount>18826108872@163.com</senderAccount>
+	     <senderAddress>18826108872@163.com</senderAddress>
+	     <senderPassword>haoren321</senderPassword><!-- 使用邮箱发送时，应采用专用客户端登录授权码，与登录密码不同 -->
+    </account>
+    <config>
+    	<mailAuth>true</mailAuth><!-- 设置用户的认证方式 -->
+     	<mailTransferProtocol>smtp</mailTransferProtocol><!-- 设置传输协议(JavaMail规范要求) -->
+    	<mailServerAddress>smtp.163.com</mailServerAddress><!-- 设置发件人的SMTP服务器地址 -->
+     	<mailPort>25</mailPort><!-- 设置邮件服务器端口-->
+    </config>
+</mail>
