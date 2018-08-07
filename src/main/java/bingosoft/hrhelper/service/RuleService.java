@@ -1,18 +1,13 @@
 package bingosoft.hrhelper.service;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Currency;
-import java.util.Date;
-import java.util.UUID;
-
-import net.sf.jsqlparser.expression.DateTimeLiteralExpression.DateTime;
-
+import bingosoft.hrhelper.common.CurrentUser;
+import bingosoft.hrhelper.mapper.RuleMapper;
+import bingosoft.hrhelper.model.Rule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import bingosoft.hrhelper.mapper.RuleMapper;
-import bingosoft.hrhelper.model.Rule;
+import java.util.Date;
+import java.util.UUID;
 
 /**
  * @创建人 zhangyx
@@ -27,25 +22,16 @@ public class RuleService {
 	
 	//规则：根据规则方法，确定规则计算方式。
 	public void addRule(Rule rule){
-		
-		Rule newRule = new Rule();
-		newRule.setId(UUID.randomUUID().toString());
-		newRule.setRuleName(rule.getRuleName());
-		newRule.setDistanceY(rule.getDistanceY());
-    	newRule.setDistanceM(rule.getDistanceM());
-    	newRule.setDistanceD(rule.getDistanceD());
-    	newRule.setSendingHourofday(rule.getSendingHourofday());
-    	newRule.setSendingMinofhour(rule.getSendingMinofhour());
-    	newRule.setModelId(rule.getModelId()); //对应的模板id
-    	newRule.setOperationId(rule.getOperationId());//对应的业务id
-		newRule.setCreateBy(rule.getCreateBy()); //创建人
-		newRule.setCreateTime(new Date()); //创建时间
-    	
+
+		rule.setId(UUID.randomUUID().toString());
+		rule.setCreateBy(CurrentUser.getUserId());
+		rule.setCreateTime(new Date());
 		if(rule.getRuleMethod().equals("1")){
 			rule.setEntryDistance(caculateRule_1(rule)); //方法1：入职时长计算
 		}else{
 			rule.setSpecialdayDistance(caculateRule_2(rule)); //方法2：距离特殊日期计算
 		}
+
 		rm.insert(rule);
 	}
 	
@@ -56,6 +42,10 @@ public class RuleService {
 	
 	//更新规则
 	public void updateRule(Rule rule){
+
+		rule.setUpdateBy(CurrentUser.getUserId());
+		rule.setUpdateTime(new Date());
+
 		rm.updateByPrimaryKey(rule);
 	}
     

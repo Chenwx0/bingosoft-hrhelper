@@ -16,9 +16,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import bingosoft.hrhelper.common.DateTransferUtils;
+import bingosoft.hrhelper.mapper.CancelRecordMapper;
 import bingosoft.hrhelper.mapper.EmployeeMapper;
 import bingosoft.hrhelper.mapper.MailMapper;
 import bingosoft.hrhelper.mapper.RuleMapper;
+import bingosoft.hrhelper.model.CancelRecord;
 import bingosoft.hrhelper.model.Employee;
 import bingosoft.hrhelper.model.Mail;
 import bingosoft.hrhelper.model.Rule;
@@ -40,25 +42,28 @@ public class MailProductService {
 	@Autowired
 	MailMapper mm;
 	@Autowired
+	CancelRecordMapper crm;
+	@Autowired
 	CreateMailContentService cmcs;
 	int i=0;
 	
-	/*@Scheduled(cron = "0 30 2 * * ?")*/ //*每天晚上2:30更新邮件表
+	/**
+	 * 方法：邮件生成主流程。
+	 * 每天晚上2:30更新邮件表    表达式为：cron = "0 30 2 * *
+	 */
 	@Test
 	@Scheduled(cron = "0 0/2 * * * ? ")
 	public void produceMail() throws ParseException{
-		/**
-		 * 1、遍历员工(2、嵌套遍历规则)
-		 * 2、生成邮件但不存储
-		 * 3、日期计算，与转正时期相差少于7天 存储
-		 * 4、已经生成的邮件不去修改(这个怎么做到？遍历前判断员工_业务之间是否已经存在邮件，存在则停止操作数据库)
-		 */
+		//(1)、删除原生成的邮件
 		mm.deleteAll();
+		//(2)、生成当天新邮件
 		for(Employee e : em.listAllEmployee() ){
 			for(Rule r : rm.listAllRule()){
 				setMail(r,e);
 			}
 		}
+		//(3)、对于已"取消发送"的邮件，取消它的生成
+		cancelSend();
 	}
 
 	/**
@@ -89,8 +94,8 @@ public class MailProductService {
 		
 		
 		/*
-		 * sending_interval//连续发送间隔
-			sending_counts//连续发送次数
+		sending_interval//连续发送间隔
+		sending_counts//连续发送次数
 		 */
 	}
 	
@@ -137,7 +142,7 @@ public class MailProductService {
 		
 		return m;
 	}
-	
+
 	/**
 	 * 方法：邮件拟发送时间计算 方式一：入职多长时间发送
 	 * @throws ParseException 
@@ -232,23 +237,33 @@ public class MailProductService {
 				   (m.getPlanSendTime().after(today));
 	}
 	
+	/**
+	 * 方法：取消状态为“已取消发送”的邮件的生成。
+	 */
+	public void cancelSend(){
+		Mail mail = new Mail();
+		for(CancelRecord cr : crm.list()){
+			//在邮件表中删除已取消发送的邮件。
+			mail.setOperationId(cr.getOperationId());
+			mail.setPlanSendTime(cr.getPlanSendTime());
+			mail.setRecipientAddress(cr.getRecipientAddress());
+			mm.deleteCancelMail(mail);
+			//定时清理取消记录表，减少系统计算量。
+			deleteCancelRecord(cr);
+		}
+	}
+	
+	/**
+	 * 方法：清理取消记录表
+	 */
+	public void deleteCancelRecord(CancelRecord cr){
+		//拟发送时间如果在今天之前，表示已不需要判别邮件是否需要发送，则删除该行记录
+		if(cr.getPlanSendTime().before(new Date())){
+			crm.deleteByPrimaryKey(cr.getId());
+		}
+	}
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
 	/**
 	 * 方法：邮件拟发送时间计算 方式一：入职多长时间发送
 	 * @throws ParseException 

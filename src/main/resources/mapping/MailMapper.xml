@@ -97,6 +97,12 @@
     delete from mail
     where id = #{id,jdbcType=VARCHAR}
   </delete>
+  <delete id="deleteCancelMail" parameterType="bingosoft.hrhelper.model.Mail" >
+    delete from mail
+    where operation_id = #{operation_id,jdbcType=VARCHAR} 
+    && plan_send_time = #{plan_send_time,jdbcType=VARCHAR}
+    && recipient_address = #{recipient_address,jdbcType=VARCHAR}
+  </delete>
   <delete id="deleteAll" parameterType="java.lang.String" >
     delete from mail
   </delete>
