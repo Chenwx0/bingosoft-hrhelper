@@ -17,10 +17,24 @@
     <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="plan_send_time" property="planSendTime" jdbcType="TIMESTAMP" />
+
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="bingosoft.hrhelper.model.Mail" extends="BaseResultMap" >
     <result column="mail_content" property="mailContent" jdbcType="LONGVARCHAR" />
   </resultMap>
+
+  <!-- 邮件列表 -->
+  <resultMap id="MailListForm" type="bingosoft.hrhelper.form.MailListForm" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="mail_name" property="mailName" jdbcType="VARCHAR" />
+    <result column="recipient" property="recipient" jdbcType="VARCHAR" />
+    <result column="copy_people" property="copyPeople" jdbcType="VARCHAR" />
+    <result column="operation_name" property="operation" jdbcType="VARCHAR" />
+    <result column="username" property="principal" jdbcType="VARCHAR" />
+    <result column="plan_send_time" property="planSendTime" jdbcType="TIMESTAMP" />
+    <result column="send_time" property="sendTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+
   <sql id="Base_Column_List" >
     id, mail_name, recipient, recipient_address, sender, sender_address, copy_people, 
     copy_people_address, mail_attachment_path, operation_id, appove_id, status, update_by, 
@@ -29,6 +43,41 @@
   <sql id="Blob_Column_List" >
     mail_content
   </sql>
+
+  <select id="selectNotSendMailList" resultMap="MailListForm">
+    SELECT m.id, m.mail_name, m.recipient, m.copy_people, o.operation_name, m.plan_send_time, u.username
+    FROM  mail m, operation o, permission p, user u
+    WHERE m.operation_id = o.id
+      AND o.id = p.operation_id
+      AND u.id = p.user_id
+      <if test="recipient != null">
+        AND m.recipient LIKE "%"#{recipient}"%"
+      </if>
+      <if test="operationId != null">
+        AND o.id = #{operationId}
+      </if>
+      <if test="startTime != null and endTime != null">
+        AND m.plan_send_time BETWEEN #{startTime} AND #{endTime}
+      </if>
+  </select>
+
+  <select id="selectSentMailList" resultMap="MailListForm">
+    SELECT m.id, m.mail_name, m.recipient, m.copy_people, o.operation_name, m.send_time, u.username
+    FROM  already_send_mail m, operation o, permission p, user u
+    WHERE m.operation_id = o.id
+    AND o.id = p.operation_id
+    AND u.id = p.user_id
+    <if test="recipient != null">
+      AND m.recipient LIKE "%"#{recipient}"%"
+    </if>
+    <if test="operationId != null">
+      AND o.id = #{operationId}
+    </if>
+    <if test="startTime != null and endTime != null">
+      AND m.send_time BETWEEN #{startTime} AND #{endTime}
+    </if>
+  </select>
+
   <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
