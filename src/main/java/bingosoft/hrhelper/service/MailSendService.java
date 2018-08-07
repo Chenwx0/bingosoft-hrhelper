@@ -33,8 +33,6 @@ import bingosoft.hrhelper.model.MailConfig;
  * @功能描述 邮件发送服务
  * @创建时间 2018-08-03 14:08:08
  */
-@RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Service
 public class MailSendService {
 	
@@ -93,7 +91,7 @@ public class MailSendService {
 		//此处应该加锁!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		//在邮件表中删除该邮件
 		asm.setId(mail.getId());
-		asm.setAppoveId(mail.getAppoveId());
+		asm.setAppoveId(mail.getApproveId());
 		asm.setCopyPeople(mail.getCopyPeople());
 		asm.setCreateTime(mail.getCreateTime());
 		asm.setMailAttachmentPath(mail.getMailAttachmentPath());
