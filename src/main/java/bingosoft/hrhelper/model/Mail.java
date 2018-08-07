@@ -62,6 +62,7 @@ public class Mail {
     public String getRecipientAddress() {
         return recipientAddress;
     }
+    
 
     public void setRecipientAddress(String recipientAddress) {
         this.recipientAddress = recipientAddress == null ? null : recipientAddress.trim();
