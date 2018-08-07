@@ -6,14 +6,11 @@ import bingosoft.hrhelper.model.Mail;
 import bingosoft.hrhelper.service.MailSendService;
 import bingosoft.hrhelper.service.MailService;
 
-import com.github.pagehelper.PageInfo;
-
-import leap.lang.json.JSON;
-import leap.web.api.mvc.ApiResponse;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -50,7 +47,31 @@ public class MailController{
 
        return mailService.pageQueryMailList(pageNum, pageSize, status, recipient, operationId, startTime, endTime);
     }
-    
+
+    /**
+     * 删除邮件
+     * @param mailId
+     * @return 操作结果
+     */
+    @DeleteMapping("/del")
+    public Result deleteMail(Integer status, String mailId){
+        return mailService.deleteMail(status, mailId);
+    }
+
+    /**
+     * 批量删除邮件
+     * @param mailIds
+     * @return 操作结果
+     */
+    @DeleteMapping("/patchDel")
+    public Result patchDeleteMail(Integer status, String[] mailIds){
+        return mailService.patchDeleteMail(status, mailIds);
+    }
+
+    /**
+     * 取消发送邮件
+     * @param id
+     */
     @GetMapping(path = "/cancelSend")
     public void cancelSendMail(String id){
     	mailSendService.cancelSendMail(id);
