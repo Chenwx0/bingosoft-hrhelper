@@ -84,19 +84,6 @@ public class MailProductService {
 			//邮件生成 添加到数据库
 			mm.insert(m);
 		}
-		//生成判断方式二： (1)、该邮件是否在生成日期区间  (2)、发送次数为2次或以上
-		/*else if(judgeProduce(m) && r.getSendingCounts()>1){
-			for(int i=0;i<r.getSendingCounts();i++){
-				setMailContent(r,e,m);
-				mm.insert(m);
-			}
-		}*/
-		
-		
-		/*
-		sending_interval//连续发送间隔
-		sending_counts//连续发送次数
-		 */
 	}
 	
 	/**

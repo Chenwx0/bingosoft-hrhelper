@@ -23,7 +23,7 @@ public class Mail {
 
     private String operationId;
 
-    private String appoveId;
+    private String approveId;
 
     private Integer status;
 
@@ -116,12 +116,12 @@ public class Mail {
         this.operationId = operationId == null ? null : operationId.trim();
     }
 
-    public String getAppoveId() {
-        return appoveId;
+    public String getApproveId() {
+        return approveId;
     }
 
-    public void setAppoveId(String appoveId) {
-        this.appoveId = appoveId == null ? null : appoveId.trim();
+    public void setApproveId(String approveId) {
+        this.approveId = approveId == null ? null : approveId.trim();
     }
 
     public Integer getStatus() {
