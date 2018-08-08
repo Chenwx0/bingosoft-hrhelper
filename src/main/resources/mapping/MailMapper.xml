@@ -44,6 +44,8 @@
     mail_content
   </sql>
 
+  <!-- 邮件前端相关操作自定义 -->
+  <!-- start -->
   <select id="selectNotSendMailList" resultMap="MailListForm">
     SELECT m.id, m.mail_name, m.recipient, m.copy_people, o.operation_name, m.plan_send_time, u.username
     FROM  mail m, operation o, permission p, user u
@@ -77,6 +79,8 @@
       AND m.send_time BETWEEN #{startTime} AND #{endTime}
     </if>
   </select>
+
+  <!-- end -->
 
   <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
     select 
