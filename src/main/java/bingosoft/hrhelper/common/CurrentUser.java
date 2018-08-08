@@ -8,6 +8,6 @@ package bingosoft.hrhelper.common;
 public class CurrentUser {
 
     public static String getUserId(){
-        return "test_user";
+        return "1";
     }
 }
