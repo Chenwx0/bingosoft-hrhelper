@@ -7,11 +7,7 @@ import bingosoft.hrhelper.service.MailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @创建人 chenwx
@@ -62,7 +58,7 @@ public class MailController{
      * @param mailIds
      * @return 操作结果
      */
-    @DeleteMapping("/patchDel")
+    @DeleteMapping("/patch_del")
     public Result patchDeleteMail(Integer status, String[] mailIds){
         Result result = mailService.patchDeleteMail(status, mailIds);
         return result;
