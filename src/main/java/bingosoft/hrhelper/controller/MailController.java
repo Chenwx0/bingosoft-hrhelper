@@ -1,15 +1,13 @@
 package bingosoft.hrhelper.controller;
 
 import bingosoft.hrhelper.common.Result;
-import bingosoft.hrhelper.form.MailListForm;
-import bingosoft.hrhelper.model.Mail;
 import bingosoft.hrhelper.service.MailSendService;
 import bingosoft.hrhelper.service.MailService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Required;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,8 +42,8 @@ public class MailController{
      */
     @GetMapping("/list")
     public Result pageQueryMailList(Integer pageNum, Integer pageSize, Integer status, String recipient, String operationId, String startTime, String endTime){
-
-       return mailService.pageQueryMailList(pageNum, pageSize, status, recipient, operationId, startTime, endTime);
+        Result result = mailService.pageQueryMailList(pageNum, pageSize, status, recipient, operationId, startTime, endTime);
+        return result;
     }
 
     /**
@@ -55,7 +53,8 @@ public class MailController{
      */
     @DeleteMapping("/del")
     public Result deleteMail(Integer status, String mailId){
-        return mailService.deleteMail(status, mailId);
+        Result result = mailService.deleteMail(status, mailId);
+        return result;
     }
 
     /**
@@ -65,7 +64,8 @@ public class MailController{
      */
     @DeleteMapping("/patchDel")
     public Result patchDeleteMail(Integer status, String[] mailIds){
-        return mailService.patchDeleteMail(status, mailIds);
+        Result result = mailService.patchDeleteMail(status, mailIds);
+        return result;
     }
 
     /**

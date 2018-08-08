@@ -86,7 +86,7 @@ public class MailService{
     public Result deleteMail(Integer status, String mailId){
         Result result = new Result();
         // 参数验证
-        if (mailId == null || "".equals(mailId)){
+        if (mailId == null || mailId.length()==0){
             result.setSuccess(false);
             result.setMessage(ID_NULL);
             return result;
@@ -108,7 +108,7 @@ public class MailService{
                 result.setMessage(TipMessage.DELETE_FAIL);
                 logger.error(TipMessage.DELETE_FAIL,e);
             }
-        }else{
+        }else if(status == 1){
             try{
                 int res = aMailMapper.deleteByPrimaryKey(mailId);
                 if (res>0){
@@ -156,7 +156,7 @@ public class MailService{
                 result.setMessage(TipMessage.DELETE_FAIL);
                 logger.error(TipMessage.DELETE_FAIL,e);
             }
-        }else {
+        }else if (status == 1){
             try{
                 for (String mailId: mailIds) {
                     aMailMapper.deleteByPrimaryKey(mailId);

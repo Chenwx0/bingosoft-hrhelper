@@ -23,18 +23,6 @@
     <result column="mail_content" property="mailContent" jdbcType="LONGVARCHAR" />
   </resultMap>
 
-  <!-- 邮件列表 -->
-  <resultMap id="MailListForm" type="bingosoft.hrhelper.form.MailListForm" >
-    <id column="id" property="id" jdbcType="VARCHAR" />
-    <result column="mail_name" property="mailName" jdbcType="VARCHAR" />
-    <result column="recipient" property="recipient" jdbcType="VARCHAR" />
-    <result column="copy_people" property="copyPeople" jdbcType="VARCHAR" />
-    <result column="operation_name" property="operation" jdbcType="VARCHAR" />
-    <result column="username" property="principal" jdbcType="VARCHAR" />
-    <result column="plan_send_time" property="planSendTime" jdbcType="TIMESTAMP" />
-    <result column="send_time" property="sendTime" jdbcType="TIMESTAMP" />
-  </resultMap>
-
   <sql id="Base_Column_List" >
     id, mail_name, recipient, recipient_address, sender, sender_address, copy_people, 
     copy_people_address, mail_attachment_path, operation_id, approve_id, status, update_by, 
@@ -46,12 +34,13 @@
 
   <!-- 邮件前端相关操作自定义 -->
   <!-- start -->
-  <select id="selectNotSendMailList" resultMap="MailListForm">
-    SELECT m.id, m.mail_name, m.recipient, m.copy_people, o.operation_name, m.plan_send_time, u.username
+  <select id="selectNotSendMailList" resultType="bingosoft.hrhelper.form.MailListForm">
+    SELECT m.id, m.mail_name mailName, m.mail_content mailContent, mail_attachment_path mailAttachmentPath, m.recipient, m.recipient_address recipientAddress, m.copy_people copyPeople, m.copy_people_address copyPeopleAddress, o.operation_name operation, m.plan_send_time planSendTime, u.username principal, u.email principalAddress
     FROM  mail m, operation o, permission p, user u
     WHERE m.operation_id = o.id
       AND o.id = p.operation_id
       AND u.id = p.user_id
+      AND u.is_admin = 0
       <if test="recipient != null">
         AND m.recipient LIKE "%"#{recipient}"%"
       </if>
@@ -63,12 +52,13 @@
       </if>
   </select>
 
-  <select id="selectSentMailList" resultMap="MailListForm">
-    SELECT m.id, m.mail_name, m.recipient, m.copy_people, o.operation_name, m.send_time, u.username
+  <select id="selectSentMailList" resultType="bingosoft.hrhelper.form.MailListForm">
+    SELECT m.id, m.mail_name mailName, m.mail_content mailContent, mail_attachment_path mailAttachmentPath, m.recipient, m.recipient_address recipientAddress, m.copy_people copyPeople, m.copy_people_address copyPeopleAddress, o.operation_name operation, m.send_time sendTime, u.username principal, u.email principalAddress
     FROM  already_send_mail m, operation o, permission p, user u
     WHERE m.operation_id = o.id
     AND o.id = p.operation_id
     AND u.id = p.user_id
+    AND u.is_admin = 0
     <if test="recipient != null">
       AND m.recipient LIKE "%"#{recipient}"%"
     </if>
