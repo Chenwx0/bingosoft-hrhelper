@@ -15,6 +15,8 @@ public class Operation {
 
     private Date updateTime;
 
+    private String isSpecial;
+
     public String getId() {
         return id;
     }
@@ -61,5 +63,13 @@ public class Operation {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getIsSpecial() {
+        return isSpecial;
+    }
+
+    public void setIsSpecial(String isSpecial) {
+        this.isSpecial = isSpecial == null ? null : isSpecial.trim();
     }
 }

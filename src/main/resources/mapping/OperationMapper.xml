@@ -8,9 +8,10 @@
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="is_special" property="isSpecial" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, operation_name, create_by, create_time, update_by, update_time
+    id, operation_name, create_by, create_time, update_by, update_time, is_special
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -24,11 +25,11 @@
   </delete>
   <insert id="insert" parameterType="bingosoft.hrhelper.model.Operation" >
     insert into operation (id, operation_name, create_by, 
-      create_time, update_by, update_time
-      )
+      create_time, update_by, update_time, 
+      is_special)
     values (#{id,jdbcType=VARCHAR}, #{operationName,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
-      )
+      #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{isSpecial,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="bingosoft.hrhelper.model.Operation" >
     insert into operation
@@ -51,6 +52,9 @@
       <if test="updateTime != null" >
         update_time,
       </if>
+      <if test="isSpecial != null" >
+        is_special,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -70,6 +74,9 @@
       </if>
       <if test="updateTime != null" >
         #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isSpecial != null" >
+        #{isSpecial,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -91,6 +98,9 @@
       <if test="updateTime != null" >
         update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="isSpecial != null" >
+        is_special = #{isSpecial,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
@@ -100,11 +110,12 @@
       create_by = #{createBy,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_by = #{updateBy,jdbcType=VARCHAR},
-      update_time = #{updateTime,jdbcType=TIMESTAMP}
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      is_special = #{isSpecial,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
-
-  <!-- 自定义 -->
+  
+   <!-- 自定义 -->
   <!-- start -->
   <!-- 根据用户Id获取业务 -->
     <select id="getOperationMenu" parameterType="java.lang.String" resultType="bingosoft.hrhelper.form.OperationMenuForm">

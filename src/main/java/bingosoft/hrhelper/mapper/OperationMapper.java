@@ -1,10 +1,9 @@
 package bingosoft.hrhelper.mapper;
 
-import bingosoft.hrhelper.form.OperationMenuForm;
-import bingosoft.hrhelper.model.Mail;
-import bingosoft.hrhelper.model.Operation;
-
 import java.util.List;
+
+import bingosoft.hrhelper.form.OperationMenuForm;
+import bingosoft.hrhelper.model.Operation;
 
 public interface OperationMapper {
     int deleteByPrimaryKey(String id);
@@ -19,5 +18,5 @@ public interface OperationMapper {
 
     int updateByPrimaryKey(Operation record);
 
-    List<OperationMenuForm> getOperationMenu(String userId);
+	List<OperationMenuForm> getOperationMenu(String userId);
 }

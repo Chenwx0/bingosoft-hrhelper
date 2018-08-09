@@ -19,10 +19,12 @@ import bingosoft.hrhelper.common.DateTransferUtils;
 import bingosoft.hrhelper.mapper.CancelRecordMapper;
 import bingosoft.hrhelper.mapper.EmployeeMapper;
 import bingosoft.hrhelper.mapper.MailMapper;
+import bingosoft.hrhelper.mapper.OperationMapper;
 import bingosoft.hrhelper.mapper.RuleMapper;
 import bingosoft.hrhelper.model.CancelRecord;
 import bingosoft.hrhelper.model.Employee;
 import bingosoft.hrhelper.model.Mail;
+import bingosoft.hrhelper.model.Operation;
 import bingosoft.hrhelper.model.Rule;
 
 @RunWith(SpringRunner.class)
@@ -39,6 +41,8 @@ public class MailProductService {
 	EmployeeMapper em;
 	@Autowired
 	RuleMapper rm;
+	@Autowired
+	OperationMapper om;
 	@Autowired
 	MailMapper mm;
 	@Autowired

@@ -18,7 +18,7 @@ import java.util.List;
  * @date 2018-08-06 20:28:28
  */
 @RestController
-@RequestMapping(path = "/operation")
+@RequestMapping(path = "/operation") 
 public class OperationController {
 
     @Autowired

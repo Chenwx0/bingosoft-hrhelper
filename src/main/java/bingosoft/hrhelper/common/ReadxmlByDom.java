@@ -48,7 +48,7 @@ public class ReadxmlByDom {
 	    		document.getElementsByTagName("mailTransferProtocol").item(0).getFirstChild().getNodeValue();
 	    String mcPort = 
 	    		document.getElementsByTagName("mailPort").item(0).getFirstChild().getNodeValue();
-	   
+	    																																	
 	    //添加邮件发送人信息
 	    mc.setSenderAccount(senderAccount);
 	    mc.setSenderAddress(senderAddress);
