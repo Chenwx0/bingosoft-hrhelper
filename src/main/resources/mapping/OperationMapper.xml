@@ -136,5 +136,10 @@
         AND  p.user_id = #{userId,jdbcType=VARCHAR}
     </select>
 
+	<select id="ifSpecial" parameterType="java.lang.String" resultType="java.lang.String">
+		select is_special
+		from operation where
+		id = #{id,jdbcType=VARCHAR}
+	</select>
   <!-- end -->
 </mapper>

@@ -133,8 +133,9 @@ public class MailProductService {
 		//判断是否为需要工作流或者抄送人的特殊邮件
 		//根据该规则Id，获取对应业务是否需要特殊处理的信息
 		String ifSpecial = om.ifSpecial(r.getOperationId());
+		System.out.println("这里!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+ifSpecial);
 		//生成普通邮件内容
-		if(ifSpecial.equals(null)){
+		if(ifSpecial.equals("0")){
 			setCommonMailContent(r,e,m);
 		}
 		//生成特殊类型"试用期转正"
