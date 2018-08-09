@@ -7,6 +7,7 @@
     <result column="mail" property="mail" jdbcType="VARCHAR" />
     <result column="department" property="department" jdbcType="VARCHAR" />
     <result column="manager" property="manager" jdbcType="VARCHAR" />
+    <result column="manager_mail" property="managerMail" jdbcType="VARCHAR" />
     <result column="fullmenber_day" property="fullmenberDay" jdbcType="DATE" />
     <result column="plan_fullmenber_day" property="planFullmenberDay" jdbcType="DATE" />
     <result column="entry_day" property="entryDay" jdbcType="DATE" />
@@ -18,8 +19,8 @@
     <result column="sign_class" property="signClass" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, name, mail, department, manager, fullmenber_day, plan_fullmenber_day, entry_day, 
-    recruit_class, sign_count, day_of_work, year_of_work, contract_day, sign_class
+    id, name, mail, department, manager, manager_mail, fullmenber_day, plan_fullmenber_day, 
+    entry_day, recruit_class, sign_count, day_of_work, year_of_work, contract_day, sign_class
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -27,26 +28,31 @@
     from employee
     where id = #{id,jdbcType=VARCHAR}
   </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from employee
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  
+  <!-- 自定义 -->
   <select id="listAllEmployee" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from employee
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
-    delete from employee
-    where id = #{id,jdbcType=VARCHAR}
-  </delete>
+  
   <insert id="insert" parameterType="bingosoft.hrhelper.model.Employee" >
     insert into employee (id, name, mail, 
-      department, manager, fullmenber_day, 
-      plan_fullmenber_day, entry_day, recruit_class, 
-      sign_count, day_of_work, year_of_work, 
-      contract_day, sign_class)
+      department, manager, manager_mail, 
+      fullmenber_day, plan_fullmenber_day, entry_day, 
+      recruit_class, sign_count, day_of_work, 
+      year_of_work, contract_day, sign_class
+      )
     values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{mail,jdbcType=VARCHAR}, 
-      #{department,jdbcType=VARCHAR}, #{manager,jdbcType=VARCHAR}, #{fullmenberDay,jdbcType=DATE}, 
-      #{planFullmenberDay,jdbcType=DATE}, #{entryDay,jdbcType=DATE}, #{recruitClass,jdbcType=VARCHAR}, 
-      #{signCount,jdbcType=INTEGER}, #{dayOfWork,jdbcType=INTEGER}, #{yearOfWork,jdbcType=INTEGER}, 
-      #{contractDay,jdbcType=DATE}, #{signClass,jdbcType=VARCHAR})
+      #{department,jdbcType=VARCHAR}, #{manager,jdbcType=VARCHAR}, #{managerMail,jdbcType=VARCHAR}, 
+      #{fullmenberDay,jdbcType=DATE}, #{planFullmenberDay,jdbcType=DATE}, #{entryDay,jdbcType=DATE}, 
+      #{recruitClass,jdbcType=VARCHAR}, #{signCount,jdbcType=INTEGER}, #{dayOfWork,jdbcType=INTEGER}, 
+      #{yearOfWork,jdbcType=INTEGER}, #{contractDay,jdbcType=DATE}, #{signClass,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="bingosoft.hrhelper.model.Employee" >
     insert into employee
@@ -65,6 +71,9 @@
       </if>
       <if test="manager != null" >
         manager,
+      </if>
+      <if test="managerMail != null" >
+        manager_mail,
       </if>
       <if test="fullmenberDay != null" >
         fullmenber_day,
@@ -110,6 +119,9 @@
       <if test="manager != null" >
         #{manager,jdbcType=VARCHAR},
       </if>
+      <if test="managerMail != null" >
+        #{managerMail,jdbcType=VARCHAR},
+      </if>
       <if test="fullmenberDay != null" >
         #{fullmenberDay,jdbcType=DATE},
       </if>
@@ -154,6 +166,9 @@
       <if test="manager != null" >
         manager = #{manager,jdbcType=VARCHAR},
       </if>
+      <if test="managerMail != null" >
+        manager_mail = #{managerMail,jdbcType=VARCHAR},
+      </if>
       <if test="fullmenberDay != null" >
         fullmenber_day = #{fullmenberDay,jdbcType=DATE},
       </if>
@@ -190,6 +205,7 @@
       mail = #{mail,jdbcType=VARCHAR},
       department = #{department,jdbcType=VARCHAR},
       manager = #{manager,jdbcType=VARCHAR},
+      manager_mail = #{managerMail,jdbcType=VARCHAR},
       fullmenber_day = #{fullmenberDay,jdbcType=DATE},
       plan_fullmenber_day = #{planFullmenberDay,jdbcType=DATE},
       entry_day = #{entryDay,jdbcType=DATE},

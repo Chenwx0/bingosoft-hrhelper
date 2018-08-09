@@ -113,7 +113,7 @@ public class MailProductService {
 	 * @return
 	 * @throws ParseException
 	 */
-	public Mail setMailContent(Rule r,Employee e,Mail m) throws ParseException{
+	public void setMailContent(Rule r,Employee e,Mail m) throws ParseException{
 		
 		m.setId(UUID.randomUUID().toString());
 		m.setMailName(r.getRuleName());
@@ -127,11 +127,80 @@ public class MailProductService {
 		m.setOperationId(r.getOperationId());
 		m.setStatus(1);//默认为1：待发送。如果管理员点击取消，则变为0。
 		m.setOperationId(r.getOperationId());
-		
 		//根据规则方法与员工信息 生成邮件模板
 		m.setMailContent(cmcs.getMailContent(e.getId(), r.getModelId(), DateTransferUtils.dateTimeFormat(m.getPlanSendTime()),"截止日期"));
 		
-		return m;
+		//判断是否为需要工作流或者抄送人的特殊邮件
+		//根据该规则Id，获取对应业务是否需要特殊处理的信息
+		String ifSpecial = om.ifSpecial(r.getOperationId());
+		//生成普通邮件内容
+		if(ifSpecial.equals(null)){
+			setCommonMailContent(r,e,m);
+		}
+		//生成特殊类型"试用期转正"
+		if(ifSpecial.equals("1")){
+			setSpecialMailContent(r,e,m,"1");
+		}
+		//生成特殊类型"合同续签"
+		if(ifSpecial.equals("2")){
+			setSpecialMailContent(r,e,m,"2");
+		}
+		//生成特殊类型"绩效表填写"
+		if(ifSpecial.equals("3")){
+			setSpecialMailContent(r,e,m,"3");
+		}
+	}
+
+	/**
+	 * 设置邮件的具体内容___普通邮件
+	 * @param r
+	 * @param e
+	 * @param m
+	 * @param special 
+	 * @throws ParseException
+	 */
+	public void setCommonMailContent(Rule r,Employee e,Mail m) throws ParseException{
+		
+		m.setId(UUID.randomUUID().toString());
+		m.setMailName(r.getRuleName());
+		m.setCreateTime(new Date());
+		m.setRecipient(e.getName());
+		m.setRecipientAddress(e.getMail());
+		m.setSender("人力资源部");
+		m.setSenderAddress("Hr@BingoSoft.com");
+		m.setCopyPeople(e.getManager());//抄送人：员工所属上级
+		m.setCopyPeopleAddress("");
+		m.setOperationId(r.getOperationId());
+		m.setStatus(1);//默认为1：待发送。如果管理员点击取消，则变为0。
+		m.setOperationId(r.getOperationId());
+		//根据规则方法与员工信息 生成邮件模板
+		m.setMailContent(cmcs.getMailContent(e.getId(), r.getModelId(), DateTransferUtils.dateTimeFormat(m.getPlanSendTime()),"截止日期"));
+	}
+	
+	/**
+	 * 设置邮件的具体内容___特殊邮件
+	 * @param r
+	 * @param e
+	 * @param m
+	 * @throws ParseException
+	 */
+	private void setSpecialMailContent(Rule r, Employee e, Mail m, String special) {
+		m.setId(UUID.randomUUID().toString());
+		m.setMailName(r.getRuleName());
+		m.setCreateTime(new Date());
+		if(special.equals("1")){
+			m.setRecipient(e.getManager());
+			m.setRecipientAddress(e.getManagerMail());
+			m.setSender("人力资源部");
+			m.setSenderAddress("Hr@BingoSoft.com");
+			m.setCopyPeople(e.getManager());//抄送人：员工所属上级
+			m.setCopyPeopleAddress("");
+			m.setOperationId(r.getOperationId());
+			m.setStatus(1);//默认为1：待发送。如果管理员点击取消，则变为0。
+			m.setOperationId(r.getOperationId());
+			//根据规则方法与员工信息 生成邮件模板
+			m.setMailContent(cmcs.getMailContent(e.getId(), r.getModelId(), DateTransferUtils.dateTimeFormat(m.getPlanSendTime()),"截止日期"));
+		}
 	}
 
 	/**

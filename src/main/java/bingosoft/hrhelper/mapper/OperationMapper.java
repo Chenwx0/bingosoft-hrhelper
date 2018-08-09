@@ -18,5 +18,7 @@ public interface OperationMapper {
 
     int updateByPrimaryKey(Operation record);
 
+	String ifSpecial(String operationId);
+
 	List<OperationMenuForm> getOperationMenu(String userId);
 }

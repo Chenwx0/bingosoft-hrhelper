@@ -17,6 +17,8 @@ public class Operation {
 
     private String isSpecial;
 
+    private String userId;
+
     public String getId() {
         return id;
     }
@@ -71,5 +73,13 @@ public class Operation {
 
     public void setIsSpecial(String isSpecial) {
         this.isSpecial = isSpecial == null ? null : isSpecial.trim();
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId == null ? null : userId.trim();
     }
 }

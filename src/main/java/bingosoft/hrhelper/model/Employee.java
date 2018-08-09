@@ -13,6 +13,8 @@ public class Employee {
 
     private String manager;
 
+    private String managerMail;
+
     private Date fullmenberDay;
 
     private Date planFullmenberDay;
@@ -69,6 +71,14 @@ public class Employee {
 
     public void setManager(String manager) {
         this.manager = manager == null ? null : manager.trim();
+    }
+
+    public String getManagerMail() {
+        return managerMail;
+    }
+
+    public void setManagerMail(String managerMail) {
+        this.managerMail = managerMail == null ? null : managerMail.trim();
     }
 
     public Date getFullmenberDay() {
@@ -151,6 +161,8 @@ public class Employee {
             result = this.name;
         if (field.equals("mail"))
             result = this.mail;
+        if (field.equals("managerMail"))
+            result = this.managerMail;
         if (field.equals("department"))
             result = this.department;
         if (field.equals("manager"))
