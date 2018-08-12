@@ -1,11 +1,10 @@
 package bingosoft.hrhelper.mapper;
 
-
-import bingosoft.hrhelper.model.Mail;
-import java.util.List;
 import bingosoft.hrhelper.form.MailListForm;
 import bingosoft.hrhelper.model.Mail;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface MailMapper {
     int deleteByPrimaryKey(String id);
@@ -22,12 +21,12 @@ public interface MailMapper {
 
     int updateByPrimaryKey(Mail record);
 
-	List<Mail> listAll();
+    List<Mail> listAll();
 
-	void deleteAll();
-	
-	void deleteCancelMail(Mail record);
- 
+    void deleteAll();
+
+    void deleteCancelMail(Mail record);
+
     /**
      * 查询待发送邮件列表
      * @param recipient
@@ -36,7 +35,7 @@ public interface MailMapper {
      * @param endTime
      * @return
      */
-	List<MailListForm> selectNotSendMailList(@Param("recipient") String recipient, @Param("operationId") String operationId, @Param("startTime") String startTime, @Param("endTime") String endTime);
+    List<MailListForm> selectNotSendMailList(@Param("recipient") String recipient, @Param("operationId") String operationId, @Param("startTime") String startTime, @Param("endTime") String endTime);
 
     /**
      * 查询已发送邮件列表
@@ -47,5 +46,4 @@ public interface MailMapper {
      * @return
      */
     List<MailListForm> selectSentMailList(@Param("recipient") String recipient, @Param("operationId") String operationId, @Param("startTime") String startTime, @Param("endTime") String endTime);
-
 }

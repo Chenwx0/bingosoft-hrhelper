@@ -21,9 +21,11 @@ public class AlreadySendMail {
 
     private String mailAttachmentPath;
 
+    private String employeeId;
+
     private String operationId;
 
-    private String appoveId;
+    private String approveId;
 
     private Integer status;
 
@@ -101,11 +103,23 @@ public class AlreadySendMail {
         this.copyPeopleAddress = copyPeopleAddress == null ? null : copyPeopleAddress.trim();
     }
 
-   
+    public String getMailAttachmentPath() {
+        return mailAttachmentPath;
+    }
 
-    
+    public void setMailAttachmentPath(String mailAttachmentPath) {
+        this.mailAttachmentPath = mailAttachmentPath == null ? null : mailAttachmentPath.trim();
+    }
 
-	public String getOperationId() {
+    public String getEmployeeId() {
+        return employeeId;
+    }
+
+    public void setEmployeeId(String employeeId) {
+        this.employeeId = employeeId == null ? null : employeeId.trim();
+    }
+
+    public String getOperationId() {
         return operationId;
     }
 
@@ -113,12 +127,12 @@ public class AlreadySendMail {
         this.operationId = operationId == null ? null : operationId.trim();
     }
 
-    public String getAppoveId() {
-        return appoveId;
+    public String getApproveId() {
+        return approveId;
     }
 
-    public void setAppoveId(String appoveId) {
-        this.appoveId = appoveId == null ? null : appoveId.trim();
+    public void setApproveId(String approveId) {
+        this.approveId = approveId == null ? null : approveId.trim();
     }
 
     public Integer getStatus() {
@@ -168,13 +182,4 @@ public class AlreadySendMail {
     public void setMailContent(String mailContent) {
         this.mailContent = mailContent == null ? null : mailContent.trim();
     }
-
-	public String getMailAttachmentPath() {
-		return mailAttachmentPath;
-	}
-
-	public void setMailAttachmentPath(String mailAttachmentPath) {
-		this.mailAttachmentPath = mailAttachmentPath;
-	}
-
 }

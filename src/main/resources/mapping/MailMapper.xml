@@ -11,67 +11,25 @@
     <result column="copy_people" property="copyPeople" jdbcType="VARCHAR" />
     <result column="copy_people_address" property="copyPeopleAddress" jdbcType="VARCHAR" />
     <result column="mail_attachment_path" property="mailAttachmentPath" jdbcType="VARCHAR" />
+    <result column="employee_id" property="employeeId" jdbcType="VARCHAR" />
     <result column="operation_id" property="operationId" jdbcType="VARCHAR" />
     <result column="approve_id" property="approveId" jdbcType="VARCHAR" />
     <result column="status" property="status" jdbcType="INTEGER" />
     <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="plan_send_time" property="planSendTime" jdbcType="TIMESTAMP" />
-
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="bingosoft.hrhelper.model.Mail" extends="BaseResultMap" >
     <result column="mail_content" property="mailContent" jdbcType="LONGVARCHAR" />
   </resultMap>
-
   <sql id="Base_Column_List" >
     id, mail_name, recipient, recipient_address, sender, sender_address, copy_people, 
-    copy_people_address, mail_attachment_path, operation_id, approve_id, status, update_by, 
-    create_time, plan_send_time
+    copy_people_address, mail_attachment_path, employee_id, operation_id, approve_id, 
+    status, update_by, create_time, plan_send_time
   </sql>
   <sql id="Blob_Column_List" >
     mail_content
   </sql>
-
-  <!-- 邮件前端相关操作自定义 -->
-  <!-- start -->
-  <select id="selectNotSendMailList" resultType="bingosoft.hrhelper.form.MailListForm">
-    SELECT m.id, m.mail_name mailName, m.mail_content mailContent, mail_attachment_path mailAttachmentPath, m.recipient, m.recipient_address recipientAddress, m.copy_people copyPeople, m.copy_people_address copyPeopleAddress, o.operation_name operation, m.plan_send_time planSendTime, u.username principal, u.email principalAddress
-    FROM  mail m, operation o, permission p, user u
-    WHERE m.operation_id = o.id
-      AND o.id = p.operation_id
-      AND u.id = p.user_id
-      AND u.is_admin = 0
-      <if test="recipient != null">
-        AND m.recipient LIKE "%"#{recipient}"%"
-      </if>
-      <if test="operationId != null">
-        AND o.id = #{operationId}
-      </if>
-      <if test="startTime != null and endTime != null">
-        AND m.plan_send_time BETWEEN #{startTime} AND #{endTime}
-      </if>
-  </select>
-
-  <select id="selectSentMailList" resultType="bingosoft.hrhelper.form.MailListForm">
-    SELECT m.id, m.mail_name mailName, m.mail_content mailContent, mail_attachment_path mailAttachmentPath, m.recipient, m.recipient_address recipientAddress, m.copy_people copyPeople, m.copy_people_address copyPeopleAddress, o.operation_name operation, m.send_time sendTime, u.username principal, u.email principalAddress
-    FROM  already_send_mail m, operation o, permission p, user u
-    WHERE m.operation_id = o.id
-    AND o.id = p.operation_id
-    AND u.id = p.user_id
-    AND u.is_admin = 0
-    <if test="recipient != null">
-      AND m.recipient LIKE "%"#{recipient}"%"
-    </if>
-    <if test="operationId != null">
-      AND o.id = #{operationId}
-    </if>
-    <if test="startTime != null and endTime != null">
-      AND m.send_time BETWEEN #{startTime} AND #{endTime}
-    </if>
-  </select>
-
-  <!-- end -->
-
   <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
@@ -80,39 +38,23 @@
     from mail
     where id = #{id,jdbcType=VARCHAR}
   </select>
-  <select id="listAll" resultMap="ResultMapWithBLOBs" >
-    select 
-    <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
-    from mail
-  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from mail
     where id = #{id,jdbcType=VARCHAR}
-  </delete>
-  <delete id="deleteCancelMail" parameterType="bingosoft.hrhelper.model.Mail" >
-    delete from mail
-    where operation_id = #{operationId,jdbcType=VARCHAR} 
-    &amp; plan_send_time = #{planSendTime,jdbcType=VARCHAR}
-    &amp; recipient_address = #{recipientAddress,jdbcType=VARCHAR}
-  </delete>
-  <delete id="deleteAll" parameterType="java.lang.String" >
-    delete from mail
   </delete>
   <insert id="insert" parameterType="bingosoft.hrhelper.model.Mail" >
     insert into mail (id, mail_name, recipient, 
       recipient_address, sender, sender_address, 
       copy_people, copy_people_address, mail_attachment_path, 
-      operation_id, approve_id, status, 
-      update_by, create_time, plan_send_time, 
-      mail_content)
+      employee_id, operation_id, approve_id, 
+      status, update_by, create_time, 
+      plan_send_time, mail_content)
     values (#{id,jdbcType=VARCHAR}, #{mailName,jdbcType=VARCHAR}, #{recipient,jdbcType=VARCHAR}, 
       #{recipientAddress,jdbcType=VARCHAR}, #{sender,jdbcType=VARCHAR}, #{senderAddress,jdbcType=VARCHAR}, 
       #{copyPeople,jdbcType=VARCHAR}, #{copyPeopleAddress,jdbcType=VARCHAR}, #{mailAttachmentPath,jdbcType=VARCHAR}, 
-      #{operationId,jdbcType=VARCHAR}, #{approveId,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
-      #{updateBy,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{planSendTime,jdbcType=TIMESTAMP}, 
-      #{mailContent,jdbcType=LONGVARCHAR})
+      #{employeeId,jdbcType=VARCHAR}, #{operationId,jdbcType=VARCHAR}, #{approveId,jdbcType=VARCHAR}, 
+      #{status,jdbcType=INTEGER}, #{updateBy,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{planSendTime,jdbcType=TIMESTAMP}, #{mailContent,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="bingosoft.hrhelper.model.Mail" >
     insert into mail
@@ -143,6 +85,9 @@
       </if>
       <if test="mailAttachmentPath != null" >
         mail_attachment_path,
+      </if>
+      <if test="employeeId != null" >
+        employee_id,
       </if>
       <if test="operationId != null" >
         operation_id,
@@ -194,6 +139,9 @@
       <if test="mailAttachmentPath != null" >
         #{mailAttachmentPath,jdbcType=VARCHAR},
       </if>
+      <if test="employeeId != null" >
+        #{employeeId,jdbcType=VARCHAR},
+      </if>
       <if test="operationId != null" >
         #{operationId,jdbcType=VARCHAR},
       </if>
@@ -244,6 +192,9 @@
       <if test="mailAttachmentPath != null" >
         mail_attachment_path = #{mailAttachmentPath,jdbcType=VARCHAR},
       </if>
+      <if test="employeeId != null" >
+        employee_id = #{employeeId,jdbcType=VARCHAR},
+      </if>
       <if test="operationId != null" >
         operation_id = #{operationId,jdbcType=VARCHAR},
       </if>
@@ -278,6 +229,7 @@
       copy_people = #{copyPeople,jdbcType=VARCHAR},
       copy_people_address = #{copyPeopleAddress,jdbcType=VARCHAR},
       mail_attachment_path = #{mailAttachmentPath,jdbcType=VARCHAR},
+      employee_id = #{employeeId,jdbcType=VARCHAR},
       operation_id = #{operationId,jdbcType=VARCHAR},
       approve_id = #{approveId,jdbcType=VARCHAR},
       status = #{status,jdbcType=INTEGER},
@@ -297,6 +249,7 @@
       copy_people = #{copyPeople,jdbcType=VARCHAR},
       copy_people_address = #{copyPeopleAddress,jdbcType=VARCHAR},
       mail_attachment_path = #{mailAttachmentPath,jdbcType=VARCHAR},
+      employee_id = #{employeeId,jdbcType=VARCHAR},
       operation_id = #{operationId,jdbcType=VARCHAR},
       approve_id = #{approveId,jdbcType=VARCHAR},
       status = #{status,jdbcType=INTEGER},
@@ -305,4 +258,64 @@
       plan_send_time = #{planSendTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=VARCHAR}
   </update>
+
+  <!--  自定义  -->
+  <select id="listAll" resultMap="ResultMapWithBLOBs" >
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from mail
+  </select>
+
+  <delete id="deleteAll" parameterType="java.lang.String" >
+    delete from mail
+  </delete>
+
+  <delete id="deleteCancelMail" parameterType="bingosoft.hrhelper.model.Mail" >
+    delete from mail
+    where operation_id = #{operationId,jdbcType=VARCHAR}
+    &amp; plan_send_time = #{planSendTime,jdbcType=VARCHAR}
+    &amp; recipient_address = #{recipientAddress,jdbcType=VARCHAR}
+  </delete>
+
+  <!-- 邮件前端相关操作自定义 -->
+  <!-- start -->
+  <select id="selectNotSendMailList" resultType="bingosoft.hrhelper.form.MailListForm">
+    SELECT m.id, m.mail_name mailName, m.mail_content mailContent, mail_attachment_path mailAttachmentPath, m.recipient, m.recipient_address recipientAddress, m.copy_people copyPeople, m.copy_people_address copyPeopleAddress, o.operation_name operation, m.plan_send_time planSendTime, u.username principal, u.email principalAddress
+    FROM  mail m, operation o, permission p, user u
+    WHERE m.operation_id = o.id
+    AND o.id = p.operation_id
+    AND u.id = p.user_id
+    AND u.is_admin = 0
+    <if test="recipient != null">
+      AND m.recipient LIKE "%"#{recipient}"%"
+    </if>
+    <if test="operationId != null">
+      AND o.id = #{operationId}
+    </if>
+    <if test="startTime != null and endTime != null">
+      AND m.plan_send_time BETWEEN #{startTime} AND #{endTime}
+    </if>
+  </select>
+
+  <select id="selectSentMailList" resultType="bingosoft.hrhelper.form.MailListForm">
+    SELECT m.id, m.mail_name mailName, m.mail_content mailContent, mail_attachment_path mailAttachmentPath, m.recipient, m.recipient_address recipientAddress, m.copy_people copyPeople, m.copy_people_address copyPeopleAddress, o.operation_name operation, m.send_time sendTime, u.username principal, u.email principalAddress
+    FROM  already_send_mail m, operation o, permission p, user u
+    WHERE m.operation_id = o.id
+    AND o.id = p.operation_id
+    AND u.id = p.user_id
+    AND u.is_admin = 0
+    <if test="recipient != null">
+      AND m.recipient LIKE "%"#{recipient}"%"
+    </if>
+    <if test="operationId != null">
+      AND o.id = #{operationId}
+    </if>
+    <if test="startTime != null and endTime != null">
+      AND m.send_time BETWEEN #{startTime} AND #{endTime}
+    </if>
+  </select>
+
+  <!-- end -->
 </mapper>

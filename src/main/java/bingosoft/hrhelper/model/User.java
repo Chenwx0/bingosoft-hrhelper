@@ -7,6 +7,8 @@ public class User {
 
     private String password;
 
+    private Integer isAdmin;
+
     public String getId() {
         return id;
     }
@@ -29,5 +31,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password == null ? null : password.trim();
+    }
+
+    public Integer getIsAdmin() {
+        return isAdmin;
+    }
+
+    public void setIsAdmin(Integer isAdmin) {
+        this.isAdmin = isAdmin;
     }
 }

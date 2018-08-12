@@ -63,9 +63,9 @@ public class MailService{
         List<MailListForm> mailListForms = new ArrayList<>();
         try{
             if (status == 0){
-                mailListForms = mailMapper.selectNotSendMailList(recipient, operationId, startTime, endTime);
+                //mailListForms = mailMapper.selectNotSendMailList(recipient, operationId, startTime, endTime);
             }else if(status == 1){
-                mailListForms = mailMapper.selectSentMailList(recipient, operationId, startTime, endTime);
+                //mailListForms = mailMapper.selectSentMailList(recipient, operationId, startTime, endTime);
             }
             PageInfo<MailListForm> pageInfo = new PageInfo<>(mailListForms);
             result.setResultEntity(pageInfo);
