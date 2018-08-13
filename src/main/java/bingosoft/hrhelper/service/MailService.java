@@ -14,9 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.logging.SimpleFormatter;
 
 /**
  * @创建人 chenwx
@@ -73,6 +74,46 @@ public class MailService{
             isSpecial = isSpecialTemp;
         }catch (NumberFormatException e){
             logger.error(TipMessage.PARAM_ILLEGAL_CHAR,e);
+        }
+        // 筛选日期处理
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar calendar = Calendar.getInstance();
+        // 入职日期
+        String entryDayEnd = params.get("entryDayEnd");
+        // 拟转正日期
+        String planFullmenberDayEnd  = params.get("planFullmenberDayEnd ");
+        // 合同到期日
+        String contractDayEnd = params.get("contractDayEnd");
+        try {
+            // 入职日期筛选结束时间处理
+            if (entryDayEnd != null){
+                Date entryDayEndDate =  simpleDateFormat.parse(entryDayEnd);
+                calendar.setTime(entryDayEndDate);
+                calendar.add(Calendar.DAY_OF_MONTH, 1);//加一天
+                entryDayEnd =  simpleDateFormat.format(calendar.getTime());
+                params.put("entryDayEnd", entryDayEnd);
+            }
+            // 拟转正日期筛选结束时间处理
+            if (planFullmenberDayEnd != null){
+                Date planFullmenberDayEndDate =  simpleDateFormat.parse(planFullmenberDayEnd);
+                calendar.setTime(planFullmenberDayEndDate);
+                calendar.add(Calendar.DAY_OF_MONTH, 1);//加一天
+                planFullmenberDayEnd =  simpleDateFormat.format(calendar.getTime());
+                params.put("planFullmenberDayEnd", planFullmenberDayEnd);
+            }
+            if (contractDayEnd != null){
+                // 合同到期日筛选结束时间处理
+                Date contractDayEndDate =  simpleDateFormat.parse(contractDayEnd);
+                calendar.setTime(contractDayEndDate);
+                calendar.add(Calendar.DAY_OF_MONTH, 1);//加一天
+                contractDayEnd =  simpleDateFormat.format(calendar.getTime());
+                params.put("contractDayEnd", contractDayEnd);
+            }
+        } catch (ParseException e) {
+            logger.error(TipMessage.PARAM_ILLEGAL_CHAR,e);
+            result.setSuccess(false);
+            result.setMessage("日期格式有误");
+            return result;
         }
 
         PageHelper.startPage(pageNum, pageSize);
