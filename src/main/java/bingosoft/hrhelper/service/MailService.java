@@ -5,16 +5,21 @@ import bingosoft.hrhelper.common.TipMessage;
 import bingosoft.hrhelper.form.MailListForm;
 import bingosoft.hrhelper.mapper.AlreadySendMailMapper;
 import bingosoft.hrhelper.mapper.MailMapper;
+import bingosoft.hrhelper.model.Mail;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import leap.lang.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.logging.SimpleFormatter;
 
 /**
  * @创建人 chenwx
@@ -25,6 +30,7 @@ import java.util.List;
 public class MailService{
 
     private static final String ID_NULL = "邮件ID不能为空";
+    private static final String OPERATION_ID_NULL = "业务类别ID不能为空";
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -35,41 +41,96 @@ public class MailService{
     AlreadySendMailMapper aMailMapper;
 
     /**
-     * 分页查询邮件列表
-     * @param pageNum
-     * @param pageSize
-     * @param status
-     * @param recipient
-     * @param operationId
-     * @param startTime
-     * @param endTime
-     * @return 邮件分页对象
+     * @param params(status 0-待发送 1-已发送 isSpecial 0-不需审批，其他-需审批)
+     * @return
      */
-    public Result<PageInfo<MailListForm>> pageQueryMailList(Integer pageNum, Integer pageSize, Integer status, String recipient, String operationId, String startTime, String endTime){
+    public Result<PageInfo<MailListForm>> pageQueryMailList(Map<String,String> params){
 
         Result<PageInfo<MailListForm>> result = new Result<>();
+
         // 参数验证
-        if (pageNum == null || pageNum == 0){
-            pageNum = 1;
+        String operationId = params.get("operationId");
+        if (Strings.isEmpty(operationId)){
+            result.setSuccess(false);
+            result.setMessage(OPERATION_ID_NULL);
+            return result;
         }
-        if (pageSize == null || pageSize == 0){
-            pageSize = 20;
+        int pageNum = 1;
+        int pageSize = 20;
+        int status = 1;
+        int isSpecial = 0;
+        try{
+            int pageNumTemp = Integer.parseInt(params.get("pageNum"));
+            int pageSizeTemp = Integer.parseInt(params.get("pageSize"));
+            int statusTemp = Integer.parseInt(params.get("status"));
+            int isSpecialTemp = Integer.parseInt(params.get("isSpecial"));
+            if (pageNumTemp > 0){
+                pageNum = pageNumTemp;
+            }
+            if (pageSize > 0){
+                pageSize = pageSizeTemp;
+            }
+            if (status == 0 || status == 1){
+                status = statusTemp;
+            }
+            isSpecial = isSpecialTemp;
+        }catch (NumberFormatException e){
+            logger.error(TipMessage.PARAM_ILLEGAL_CHAR,e);
         }
-        if (status == null){
-            status = 0;
+        // 筛选日期处理
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar calendar = Calendar.getInstance();
+        // 入职日期
+        String entryDayEnd = params.get("entryDayEnd");
+        // 拟转正日期
+        String planFullmenberDayEnd  = params.get("planFullmenberDayEnd ");
+        // 合同到期日
+        String contractDayEnd = params.get("contractDayEnd");
+        try {
+            // 入职日期筛选结束时间处理
+            if (entryDayEnd != null){
+                Date entryDayEndDate =  simpleDateFormat.parse(entryDayEnd);
+                calendar.setTime(entryDayEndDate);
+                calendar.add(Calendar.DAY_OF_MONTH, 1);//加一天
+                entryDayEnd =  simpleDateFormat.format(calendar.getTime());
+                params.put("entryDayEnd", entryDayEnd);
+            }
+            // 拟转正日期筛选结束时间处理
+            if (planFullmenberDayEnd != null){
+                Date planFullmenberDayEndDate =  simpleDateFormat.parse(planFullmenberDayEnd);
+                calendar.setTime(planFullmenberDayEndDate);
+                calendar.add(Calendar.DAY_OF_MONTH, 1);//加一天
+                planFullmenberDayEnd =  simpleDateFormat.format(calendar.getTime());
+                params.put("planFullmenberDayEnd", planFullmenberDayEnd);
+            }
+            if (contractDayEnd != null){
+                // 合同到期日筛选结束时间处理
+                Date contractDayEndDate =  simpleDateFormat.parse(contractDayEnd);
+                calendar.setTime(contractDayEndDate);
+                calendar.add(Calendar.DAY_OF_MONTH, 1);//加一天
+                contractDayEnd =  simpleDateFormat.format(calendar.getTime());
+                params.put("contractDayEnd", contractDayEnd);
+            }
+        } catch (ParseException e) {
+            logger.error(TipMessage.DATE_FORMAT_INCORRECT,e);
+            result.setSuccess(false);
+            result.setMessage(TipMessage.DATE_FORMAT_INCORRECT);
+            return result;
         }
 
         PageHelper.startPage(pageNum, pageSize);
         List<MailListForm> mailListForms = new ArrayList<>();
         try{
             if (status == 0){
-                //mailListForms = mailMapper.selectNotSendMailList(recipient, operationId, startTime, endTime);
-            }else if(status == 1){
-                //mailListForms = mailMapper.selectSentMailList(recipient, operationId, startTime, endTime);
+                mailListForms = mailMapper.selectListNotSend(params);
+            }else if(status == 1 && isSpecial == 0){
+                mailListForms = mailMapper.selectListsentNoApprove(params);
+            }else if(status == 1 && isSpecial != 0){
+                mailListForms = mailMapper.selectListSentApprove(params);
             }
             PageInfo<MailListForm> pageInfo = new PageInfo<>(mailListForms);
             result.setResultEntity(pageInfo);
-        }catch (Exception e){
+        }catch (SQLException e){
             result.setSuccess(false);
             result.setMessage(TipMessage.QUERY_FAIL);
             logger.error(TipMessage.QUERY_FAIL,e);
@@ -92,7 +153,7 @@ public class MailService{
             return result;
         }
         if (status == null){
-            status = 0;
+            status = 1;
         }
         if (status == 0){
             try{
@@ -103,7 +164,7 @@ public class MailService{
                     result.setSuccess(false);
                     result.setMessage(TipMessage.NO_DATA);
                 }
-            } catch (Exception e){
+            } catch (SQLException e){
                 result.setSuccess(false);
                 result.setMessage(TipMessage.DELETE_FAIL);
                 logger.error(TipMessage.DELETE_FAIL,e);
@@ -117,7 +178,7 @@ public class MailService{
                     result.setSuccess(false);
                     result.setMessage(TipMessage.NO_DATA);
                 }
-            } catch (Exception e){
+            } catch (SQLException e){
                 result.setSuccess(false);
                 result.setMessage(TipMessage.DELETE_FAIL);
                 logger.error(TipMessage.DELETE_FAIL,e);
@@ -143,7 +204,7 @@ public class MailService{
             return result;
         }
         if(status == null){
-            status = 0;
+            status = 1;
         }
         if (status == 0){
             try{
@@ -151,7 +212,7 @@ public class MailService{
                     mailMapper.deleteByPrimaryKey(mailId);
                 }
                 result.setMessage(TipMessage.DELETE_SUCCESS);
-            } catch (Exception e){
+            } catch (SQLException e){
                 result.setSuccess(false);
                 result.setMessage(TipMessage.DELETE_FAIL);
                 logger.error(TipMessage.DELETE_FAIL,e);
@@ -162,11 +223,44 @@ public class MailService{
                     aMailMapper.deleteByPrimaryKey(mailId);
                 }
                 result.setMessage(TipMessage.DELETE_SUCCESS);
-            } catch (Exception e){
+            } catch (SQLException e){
                 result.setSuccess(false);
                 result.setMessage(TipMessage.DELETE_FAIL);
                 logger.error(TipMessage.DELETE_FAIL,e);
             }
+        }
+
+        return result;
+    }
+
+    /**
+     * 更新待发送邮件信息
+     * @param mail
+     * @return 更新结果
+     */
+    public Result updateMail(Mail mail){
+
+        Result result = new Result();
+        // 参数校验
+        if (Strings.isEmpty(mail.getId())){
+            result.setSuccess(false);
+            result.setMessage(ID_NULL);
+            return result;
+        }
+
+        try{
+            // 执行更新
+            int res = mailMapper.updateByPrimaryKeySelective(mail);
+            // 判断更新结果
+            if (res > 0){
+                result.setMessage(TipMessage.UPDATE_SUCCESS);
+            }else{
+                result.setMessage(TipMessage.NO_DATA_CHANGE);
+            }
+        }catch (SQLException e){
+            logger.error(TipMessage.UPDATE_FAIL, e);
+            result.setSuccess(false);
+            result.setMessage(TipMessage.UPDATE_FAIL);
         }
 
         return result;

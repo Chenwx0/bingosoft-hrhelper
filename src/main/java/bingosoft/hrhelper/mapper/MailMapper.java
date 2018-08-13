@@ -2,12 +2,13 @@ package bingosoft.hrhelper.mapper;
 
 import bingosoft.hrhelper.form.MailListForm;
 import bingosoft.hrhelper.model.Mail;
-import org.apache.ibatis.annotations.Param;
 
+import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 public interface MailMapper {
-    int deleteByPrimaryKey(String id);
+    int deleteByPrimaryKey(String id) throws SQLException;
 
     int insert(Mail record);
 
@@ -15,7 +16,7 @@ public interface MailMapper {
 
     Mail selectByPrimaryKey(String id);
 
-    int updateByPrimaryKeySelective(Mail record);
+    int updateByPrimaryKeySelective(Mail record) throws SQLException;
 
     int updateByPrimaryKeyWithBLOBs(Mail record);
 
@@ -29,21 +30,22 @@ public interface MailMapper {
 
     /**
      * 查询待发送邮件列表
-     * @param recipient
-     * @param operationId
-     * @param startTime
-     * @param endTime
+     * @param params
      * @return
      */
-    List<MailListForm> selectNotSendMailList(@Param("recipient") String recipient, @Param("operationId") String operationId, @Param("startTime") String startTime, @Param("endTime") String endTime);
+    List<MailListForm> selectListNotSend(Map<String,String> params) throws SQLException;
 
     /**
-     * 查询已发送邮件列表
-     * @param recipient
-     * @param operationId
-     * @param startTime
-     * @param endTime
+     * 查询已发送不需审批邮件列表
+     * @param params
      * @return
      */
-    List<MailListForm> selectSentMailList(@Param("recipient") String recipient, @Param("operationId") String operationId, @Param("startTime") String startTime, @Param("endTime") String endTime);
+    List<MailListForm> selectListsentNoApprove(Map<String,String> params) throws SQLException;
+
+    /**
+     * 查询已发送需审批邮件列表
+     * @param params
+     * @return
+     */
+    List<MailListForm> selectListSentApprove(Map<String,String> params) throws SQLException;
 }

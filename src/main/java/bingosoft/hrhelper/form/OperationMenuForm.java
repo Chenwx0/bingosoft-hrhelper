@@ -11,6 +11,8 @@ public class OperationMenuForm {
 
     private String operationName;
 
+    private String isSpecial;
+
     public String getId() {
         return id;
     }
@@ -27,4 +29,11 @@ public class OperationMenuForm {
         this.operationName = operationName == null ? null : operationName.trim();
     }
 
+    public String getIsSpecial() {
+        return isSpecial;
+    }
+
+    public void setIsSpecial(String isSpecial) {
+        this.isSpecial = isSpecial == null ? null:isSpecial.trim();
+    }
 }

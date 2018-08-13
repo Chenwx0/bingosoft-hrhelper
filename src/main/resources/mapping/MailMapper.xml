@@ -281,40 +281,110 @@
 
   <!-- 邮件前端相关操作自定义 -->
   <!-- start -->
-  <select id="selectNotSendMailList" resultType="bingosoft.hrhelper.form.MailListForm">
-    SELECT m.id, m.mail_name mailName, m.mail_content mailContent, mail_attachment_path mailAttachmentPath, m.recipient, m.recipient_address recipientAddress, m.copy_people copyPeople, m.copy_people_address copyPeopleAddress, o.operation_name operation, m.plan_send_time planSendTime, u.username principal, u.email principalAddress
-    FROM  mail m, operation o, permission p, user u
-    WHERE m.operation_id = o.id
-    AND o.id = p.operation_id
-    AND u.id = p.user_id
-    AND u.is_admin = 0
-    <if test="recipient != null">
-      AND m.recipient LIKE "%"#{recipient}"%"
-    </if>
-    <if test="operationId != null">
-      AND o.id = #{operationId}
-    </if>
-    <if test="startTime != null and endTime != null">
-      AND m.plan_send_time BETWEEN #{startTime} AND #{endTime}
-    </if>
+  <select id="selectListNotSend" parameterType="java.util.Map" resultType="bingosoft.hrhelper.form.MailListForm">
+    SELECT *
+    FROM mail_show_info
+    <where>
+      operationId = #{operationId}
+      <if test="employeeName != null">
+        AND employeeName LIKE "%"#{employeeName}"%"
+      </if>
+      <if test="department != null">
+        AND department LIKE "%"#{department}"%"
+      </if>
+      <if test="recruitClass != null">
+        AND recruitClass = #{recruitClass}
+      </if>
+      <if test="entryDayStart != null and entryDayEnd != null">
+        AND entryDay BETWEEN #{entryDayStart} AND #{entryDayEnd}
+      </if>
+      <if test="contractDayStart != null and contractDayEnd != null">
+        AND contractDay BETWEEN #{contractDayStart} AND #{contractDayEnd}
+      </if>
+      <if test="planFullmenberDayStart != null and planFullmenberDayEnd != null">
+        AND planFullmenberDay BETWEEN #{planFullmenberDayStart} AND #{planFullmenberDayEnd}
+      </if>
+    </where>
+    ORDER BY
+    <choose>
+      <when test="orderBy != null">
+        ${orderBy}
+      </when>
+      <otherwise>
+        planSendTime asc
+      </otherwise>
+    </choose>
   </select>
 
-  <select id="selectSentMailList" resultType="bingosoft.hrhelper.form.MailListForm">
-    SELECT m.id, m.mail_name mailName, m.mail_content mailContent, mail_attachment_path mailAttachmentPath, m.recipient, m.recipient_address recipientAddress, m.copy_people copyPeople, m.copy_people_address copyPeopleAddress, o.operation_name operation, m.send_time sendTime, u.username principal, u.email principalAddress
-    FROM  already_send_mail m, operation o, permission p, user u
-    WHERE m.operation_id = o.id
-    AND o.id = p.operation_id
-    AND u.id = p.user_id
-    AND u.is_admin = 0
-    <if test="recipient != null">
-      AND m.recipient LIKE "%"#{recipient}"%"
-    </if>
-    <if test="operationId != null">
-      AND o.id = #{operationId}
-    </if>
-    <if test="startTime != null and endTime != null">
-      AND m.send_time BETWEEN #{startTime} AND #{endTime}
-    </if>
+  <select id="selectListsentNoApprove" parameterType="java.util.Map" resultType="bingosoft.hrhelper.form.MailListForm">
+    SELECT *
+    FROM already_send_mail_show_info
+    <where>
+      operationId = #{operationId}
+      <if test="employeeName != null">
+        AND employeeName LIKE "%"#{employeeName}"%"
+      </if>
+      <if test="department != null">
+        AND department LIKE "%"#{department}"%"
+      </if>
+      <if test="recruitClass != null">
+        AND recruitClass = #{recruitClass}
+      </if>
+      <if test="entryDayStart != null and entryDayEnd != null">
+        AND entryDay BETWEEN #{entryDayStart} AND #{entryDayEnd}
+      </if>
+      <if test="contractDayStart != null and contractDayEnd != null">
+        AND contractDay BETWEEN #{contractDayStart} AND #{contractDayEnd}
+      </if>
+      <if test="planFullmenberDayStart != null and planFullmenberDayEnd != null">
+        AND planFullmenberDay BETWEEN #{planFullmenberDayStart} AND #{planFullmenberDayEnd}
+      </if>
+    </where>
+    ORDER BY
+    <choose>
+      <when test="orderBy != null">
+        ${orderBy}
+      </when>
+      <otherwise>
+        sendTime asc
+      </otherwise>
+    </choose>
+  </select>
+
+  <select id="selectListSentApprove" parameterType="java.util.Map" resultType="bingosoft.hrhelper.form.MailListForm">
+    SELECT m.*, a.status approveStatus
+    FROM already_send_mail_show_info m, approve a
+    <where>
+      m.approve_id = a.id
+      AND operationId = #{operationId}
+      <if test="employeeName != null">
+        AND employeeName LIKE "%"#{employeeName}"%"
+      </if>
+      <if test="department != null">
+        AND department LIKE "%"#{department}"%"
+      </if>
+      <if test="recruitClass != null">
+        AND recruitClass = #{recruitClass}
+      </if>
+      <if test="entryDayStart != null and entryDayEnd != null">
+        AND entryDay BETWEEN #{entryDayStart} AND #{entryDayEnd}
+      </if>
+      <if test="contractDayStart != null and contractDayEnd != null">
+        AND contractDay BETWEEN #{contractDayStart} AND #{contractDayEnd}
+      </if>
+      <if test="planFullmenberDayStart != null and planFullmenberDayEnd != null">
+        AND planFullmenberDay BETWEEN #{planFullmenberDayStart} AND #{planFullmenberDayEnd}
+      </if>
+    </where>
+    ORDER BY
+    <choose>
+      <when test="orderBy != null">
+        ${orderBy}
+      </when>
+      <otherwise>
+        sendTime asc
+      </otherwise>
+    </choose>
   </select>
 
   <!-- end -->
