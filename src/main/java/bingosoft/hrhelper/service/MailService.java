@@ -110,9 +110,9 @@ public class MailService{
                 params.put("contractDayEnd", contractDayEnd);
             }
         } catch (ParseException e) {
-            logger.error(TipMessage.PARAM_ILLEGAL_CHAR,e);
+            logger.error(TipMessage.DATE_FORMAT_INCORRECT,e);
             result.setSuccess(false);
-            result.setMessage("日期格式有误");
+            result.setMessage(TipMessage.DATE_FORMAT_INCORRECT);
             return result;
         }
 

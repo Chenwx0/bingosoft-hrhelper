@@ -32,14 +32,6 @@
     delete from employee
     where id = #{id,jdbcType=VARCHAR}
   </delete>
-  
-  <!-- 自定义 -->
-  <select id="listAllEmployee" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from employee
-  </select>
-  
   <insert id="insert" parameterType="bingosoft.hrhelper.model.Employee" >
     insert into employee (id, name, mail, 
       department, manager, manager_mail, 
@@ -217,4 +209,20 @@
       sign_class = #{signClass,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
+
+  <!-- 自定义 -->
+  <select id="listAllEmployee" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from employee
+  </select>
+
+  <select id="listEmail" parameterType="java.lang.String" resultType="bingosoft.hrhelper.form.EmployeeEmailForm">
+    SELECT id, name, mail
+    FROM employee
+    <if test="employeeName != null">
+      WHERE name LIKE "%"#{employeeName}"%"
+    </if>
+  </select>
+
 </mapper>
