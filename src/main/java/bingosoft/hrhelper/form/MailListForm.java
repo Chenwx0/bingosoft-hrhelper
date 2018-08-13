@@ -63,6 +63,35 @@ public class MailListForm {
      * 业务负责人邮箱
      */
     private String principalAddress;
+    /**
+     * 员工姓名
+     */
+    private String employeeName;
+    /**
+     * 所属部门
+     */
+    private String department;
+    /**
+     * 入职时间
+     */
+    private Date entryDay;
+    /**
+     * 拟转正时间
+     */
+    private Date planFullmenberDay;
+    /**
+     * 合同到期时间
+     */
+    private Date contractDay;
+    /**
+     * 招聘类型
+     */
+    private String recruitClass;
+    /**
+     * 审批状态
+     */
+    private Integer approveStatus;
+
 
     public String getId() {
         return id;
@@ -166,5 +195,61 @@ public class MailListForm {
 
     public void setPrincipalAddress(String principalAddress) {
         this.principalAddress = principalAddress;
+    }
+
+    public String getEmployeeName() {
+        return employeeName;
+    }
+
+    public void setEmployeeName(String employeeName) {
+        this.employeeName = employeeName;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public Date getEntryDay() {
+        return entryDay;
+    }
+
+    public void setEntryDay(Date entryDay) {
+        this.entryDay = entryDay;
+    }
+
+    public Date getPlanFullmenberDay() {
+        return planFullmenberDay;
+    }
+
+    public void setPlanFullmenberDay(Date planFullmenberDay) {
+        this.planFullmenberDay = planFullmenberDay;
+    }
+
+    public Date getContractDay() {
+        return contractDay;
+    }
+
+    public void setContractDay(Date contractDay) {
+        this.contractDay = contractDay;
+    }
+
+    public String getRecruitClass() {
+        return recruitClass;
+    }
+
+    public void setRecruitClass(String recruitClass) {
+        this.recruitClass = recruitClass;
+    }
+
+    public Integer getApproveStatus() {
+        return approveStatus;
+    }
+
+    public void setApproveStatus(Integer approveStatus) {
+        this.approveStatus = approveStatus;
     }
 }

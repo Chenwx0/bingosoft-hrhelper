@@ -7,6 +7,7 @@ import bingosoft.hrhelper.mapper.AlreadySendMailMapper;
 import bingosoft.hrhelper.mapper.MailMapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import leap.lang.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @创建人 chenwx
@@ -25,6 +27,7 @@ import java.util.List;
 public class MailService{
 
     private static final String ID_NULL = "邮件ID不能为空";
+    private static final String OPERATION_ID_NULL = "业务类别ID不能为空";
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -35,37 +38,52 @@ public class MailService{
     AlreadySendMailMapper aMailMapper;
 
     /**
-     * 分页查询邮件列表
-     * @param pageNum
-     * @param pageSize
-     * @param status
-     * @param recipient
-     * @param operationId
-     * @param startTime
-     * @param endTime
-     * @return 邮件分页对象
+     * @param params(status 0-待发送 1-已发送 isSpecial 0-不需审批，其他-需审批)
+     * @return
      */
-    public Result<PageInfo<MailListForm>> pageQueryMailList(Integer pageNum, Integer pageSize, Integer status, String recipient, String operationId, String startTime, String endTime){
+    public Result<PageInfo<MailListForm>> pageQueryMailList(Map<String,String> params){
 
         Result<PageInfo<MailListForm>> result = new Result<>();
+
         // 参数验证
-        if (pageNum == null || pageNum == 0){
-            pageNum = 1;
+        String operationId = params.get("operationId");
+        if (Strings.isEmpty(operationId)){
+            result.setSuccess(false);
+            result.setMessage(OPERATION_ID_NULL);
+            return result;
         }
-        if (pageSize == null || pageSize == 0){
-            pageSize = 20;
-        }
-        if (status == null){
-            status = 0;
+        int pageNum = 1;
+        int pageSize = 20;
+        int status = 1;
+        int isSpecial = 0;
+        try{
+            int pageNumTemp = Integer.parseInt(params.get("pageNum"));
+            int pageSizeTemp = Integer.parseInt(params.get("pageSize"));
+            int statusTemp = Integer.parseInt(params.get("status"));
+            int isSpecialTemp = Integer.parseInt(params.get("isSpecial"));
+            if (pageNumTemp > 0){
+                pageNum = pageNumTemp;
+            }
+            if (pageSize > 0){
+                pageSize = pageSizeTemp;
+            }
+            if (status == 0 || status == 1){
+                status = statusTemp;
+            }
+            isSpecial = isSpecialTemp;
+        }catch (NumberFormatException e){
+            logger.error(TipMessage.PARAM_ILLEGAL_CHAR,e);
         }
 
         PageHelper.startPage(pageNum, pageSize);
         List<MailListForm> mailListForms = new ArrayList<>();
         try{
             if (status == 0){
-                //mailListForms = mailMapper.selectNotSendMailList(recipient, operationId, startTime, endTime);
-            }else if(status == 1){
-                //mailListForms = mailMapper.selectSentMailList(recipient, operationId, startTime, endTime);
+                mailListForms = mailMapper.selectListNotSend(params);
+            }else if(status == 1 && isSpecial == 0){
+                mailListForms = mailMapper.selectListsentNoApprove(params);
+            }else if(status == 1 && isSpecial != 0){
+                mailListForms = mailMapper.selectListSentApprove(params);
             }
             PageInfo<MailListForm> pageInfo = new PageInfo<>(mailListForms);
             result.setResultEntity(pageInfo);
@@ -92,7 +110,7 @@ public class MailService{
             return result;
         }
         if (status == null){
-            status = 0;
+            status = 1;
         }
         if (status == 0){
             try{
@@ -143,7 +161,7 @@ public class MailService{
             return result;
         }
         if(status == null){
-            status = 0;
+            status = 1;
         }
         if (status == 0){
             try{

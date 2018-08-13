@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 /**
  * @创建人 chenwx
  * @功能描述 邮件展示控制类
@@ -27,18 +29,12 @@ public class MailController{
 
     /**
      * 获取邮件列表
-     * @param pageNum
-     * @param pageSize
-     * @param status
-     * @param recipient
-     * @param operationId
-     * @param startTime
-     * @param endTime
+     * @param params
      * @return 查询结果对象
      */
-    @GetMapping("/list")
-    public Result pageQueryMailList(Integer pageNum, Integer pageSize, Integer status, String recipient, String operationId, String startTime, String endTime){
-        Result result = mailService.pageQueryMailList(pageNum, pageSize, status, recipient, operationId, startTime, endTime);
+    @RequestMapping("/list")
+    public Result pageQueryMailList(@RequestBody Map<String,String> params){
+        Result result = mailService.pageQueryMailList(params);
         return result;
     }
 

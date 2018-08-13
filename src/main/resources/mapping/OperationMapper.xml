@@ -130,10 +130,9 @@
   <!-- start -->
   <!-- 根据用户Id获取业务 -->
     <select id="getOperationMenu" parameterType="java.lang.String" resultType="bingosoft.hrhelper.form.OperationMenuForm">
-        SELECT o.id id, o.operation_name operationName
-        FROM operation o, permission p
-        WHERE o.id = p.operation_id
-        AND  p.user_id = #{userId,jdbcType=VARCHAR}
+        SELECT id id, operation_name operationName, is_special isSpecial
+        FROM operation
+        WHERE user_id = #{userId,jdbcType=VARCHAR}
     </select>
 
 	<select id="ifSpecial" parameterType="java.lang.String" resultType="java.lang.String">
