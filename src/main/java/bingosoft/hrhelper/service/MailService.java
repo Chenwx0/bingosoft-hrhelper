@@ -5,6 +5,7 @@ import bingosoft.hrhelper.common.TipMessage;
 import bingosoft.hrhelper.form.MailListForm;
 import bingosoft.hrhelper.mapper.AlreadySendMailMapper;
 import bingosoft.hrhelper.mapper.MailMapper;
+import bingosoft.hrhelper.model.Mail;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import leap.lang.Strings;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -128,7 +130,7 @@ public class MailService{
             }
             PageInfo<MailListForm> pageInfo = new PageInfo<>(mailListForms);
             result.setResultEntity(pageInfo);
-        }catch (Exception e){
+        }catch (SQLException e){
             result.setSuccess(false);
             result.setMessage(TipMessage.QUERY_FAIL);
             logger.error(TipMessage.QUERY_FAIL,e);
@@ -162,7 +164,7 @@ public class MailService{
                     result.setSuccess(false);
                     result.setMessage(TipMessage.NO_DATA);
                 }
-            } catch (Exception e){
+            } catch (SQLException e){
                 result.setSuccess(false);
                 result.setMessage(TipMessage.DELETE_FAIL);
                 logger.error(TipMessage.DELETE_FAIL,e);
@@ -176,7 +178,7 @@ public class MailService{
                     result.setSuccess(false);
                     result.setMessage(TipMessage.NO_DATA);
                 }
-            } catch (Exception e){
+            } catch (SQLException e){
                 result.setSuccess(false);
                 result.setMessage(TipMessage.DELETE_FAIL);
                 logger.error(TipMessage.DELETE_FAIL,e);
@@ -210,7 +212,7 @@ public class MailService{
                     mailMapper.deleteByPrimaryKey(mailId);
                 }
                 result.setMessage(TipMessage.DELETE_SUCCESS);
-            } catch (Exception e){
+            } catch (SQLException e){
                 result.setSuccess(false);
                 result.setMessage(TipMessage.DELETE_FAIL);
                 logger.error(TipMessage.DELETE_FAIL,e);
@@ -221,11 +223,44 @@ public class MailService{
                     aMailMapper.deleteByPrimaryKey(mailId);
                 }
                 result.setMessage(TipMessage.DELETE_SUCCESS);
-            } catch (Exception e){
+            } catch (SQLException e){
                 result.setSuccess(false);
                 result.setMessage(TipMessage.DELETE_FAIL);
                 logger.error(TipMessage.DELETE_FAIL,e);
             }
+        }
+
+        return result;
+    }
+
+    /**
+     * 更新待发送邮件信息
+     * @param mail
+     * @return 更新结果
+     */
+    public Result updateMail(Mail mail){
+
+        Result result = new Result();
+        // 参数校验
+        if (Strings.isEmpty(mail.getId())){
+            result.setSuccess(false);
+            result.setMessage(ID_NULL);
+            return result;
+        }
+
+        try{
+            // 执行更新
+            int res = mailMapper.updateByPrimaryKeySelective(mail);
+            // 判断更新结果
+            if (res > 0){
+                result.setMessage(TipMessage.UPDATE_SUCCESS);
+            }else{
+                result.setMessage(TipMessage.NO_DATA_CHANGE);
+            }
+        }catch (SQLException e){
+            logger.error(TipMessage.UPDATE_FAIL, e);
+            result.setSuccess(false);
+            result.setMessage(TipMessage.UPDATE_FAIL);
         }
 
         return result;

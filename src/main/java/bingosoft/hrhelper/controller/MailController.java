@@ -1,9 +1,11 @@
 package bingosoft.hrhelper.controller;
 
 import bingosoft.hrhelper.common.Result;
+import bingosoft.hrhelper.model.Mail;
 import bingosoft.hrhelper.service.MailSendService;
 import bingosoft.hrhelper.service.MailService;
 
+import leap.web.annotation.Path;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +59,17 @@ public class MailController{
     @DeleteMapping("/patch_del")
     public Result patchDeleteMail(Integer status, String[] mailIds){
         Result result = mailService.patchDeleteMail(status, mailIds);
+        return result;
+    }
+
+    /**
+     * 更新待发送邮件信息
+     * @param mail
+     * @return 更新结果
+     */
+    @PatchMapping("update")
+    public Result updateMail(@RequestBody Mail mail){
+        Result result = mailService.updateMail(mail);
         return result;
     }
 

@@ -1,5 +1,6 @@
 package bingosoft.hrhelper.service;
 
+import java.sql.SQLException;
 import java.util.Date;
 
 
@@ -7,26 +8,22 @@ import java.util.Date;
 
 
 
-import java.util.List;
 import java.util.UUID;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import bingosoft.hrhelper.common.MailUtil;
-import bingosoft.hrhelper.common.ReadxmlByDom;
 import bingosoft.hrhelper.mapper.AlreadySendMailMapper;
 import bingosoft.hrhelper.mapper.CancelRecordMapper;
 import bingosoft.hrhelper.mapper.MailMapper;
 import bingosoft.hrhelper.model.AlreadySendMail;
 import bingosoft.hrhelper.model.CancelRecord;
 import bingosoft.hrhelper.model.Mail;
-import bingosoft.hrhelper.model.MailConfig;
 
 /**
  * @创建人 zhangyx
@@ -35,7 +32,9 @@ import bingosoft.hrhelper.model.MailConfig;
  */
 @Service
 public class MailSendService {
-	
+
+	Logger logger = LoggerFactory.getLogger(this.getClass());
+
 	MailUtil mu = new MailUtil();
 	AlreadySendMail asm = new AlreadySendMail();
 	
@@ -104,8 +103,12 @@ public class MailSendService {
 		asm.setSendTime(new Date());
 		asm.setStatus(mail.getStatus());
 		asm.setUpdateBy(mail.getUpdateBy());
-		
-		mm.deleteByPrimaryKey(mail.getId());
+
+		try {
+			mm.deleteByPrimaryKey(mail.getId());
+		} catch (SQLException e) {
+			logger.error(e.getMessage(),e);
+		}
 		asmm.insert(asm);
 	}
 	

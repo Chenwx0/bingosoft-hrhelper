@@ -2,8 +2,10 @@ package bingosoft.hrhelper.mapper;
 
 import bingosoft.hrhelper.model.AlreadySendMail;
 
+import java.sql.SQLException;
+
 public interface AlreadySendMailMapper {
-    int deleteByPrimaryKey(String id);
+    int deleteByPrimaryKey(String id) throws SQLException;
 
     int insert(AlreadySendMail record);
 
