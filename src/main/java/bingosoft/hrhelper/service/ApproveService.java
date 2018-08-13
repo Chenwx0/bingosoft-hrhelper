@@ -34,6 +34,8 @@ public class ApproveService {
 	ApproveMapper am;
 	@Autowired
 	OperationMapper om;
+	@Autowired
+	AlreadySendMailMapper asmm;
 	
 	// 经理点击按钮的时候，调用approve表中的status更改为0(待审核)/1(已通过)/2(未通过)
 	public boolean sendStatus(Approve a){
@@ -45,8 +47,8 @@ public class ApproveService {
 			}
 			//如果通过，则更新审批表，并触发邮件。
 			else if(a.getStatus()==1){
-				am.updateByPrimaryKey(a);
 				sendApproveMail(a);
+				am.updateByPrimaryKey(a);
 				return true;
 			}
 		}catch(Exception e){
@@ -59,11 +61,35 @@ public class ApproveService {
 	 * 方法：审批并发送单封邮件
 	 */
 	public void sendApproveMail(Approve a){
+		//取得该审批对应业务业务
+		String isSpecial = om.selectByPrimaryKey(a.getOperationId()).getIsSpecial();
+		//处理转正业务，直接发送下一封邮件
+		if(isSpecial.equals("1")){
+			fullMember(a);
+		}
+		if(isSpecial.equals("2")){
+			contractApprove(a);
+		}
+	}
+	
+	/**
+	 * 方法：审批并待发送单封邮件__合同续签
+	 * @param a
+	 */
+	private void contractApprove(Approve a) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	/**
+	 * 方法：审批并发送单封邮件__转正业务
+	 * @param a
+	 */
+	public void fullMember(Approve a){
 		try {
 			//
 			MailUtil mu = new MailUtil();
 			String operationName = om.selectByPrimaryKey(a.getId()).getOperationName();
-			
 			mu.setSubject(a.getApproveObject()+operationName);
 			mu.setContent("从邮件模板表中得到"); 
 			mu.setRecipientAddresses("18826108872@163.com");
@@ -88,5 +114,22 @@ public class ApproveService {
     	a.setStatus(1);
     	
 	    sendStatus(a);
+	}
+
+	/**
+	 * 经理点击同意后，提醒员工填写申请续签合同
+	 * @param mailContent
+	 * @param employeeAddress
+	 */
+	public void sendContractMail(String mailContent, String employeeId) {
+		try {
+			mu.setSubject("合同续签申请提醒");
+			mu.setRecipientAddresses(employeeId);
+			mu.setContent(mailContent);
+			mu.sendMail();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

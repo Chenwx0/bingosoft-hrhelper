@@ -16,14 +16,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import bingosoft.hrhelper.common.DateTransferUtils;
+import bingosoft.hrhelper.common.ReadxmlByDom;
+import bingosoft.hrhelper.mapper.ApproveMapper;
 import bingosoft.hrhelper.mapper.CancelRecordMapper;
 import bingosoft.hrhelper.mapper.EmployeeMapper;
 import bingosoft.hrhelper.mapper.MailMapper;
 import bingosoft.hrhelper.mapper.OperationMapper;
 import bingosoft.hrhelper.mapper.RuleMapper;
+import bingosoft.hrhelper.model.Approve;
 import bingosoft.hrhelper.model.CancelRecord;
 import bingosoft.hrhelper.model.Employee;
 import bingosoft.hrhelper.model.Mail;
+import bingosoft.hrhelper.model.MailConfig;
 import bingosoft.hrhelper.model.Operation;
 import bingosoft.hrhelper.model.Rule;
 
@@ -37,6 +41,8 @@ import bingosoft.hrhelper.model.Rule;
  */
 public class MailProductService {
 	
+
+	
 	@Autowired
 	EmployeeMapper em;
 	@Autowired
@@ -49,6 +55,9 @@ public class MailProductService {
 	CancelRecordMapper crm;
 	@Autowired
 	CreateMailContentService cmcs;
+	@Autowired
+	ApproveMapper am;
+	
 	int i=0;
 	
 	/**
@@ -118,38 +127,103 @@ public class MailProductService {
 		m.setId(UUID.randomUUID().toString());
 		m.setMailName(r.getRuleName());
 		m.setCreateTime(new Date());
-		m.setRecipient(e.getName());
-		m.setRecipientAddress(e.getMail());
 		m.setSender("人力资源部");
 		m.setSenderAddress("Hr@BingoSoft.com");
-		m.setCopyPeople(e.getManager());//抄送人：员工所属上级
-		m.setCopyPeopleAddress("");
 		m.setOperationId(r.getOperationId());
 		m.setStatus(1);//默认为1：待发送。如果管理员点击取消，则变为0。
-		m.setOperationId(r.getOperationId());
-		//根据规则方法与员工信息 生成邮件模板
-		m.setMailContent(cmcs.getMailContent(e.getId(), r.getModelId(), DateTransferUtils.dateTimeFormat(m.getPlanSendTime()),"截止日期"));
 		
 		//判断是否为需要工作流或者抄送人的特殊邮件
 		//根据该规则Id，获取对应业务是否需要特殊处理的信息
 		String ifSpecial = om.ifSpecial(r.getOperationId());
-		System.out.println("这里!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+ifSpecial);
+		//生成普通邮件内容
+		if(ifSpecial==null){
+			setCommonMailContent(r,e,m);
+		}
 		//生成普通邮件内容
 		if(ifSpecial.equals("0")){
 			setCommonMailContent(r,e,m);
 		}
 		//生成特殊类型"试用期转正"
 		if(ifSpecial.equals("1")){
-			setSpecialMailContent(r,e,m,"1");
+			setFullMenberMailContent(r,e,m);
 		}
 		//生成特殊类型"合同续签"
 		if(ifSpecial.equals("2")){
-			setSpecialMailContent(r,e,m,"2");
+			setContractMailContent(r,e,m);
 		}
 		//生成特殊类型"绩效表填写"
 		if(ifSpecial.equals("3")){
-			setSpecialMailContent(r,e,m,"3");
+			setPerformanceMailContent(r,e,m);
 		}
+	}
+	
+	/**
+	 * 设置邮件的具体内容___转正提醒邮件(带附件发送给经理，征得经理同意则触发第二封邮件发给HR，提醒员工进行申请)
+	 * @param r
+	 * @param e
+	 * @param m
+	 * @throws ParseException
+	 */
+	private void setFullMenberMailContent(Rule r, Employee e, Mail m) {
+		
+		m.setRecipient(e.getManager());
+		m.setRecipientAddress(e.getManagerMail());
+		//根据规则方法与员工信息 生成邮件模板
+		m.setMailContent(cmcs.getMailContent(e.getId(), r.getModelId(), DateTransferUtils.dateTimeFormat(m.getPlanSendTime()),"截止日期"));
+		
+		//生成审批内容，设置审批状态为0:待审批
+		String approveId = UUID.randomUUID().toString();
+		m.setApproveId(approveId);
+		
+		Approve a = new Approve();
+		a.setId(approveId);
+		a.setOperationId(r.getOperationId());
+		a.setStatus(0);
+		a.setCreateTime(new Date());
+		a.setApprover("approver");
+		a.setApproveObject("approveObject");
+		am.insert(a);
+	}
+	
+	/**
+	 * 设置邮件的具体内容___合同续签提醒邮件(发送给经理，征得经理同意则发送给员工进行申请)
+	 * @param r
+	 * @param e
+	 * @param m
+	 * @throws ParseException
+	 */
+	private void setContractMailContent(Rule r, Employee e, Mail m) {
+		m.setRecipient(e.getManager());
+		m.setRecipientAddress(e.getManagerMail());
+		//根据规则方法与员工信息 生成邮件模板
+		m.setMailContent(cmcs.getMailContent(e.getId(), r.getModelId(), DateTransferUtils.dateTimeFormat(m.getPlanSendTime()),"截止日期"));
+	
+		//生成审批内容，设置审批状态为0:待审批
+		String approveId = UUID.randomUUID().toString();
+		m.setApproveId(approveId);
+		
+		Approve a = new Approve();
+		a.setId(approveId);
+		a.setOperationId(r.getOperationId());
+		a.setStatus(0);
+		a.setCreateTime(new Date());
+		a.setApprover("approver");
+		a.setApproveObject("approveObject");
+		am.insert(a);
+	}
+	
+	/**
+	 * 设置邮件的具体内容___试用期绩效表提交提醒邮件(发送给员工，同时抄送给HR。满月前2天开始重复提醒3次)
+	 * @param r
+	 * @param e
+	 * @param m
+	 * @throws ParseException
+	 */
+	private void setPerformanceMailContent(Rule r, Employee e, Mail m) {
+		m.setRecipient(e.getName());
+		m.setRecipientAddress(e.getMail());
+		//根据规则方法与员工信息 生成邮件模板
+		m.setMailContent(cmcs.getMailContent(e.getId(), r.getModelId(), DateTransferUtils.dateTimeFormat(m.getPlanSendTime()),"截止日期"));
 	}
 
 	/**
@@ -161,102 +235,67 @@ public class MailProductService {
 	 * @throws ParseException
 	 */
 	public void setCommonMailContent(Rule r,Employee e,Mail m) throws ParseException{
-		
-		m.setId(UUID.randomUUID().toString());
-		m.setMailName(r.getRuleName());
-		m.setCreateTime(new Date());
+		//设置接收人信息
 		m.setRecipient(e.getName());
 		m.setRecipientAddress(e.getMail());
-		m.setSender("人力资源部");
-		m.setSenderAddress("Hr@BingoSoft.com");
-		m.setCopyPeople(e.getManager());//抄送人：员工所属上级
-		m.setCopyPeopleAddress("");
-		m.setOperationId(r.getOperationId());
-		m.setStatus(1);//默认为1：待发送。如果管理员点击取消，则变为0。
-		m.setOperationId(r.getOperationId());
 		//根据规则方法与员工信息 生成邮件模板
 		m.setMailContent(cmcs.getMailContent(e.getId(), r.getModelId(), DateTransferUtils.dateTimeFormat(m.getPlanSendTime()),"截止日期"));
 	}
 	
 	/**
-	 * 设置邮件的具体内容___特殊邮件
 	 * @param r
 	 * @param e
-	 * @param m
+	 * 方法：邮件拟发送时间计算 方式一：入职多长时间发送
+	 * 距离入职时间：rule.getEntry_distance() : 格式"yyyy-MM-dd hh:mm" 
+	 * 入职日期：      e.getEntryDay()              : 格式"yyyy-MM-dd"         
 	 * @throws ParseException
 	 */
-	private void setSpecialMailContent(Rule r, Employee e, Mail m, String special) {
-		m.setId(UUID.randomUUID().toString());
-		m.setMailName(r.getRuleName());
-		m.setCreateTime(new Date());
-		if(special.equals("1")){
-			m.setRecipient(e.getManager());
-			m.setRecipientAddress(e.getManagerMail());
-			m.setSender("人力资源部");
-			m.setSenderAddress("Hr@BingoSoft.com");
-			m.setCopyPeople(e.getManager());//抄送人：员工所属上级
-			m.setCopyPeopleAddress("");
-			m.setOperationId(r.getOperationId());
-			m.setStatus(1);//默认为1：待发送。如果管理员点击取消，则变为0。
-			m.setOperationId(r.getOperationId());
-			//根据规则方法与员工信息 生成邮件模板
-			m.setMailContent(cmcs.getMailContent(e.getId(), r.getModelId(), DateTransferUtils.dateTimeFormat(m.getPlanSendTime()),"截止日期"));
-		}
-	}
-
-	/**
-	 * 方法：邮件拟发送时间计算 方式一：入职多长时间发送
-	 * @throws ParseException 
-	 * 距离入职时间：rule.getEntry_distance() : 格式"yyyy-MM-dd hh:mm" 
-	 * 入职日期：      e.getEntryDay()              : 格式"yyyy-MM-dd"           
-	 */ 
 	public Date sendTimeCountMethod_1(Rule r,Employee e) throws ParseException{
 				//流程：Date→Calendar
 				Calendar entrydayCal = Calendar.getInstance();
 				entrydayCal.setTime(e.getEntryDay());
-				
 				// 入职日期(具体到日) +入职后时长(具体到分)
 				entrydayCal.add(Calendar.YEAR, r.getDistanceY());
 				entrydayCal.add(Calendar.MONTH, r.getDistanceM());
 				entrydayCal.add(Calendar.DAY_OF_MONTH, r.getDistanceD());
 				entrydayCal.add(Calendar.HOUR, r.getSendingHourofday());
 				entrydayCal.add(Calendar.MINUTE, r.getSendingMinofhour());
-				
 				Date sendTime=entrydayCal.getTime();
-				
 				//邮件拟发送时间
 				return sendTime;
 	}
 	
 	
+	
 	/**
 	 * 方法：邮件拟发送时间计算 方式二：在某一个特殊日期提前多久发送
 	 * 确定某一特殊日期 ：rule.getSpecialDay : 格式"yyyy-MM-dd"
-	 * 提前多久 earlyDate
-	 */ 
+	 * 提前多久：earlyDate
+	 * @param specailDay
+	 * @param r
+	 * @return
+	 * @throws ParseException
+	 */
 	public Date sendTimeCountMethod_2(Date specailDay,Rule r) throws ParseException{
-		
 		//流程：Date→Calendar
 		Calendar specailDayCal = Calendar.getInstance();
 		specailDayCal.setTime(specailDay);
-		
 		// (特殊日期-提前时间) + 当天发送时间(具体到分)
 		specailDayCal.add(Calendar.YEAR, -r.getDistanceY());
 		specailDayCal.add(Calendar.MONTH, -r.getDistanceM());
 		specailDayCal.add(Calendar.DAY_OF_MONTH,- r.getDistanceD());
 		specailDayCal.add(Calendar.HOUR, r.getSendingHourofday());
 		specailDayCal.add(Calendar.MINUTE, r.getSendingMinofhour());
-		
 		Date sendTime=specailDayCal.getTime();
-		
 		//邮件拟发送时间
 		return sendTime;
 	}
 	
 	/**
-	 * 需要根据某日期提前N天发送：调用该方法。
-	 * @param 某特殊日期
-	 * @param 提前的天数
+	 * 
+	 * @param oneDayTime 某特殊日期
+	 * @param earlyDay 提前的天数
+	 * @return
 	 */
 	public Date earlyDayUtil(Date oneDayTime,int earlyDay){
 		//转换日历类型：并计算某天时间-提前天数
@@ -274,25 +313,15 @@ public class MailProductService {
 	 * @throws ParseException 
 	 */
 	public boolean judgeProduce(Mail m) throws ParseException{
-		
-		/**
-		* 获得以 yyyy-MM-dd 为形式的当前时间
-		* 将String转化成date 格式
-		*/
-		
 		//生成"yyyy-MM-dd"的当前时间
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		String nowdayTime = dateFormat.format(new Date());
 		Date today = dateFormat.parse(nowdayTime);
-		
 		//转换为日历类型并加上7天，再转换为普通的Date类型。
 		Calendar c = Calendar.getInstance();
 		c.setTime(today);
 		c.add(Calendar.DAY_OF_MONTH, 7);
 		Date compareDay = c.getTime();
-		
-		System.out.println("七天后是"+DateTransferUtils.fDateCNYRSFM(compareDay)+"计划发送日期是"+DateTransferUtils.fDateCNYRSFM(m.getPlanSendTime()));
-		
 		//拟发送时间如果比当前时间加七天早，并且比今天晚，返回true
 		return compareDay.after(m.getPlanSendTime()) &&
 				   (m.getPlanSendTime().after(today));
@@ -316,6 +345,7 @@ public class MailProductService {
 	
 	/**
 	 * 方法：清理取消记录表
+	 * @param cr
 	 */
 	public void deleteCancelRecord(CancelRecord cr){
 		//拟发送时间如果在今天之前，表示已不需要判别邮件是否需要发送，则删除该行记录
@@ -323,33 +353,4 @@ public class MailProductService {
 			crm.deleteByPrimaryKey(cr.getId());
 		}
 	}
-	
-	
-	/**
-	 * 方法：邮件拟发送时间计算 方式一：入职多长时间发送
-	 * @throws ParseException 
-	 * 距离入职时间：rule.getEntry_distance() : 格式"yyyy-MM-dd hh:mm" 
-	 * 入职日期：      e.getEntryDay()              : 格式"yyyy-MM-dd"           
-	 */ 
-	/*public Date sendTimeCountMethod_3(Rule r,Employee e) throws ParseException{
-				
-				int y = r.getSendingInterval();
-				r.getSendingCounts();
-		
-				//流程：Date→Calendar
-				Calendar entrydayCal = Calendar.getInstance();
-				entrydayCal.setTime(e.getEntryDay());
-				
-				// 入职日期(具体到日) +入职后时长(具体到分)
-				entrydayCal.add(Calendar.YEAR, r.getEntryDistanceY());
-				entrydayCal.add(Calendar.MONTH, r.getEntryDistanceM());
-				entrydayCal.add(Calendar.DAY_OF_MONTH, r.getEntryDistanceD());
-				entrydayCal.add(Calendar.HOUR, r.getSendingHourofday());
-				entrydayCal.add(Calendar.MINUTE, r.getSendingMinofhour());
-				
-				Date sendTime=entrydayCal.getTime();
-				
-				//邮件拟发送时间
-				return sendTime;
-	}*/
 }

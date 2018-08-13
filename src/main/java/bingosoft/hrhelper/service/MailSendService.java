@@ -91,7 +91,7 @@ public class MailSendService {
 		//此处应该加锁!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		//在邮件表中删除该邮件
 		asm.setId(mail.getId());
-		asm.setAppoveId(mail.getApproveId());
+		asm.setApproveId(mail.getApproveId());
 		asm.setCopyPeople(mail.getCopyPeople());
 		asm.setCreateTime(mail.getCreateTime());
 		asm.setMailAttachmentPath(mail.getMailAttachmentPath());
