@@ -60,7 +60,7 @@ public class RuleService {
     						rule.getDistanceD()+"日 "+
     						rule.getSendingHourofday()+"点"+
     						rule.getSendingMinofhour()+"分时发送邮件";
-    	rule.setRuleMethod("入职多长时间");
+    	rule.setRuleMethod("1");
 	  	return entry_distance;
     }
     
@@ -70,13 +70,29 @@ public class RuleService {
      * @return 根据该规则，员工距离入职多长时间发送邮件
      */
     public String caculateRule_2(Rule rule){
-    	String entry_distance =  "距离"+"某一特殊的日子的"+
+    	String entry_distance =  "距离"+"合同到期的"+
 				    						rule.getDistanceY()+"年"+
 				    						rule.getDistanceM()+"月"+
 				    						rule.getDistanceD()+"日 的当天"+
 				    						rule.getSendingHourofday()+"点"+
 				    						rule.getSendingMinofhour()+"分时发送邮件";
-    	rule.setRuleMethod("根据某个日期提前");
+    	rule.setRuleMethod("2");
+	  	return entry_distance;
+    }
+    
+    /**
+     * 业务：根据规则进行计算
+     * @param rule 
+     * @return 根据该规则，员工距离入职多长时间发送邮件
+     */
+    public String caculateRule_3(Rule rule){
+    	String entry_distance =  "距离"+"试用期转正的"+
+				    						rule.getDistanceY()+"年"+
+				    						rule.getDistanceM()+"月"+
+				    						rule.getDistanceD()+"日 的当天"+
+				    						rule.getSendingHourofday()+"点"+
+				    						rule.getSendingMinofhour()+"分时发送邮件";
+    	rule.setRuleMethod("3");
 	  	return entry_distance;
     }
     

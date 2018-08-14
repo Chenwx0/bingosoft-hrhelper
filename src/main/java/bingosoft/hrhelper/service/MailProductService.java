@@ -109,8 +109,10 @@ public class MailProductService {
 	public void setPlanSendTime(Rule r,Employee e,Mail m) throws ParseException{
 		if(r.getRuleMethod().equals("1")){
 			m.setPlanSendTime(sendTimeCountMethod_1(r,e));//入职后多久
-		}else{
-			m.setPlanSendTime(sendTimeCountMethod_2(new Date(),r)); //特殊日期&根据规则计算提前的时间
+		}else if(r.getRuleMethod().equals("2")){
+			m.setPlanSendTime(sendTimeCountMethod_2(r,e)); //特殊日期&根据规则计算提前的时间
+		}else if(r.getRuleMethod().equals("3")){
+			m.setPlanSendTime(sendTimeCountMethod_3(r,e)); //特殊日期&根据规则计算提前的时间
 		}
 	}
 	
@@ -268,7 +270,7 @@ public class MailProductService {
 	
 	
 	/**
-	 * 方法：邮件拟发送时间计算 方式二：在某一个特殊日期提前多久发送
+	 * 方法：邮件拟发送时间计算 方式二：在合同到期前多久发送
 	 * 确定某一特殊日期 ：rule.getSpecialDay : 格式"yyyy-MM-dd"
 	 * 提前多久：earlyDate
 	 * @param specailDay
@@ -276,10 +278,34 @@ public class MailProductService {
 	 * @return
 	 * @throws ParseException
 	 */
-	public Date sendTimeCountMethod_2(Date specailDay,Rule r) throws ParseException{
+	public Date sendTimeCountMethod_2(Rule r,Employee e) throws ParseException{
 		//流程：Date→Calendar
 		Calendar specailDayCal = Calendar.getInstance();
-		specailDayCal.setTime(specailDay);
+		specailDayCal.setTime(e.getContractDay());
+		// (特殊日期-提前时间) + 当天发送时间(具体到分)
+		specailDayCal.add(Calendar.YEAR, -r.getDistanceY());
+		specailDayCal.add(Calendar.MONTH, -r.getDistanceM());
+		specailDayCal.add(Calendar.DAY_OF_MONTH,- r.getDistanceD());
+		specailDayCal.add(Calendar.HOUR, r.getSendingHourofday());
+		specailDayCal.add(Calendar.MINUTE, r.getSendingMinofhour());
+		Date sendTime=specailDayCal.getTime();
+		//邮件拟发送时间
+		return sendTime;
+	}
+	
+	/**
+	 * 方法：邮件拟发送时间计算 方式二：在试用期转正前多久发送
+	 * 确定某一特殊日期 ：rule.getSpecialDay : 格式"yyyy-MM-dd"
+	 * 提前多久：earlyDate
+	 * @param specailDay
+	 * @param r
+	 * @return
+	 * @throws ParseException
+	 */
+	public Date sendTimeCountMethod_3(Rule r,Employee e) throws ParseException{
+		//流程：Date→Calendar
+		Calendar specailDayCal = Calendar.getInstance();
+		specailDayCal.setTime(e.getFullmenberDay());
 		// (特殊日期-提前时间) + 当天发送时间(具体到分)
 		specailDayCal.add(Calendar.YEAR, -r.getDistanceY());
 		specailDayCal.add(Calendar.MONTH, -r.getDistanceM());
