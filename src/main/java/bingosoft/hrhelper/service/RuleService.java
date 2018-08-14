@@ -81,12 +81,32 @@ public class RuleService {
 	}
 	
 	//更新规则
-	public void updateRule(Rule rule){
+	public Result updateRule(Rule rule){
+		
+		Result result = new Result();
 
-		rule.setUpdateBy(CurrentUser.getUserId());
-		rule.setUpdateTime(new Date());
-
-		rm.updateByPrimaryKey(rule);
+		// 参数校验
+		if (Strings.isNullOrEmpty(rule)){
+			result.setSuccess(false);
+			result.setMessage(TipMessage.PARAM_NOT_NULL);
+			return result;
+		}
+		// 执行删除
+		try {
+			rule.setUpdateBy(CurrentUser.getUserId());
+			rule.setUpdateTime(new Date());
+			int res = rm.updateByPrimaryKey(rule);
+			if (res > 0){
+				result.setMessage(TipMessage.UPDATE_SUCCESS);
+			}else {
+				result.setMessage(TipMessage.NO_DATA_CHANGE);
+			}
+		} catch (SQLException e) {
+			logger.error(TipMessage.UPDATE_FAIL,e);
+			result.setSuccess(false);
+			result.setMessage(TipMessage.UPDATE_FAIL);
+		}
+		return result;
 	}
     
     /**

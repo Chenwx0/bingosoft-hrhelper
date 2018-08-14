@@ -16,7 +16,7 @@ public interface RuleMapper {
 
     int updateByPrimaryKeySelective(Rule record);
 
-    int updateByPrimaryKey(Rule record);
+    int updateByPrimaryKey(Rule record) throws SQLException;
 
 	List<Rule> listAllRule();
 }
