@@ -31,12 +31,6 @@
     from rule
     where id = #{id,jdbcType=VARCHAR}
   </select>
-  <select id="listAllRule" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from rule
-  </select>
-  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from rule
     where id = #{id,jdbcType=VARCHAR}
@@ -238,4 +232,30 @@
       specialday_distance = #{specialdayDistance,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
+
+  <!--   自定义代码    -->
+  <select id="listAllRule" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from rule
+  </select>
+  
+  <select id="listRuleListForm" parameterType="java.lang.String" resultType="bingosoft.hrhelper.form.RuleListForm">
+    SELECT r.id, r.rule_name ruleName, r.entry_distance ruleSummary, r.update_time updateTime, o.operation_name operationName, u.username principal
+    FROM rule r, operation o, user u
+    WHERE r.operation_id = o.id
+      AND o.user_id = u.id
+    <if test="operationId != null">
+      AND o.id = #{operationId}
+    </if>
+  </select>
+
+  <select id="getRuleDetail" parameterType="java.lang.String" resultType="bingosoft.hrhelper.form.RuleDetailForm">
+    SELECT r.id, r.rule_name ruleName, r.rule_method ruleMethod, r.distance_y distanceY, r.distance_m distanceM, r.distance_d distanceD
+    , r.sending_hourofday sendingHourofday, r.sending_minofhour sendingMinofhour, m.model_content modelContent, m.attachment_href attachmentHref, o.id operationId
+    FROM rule r, operation o, model m
+    WHERE r.operation_id = o.id
+      AND r.model_id = m.id
+      AND r.id = #{ruleId}
+  </select>
 </mapper>

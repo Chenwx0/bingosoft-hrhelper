@@ -3,17 +3,24 @@ package bingosoft.hrhelper.service;
 import bingosoft.hrhelper.common.CurrentUser;
 import bingosoft.hrhelper.common.Result;
 import bingosoft.hrhelper.common.TipMessage;
+import bingosoft.hrhelper.form.RuleDetailForm;
+import bingosoft.hrhelper.form.RuleListForm;
+import bingosoft.hrhelper.mapper.ModelMapper;
 import bingosoft.hrhelper.mapper.RuleMapper;
+import bingosoft.hrhelper.model.Model;
 import bingosoft.hrhelper.model.Rule;
 import com.sun.xml.internal.bind.v2.model.core.ID;
 import leap.lang.Strings;
+import leap.orm.dao.Dao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -25,16 +32,42 @@ import java.util.UUID;
 public class RuleService {
 
 	private static final String ID_NULL = "规则ID不能为空";
+	private static final String MODEL_ID_NULL = "模板ID不能为空";
 
 	Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
-	RuleMapper rm ;
-	
-	//规则：根据规则方法，确定规则计算方式。
-	public void addRule(Rule rule){
+	RuleMapper ruleMapper ;
 
+	@Autowired
+	ModelMapper modelMapper ;
+
+	/**
+	 * 添加规则
+	 * @param ruleDetailForm
+	 * @return 操作结果
+	 */
+	@Transactional
+	public Result addRule(RuleDetailForm ruleDetailForm){
+
+		Result result = new Result();
+		// 参数校验
+		if (ruleDetailForm == null){
+			result.setSuccess(false);
+			result.setMessage(TipMessage.PARAM_NOT_NULL);
+			return result;
+		}
+		// 构建规则模型
+		Rule rule = new Rule();
 		rule.setId(UUID.randomUUID().toString());
+		rule.setRuleName(ruleDetailForm.getRuleName());
+		rule.setRuleMethod(ruleDetailForm.getRuleMethod());
+		rule.setDistanceY(ruleDetailForm.getDistanceY());
+		rule.setDistanceM(ruleDetailForm.getDistanceM());
+		rule.setDistanceD(ruleDetailForm.getDistanceD());
+		rule.setSendingHourofday(ruleDetailForm.getSendingHourofday());
+		rule.setSendingMinofhour(ruleDetailForm.getSendingMinofhour());
+		rule.setOperationId(ruleDetailForm.getOperationId());
 		rule.setCreateBy(CurrentUser.getUserId());
 		rule.setCreateTime(new Date());
 		if(rule.getRuleMethod().equals("1")){
@@ -44,8 +77,85 @@ public class RuleService {
 		}else{
 			rule.setEntryDistance(caculateRule_3(rule)); //方法3：距离转正日期计算
 		}
+		// 构建模板模型
+		Model model = new Model();
+		model.setId(UUID.randomUUID().toString());
+		model.setModelName(ruleDetailForm.getRuleName() + "模板");
+		model.setModelContent(ruleDetailForm.getModelContent());
+		model.setAttachmentHref(ruleDetailForm.getAttachmentHref());
+		model.setCreateBy(CurrentUser.getUserId());
+		model.setCreateTime(new Date());
 
-		rm.insert(rule);
+		// 执行新增
+		try {
+			ruleMapper.insert(rule);
+			modelMapper.insert(model);
+			result.setMessage(TipMessage.CREATE_SUCCESS);
+		} catch (SQLException e) {
+			logger.error(TipMessage.CREATE_FAIL, e);
+			result.setSuccess(false);
+			result.setMessage(TipMessage.CREATE_FAIL);
+		}
+
+		return result;
+	}
+
+	/**
+	 * 获取规则列表
+	 * @param operationId
+	 * @return 规则列表
+	 */
+	public Result<List<RuleListForm>> listRule(String operationId){
+
+		Result<List<RuleListForm>> result = new Result<>();
+
+		// 执行查询
+		try {
+			List<RuleListForm> ruleList = ruleMapper.listRuleListForm(operationId);
+			result.setResultEntity(ruleList);
+		} catch (SQLException e) {
+			logger.error(TipMessage.QUERY_FAIL, e);
+			result.setSuccess(false);
+			result.setMessage(TipMessage.QUERY_FAIL);
+		}
+
+		return result;
+
+	}
+
+	/**
+	 * 获取规则详情
+	 * @param ruleId
+	 * @return 规则详情
+	 */
+	public Result<RuleDetailForm> getRuleDetail(String ruleId){
+
+		Result<RuleDetailForm> result = new Result<>();
+
+		// 参数校验
+		if (Strings.isEmpty(ruleId)){
+			result.setSuccess(false);
+			result.setMessage(ID_NULL);
+			return result;
+		}
+
+		// 执行查询
+		try {
+			RuleDetailForm ruleDetailForm = ruleMapper.getRuleDetail(ruleId);
+			if (ruleDetailForm == null){
+				result.setSuccess(false);
+				result.setMessage(TipMessage.NO_DATA);
+			}else {
+				result.setResultEntity(ruleDetailForm);
+			}
+		} catch (SQLException e) {
+			logger.error(TipMessage.QUERY_FAIL, e);
+			result.setSuccess(false);
+			result.setMessage(TipMessage.QUERY_FAIL);
+		}
+
+		return result;
+
 	}
 
 	/**
@@ -65,7 +175,7 @@ public class RuleService {
 		}
 		// 执行删除
 		try {
-			int res = rm.deleteByPrimaryKey(ruleId);
+			int res = ruleMapper.deleteByPrimaryKey(ruleId);
 			if (res > 0){
 				result.setMessage(TipMessage.DELETE_SUCCESS);
 			}else {
@@ -79,14 +189,71 @@ public class RuleService {
 
 		return result;
 	}
-	
-	//更新规则
-	public void updateRule(Rule rule){
 
-		rule.setUpdateBy(CurrentUser.getUserId());
-		rule.setUpdateTime(new Date());
+	/**
+	 * 更新规则
+	 * @param ruleDetailForm
+	 * @return 操作结果
+	 */
+	public Result updateRule(RuleDetailForm ruleDetailForm){
 
-		rm.updateByPrimaryKey(rule);
+		Result result = new Result();
+		// 参数校验
+		if (ruleDetailForm == null){
+			result.setSuccess(false);
+			result.setMessage(TipMessage.PARAM_NOT_NULL);
+			return result;
+		}
+		if (Strings.isEmpty(ruleDetailForm.getId())){
+			result.setSuccess(false);
+			result.setMessage(ID_NULL);
+			return result;
+		}
+		if (Strings.isEmpty(ruleDetailForm.getModelId())){
+			result.setSuccess(false);
+			result.setMessage(MODEL_ID_NULL);
+			return result;
+		}
+		// 构建规则模型
+		Rule rule = new Rule();
+		rule.setId(ruleDetailForm.getId());
+		rule.setRuleName(ruleDetailForm.getRuleName());
+		rule.setRuleMethod(ruleDetailForm.getRuleMethod());
+		rule.setDistanceY(ruleDetailForm.getDistanceY());
+		rule.setDistanceM(ruleDetailForm.getDistanceM());
+		rule.setDistanceD(ruleDetailForm.getDistanceD());
+		rule.setSendingHourofday(ruleDetailForm.getSendingHourofday());
+		rule.setSendingMinofhour(ruleDetailForm.getSendingMinofhour());
+		rule.setOperationId(ruleDetailForm.getOperationId());
+		rule.setCreateBy(CurrentUser.getUserId());
+		rule.setCreateTime(new Date());
+		if(rule.getRuleMethod().equals("1")){
+			rule.setEntryDistance(caculateRule_1(rule)); //方法1：入职时长计算
+		}else if(rule.getRuleMethod().equals("2")){
+			rule.setEntryDistance(caculateRule_2(rule)); //方法2：距离合同续签日期计算
+		}else{
+			rule.setEntryDistance(caculateRule_3(rule)); //方法3：距离转正日期计算
+		}
+		// 构建模板模型
+		Model model = new Model();
+		model.setId(ruleDetailForm.getModelId());
+		model.setModelName(ruleDetailForm.getRuleName() + "模板");
+		model.setModelContent(ruleDetailForm.getModelContent());
+		model.setAttachmentHref(ruleDetailForm.getAttachmentHref());
+		model.setCreateBy(CurrentUser.getUserId());
+		model.setCreateTime(new Date());
+
+		try {
+			ruleMapper.updateByPrimaryKeySelective(rule);
+			modelMapper.updateByPrimaryKeySelective(model);
+			result.setMessage(TipMessage.UPDATE_SUCCESS);
+		} catch (SQLException e) {
+			logger.error(TipMessage.UPDATE_FAIL, e);
+			result.setSuccess(false);
+			result.setMessage(TipMessage.UPDATE_FAIL);
+		}
+
+		return result;
 	}
     
     /**

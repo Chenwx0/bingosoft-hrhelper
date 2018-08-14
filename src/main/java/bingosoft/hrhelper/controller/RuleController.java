@@ -1,15 +1,13 @@
 package bingosoft.hrhelper.controller;
 
 import bingosoft.hrhelper.common.Result;
+import bingosoft.hrhelper.form.RuleDetailForm;
 import bingosoft.hrhelper.model.Rule;
 import bingosoft.hrhelper.service.RuleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @创建人 zhangyx
@@ -17,17 +15,43 @@ import org.springframework.web.bind.annotation.RestController;
  * @创建时间 2018-07-26 10:54:54
  */
 @RestController
-@RequestMapping(path = "/rule")
+@RequestMapping(path = "rule")
 public class RuleController {
 	Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
     RuleService ruleService;
 
+    /**
+     * 获取规则列表
+     * @param operationId
+     * @return 规则列表
+     */
+    @GetMapping("/list")
+    public Result listRule(String operationId){
+        Result result = ruleService.listRule(operationId);
+        return result;
+    }
 
+    /**
+     * 获取规则详情
+     * @param ruleId
+     * @return 规则详情
+     */
+    @GetMapping("/{ruleId}")
+    public Result getRuleDetail(@PathVariable String ruleId){
+        Result result = ruleService.getRuleDetail(ruleId);
+        return result;
+    }
 
-    @GetMapping(path = "/add")
-    public void addRule(Rule rule){
-    	ruleService.addRule(rule);
+    /**
+     * 添加规则
+     * @param ruleDetailForm
+     * @return 操作结果
+     */
+    @PostMapping
+    public Result addRule(RuleDetailForm ruleDetailForm){
+        Result result = ruleService.addRule(ruleDetailForm);
+        return result;
     }
 
     /**
@@ -35,14 +59,15 @@ public class RuleController {
      * @param ruleId
      * @return 操作结果
      */
-    @DeleteMapping(path = "/del")
-    public Result deleteRule(String ruleId){
+    @DeleteMapping("/{ruleId}")
+    public Result deleteRule(@PathVariable String ruleId){
     	Result result = ruleService.deleteRule(ruleId);
     	return result;
     }
     
-    @GetMapping(path = "/update")
-    public void updateRule(Rule rule){
-    	ruleService.updateRule(rule);
+    @PatchMapping
+    public Result updateRule(RuleDetailForm ruleDetailForm){
+        Result result = ruleService.updateRule(ruleDetailForm);
+        return result;
     }
 }

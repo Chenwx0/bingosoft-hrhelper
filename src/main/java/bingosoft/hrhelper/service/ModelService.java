@@ -3,9 +3,12 @@ package bingosoft.hrhelper.service;
 import bingosoft.hrhelper.common.CurrentUser;
 import bingosoft.hrhelper.mapper.ModelMapper;
 import bingosoft.hrhelper.model.Model;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.UUID;
 
@@ -18,6 +21,8 @@ import java.util.UUID;
 @Service
 public class ModelService {
 
+    Logger logger = LoggerFactory.getLogger(getClass());
+
     @Autowired
     ModelMapper modelMapper;
 
@@ -27,7 +32,11 @@ public class ModelService {
         model.setCreateBy(CurrentUser.getUserId());
         model.setCreateTime(new Date());
 
-        modelMapper.insert(model);
+        try {
+            modelMapper.insert(model);
+        } catch (SQLException e) {
+            logger.error(e.getMessage(), e);
+        }
     }
 
     //更新邮件模板
