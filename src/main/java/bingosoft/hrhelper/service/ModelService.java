@@ -93,7 +93,21 @@ public class ModelService {
      * @param model
      */
     public void deleteModel(Model model){
-        modelMapper.deleteByPrimaryKey(model.getId());
+        Result result = new Result();
+        // 参数校验
+        if (model == null){
+            result.setSuccess(false);
+            result.setMessage(TipMessage.PARAM_NULL);
+        }
+
+        try{
+        	modelMapper.deleteByPrimaryKey(model.getId());
+            result.setMessage(TipMessage.DELETE_SUCCESS);
+        }catch (Exception e){
+            result.setSuccess(false);
+            result.setMessage(TipMessage.DELETE_FAIL);
+            logger.error(TipMessage.DELETE_FAIL,e);
+        }
     }
 
     //查看邮件模板（待定） 
