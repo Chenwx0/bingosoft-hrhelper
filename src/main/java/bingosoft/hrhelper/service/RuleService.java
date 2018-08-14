@@ -1,11 +1,18 @@
 package bingosoft.hrhelper.service;
 
 import bingosoft.hrhelper.common.CurrentUser;
+import bingosoft.hrhelper.common.Result;
+import bingosoft.hrhelper.common.TipMessage;
 import bingosoft.hrhelper.mapper.RuleMapper;
 import bingosoft.hrhelper.model.Rule;
+import com.sun.xml.internal.bind.v2.model.core.ID;
+import leap.lang.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.UUID;
 
@@ -16,7 +23,11 @@ import java.util.UUID;
  */
 @Service
 public class RuleService {
-	
+
+	private static final String ID_NULL = "规则ID不能为空";
+
+	Logger logger = LoggerFactory.getLogger(getClass());
+
 	@Autowired
 	RuleMapper rm ;
 	
@@ -34,10 +45,37 @@ public class RuleService {
 
 		rm.insert(rule);
 	}
-	
-	//删除规则
-	public void deleteRule(String rule_id){
-		rm.deleteByPrimaryKey(rule_id);
+
+	/**
+	 * 删除规则
+	 * @param ruleId
+	 * @return 操作结果
+	 */
+	public Result deleteRule(String ruleId){
+
+		Result result = new Result();
+
+		// 参数校验
+		if (Strings.isEmpty(ruleId)){
+			result.setSuccess(false);
+			result.setMessage(ID_NULL);
+			return result;
+		}
+		// 执行删除
+		try {
+			int res = rm.deleteByPrimaryKey(ruleId);
+			if (res > 0){
+				result.setMessage(TipMessage.DELETE_SUCCESS);
+			}else {
+				result.setMessage(TipMessage.NO_DATA_DELETE);
+			}
+		} catch (SQLException e) {
+			logger.error(TipMessage.DELETE_FAIL,e);
+			result.setSuccess(false);
+			result.setMessage(TipMessage.DELETE_FAIL);
+		}
+
+		return result;
 	}
 	
 	//更新规则

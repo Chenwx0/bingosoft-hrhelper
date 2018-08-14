@@ -1,11 +1,12 @@
 package bingosoft.hrhelper.mapper;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import bingosoft.hrhelper.model.Rule;
 
 public interface RuleMapper {
-    int deleteByPrimaryKey(String id);
+    int deleteByPrimaryKey(String id) throws SQLException;
 
     int insert(Rule record);
 

@@ -1,5 +1,6 @@
 package bingosoft.hrhelper.service;
 
+import bingosoft.hrhelper.common.CurrentUser;
 import bingosoft.hrhelper.common.Result;
 import bingosoft.hrhelper.common.TipMessage;
 import bingosoft.hrhelper.form.MailListForm;
@@ -247,7 +248,7 @@ public class MailService{
             result.setMessage(ID_NULL);
             return result;
         }
-
+        mail.setUpdateBy(CurrentUser.getUserId());
         try{
             // 执行更新
             int res = mailMapper.updateByPrimaryKeySelective(mail);
