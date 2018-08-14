@@ -54,7 +54,7 @@ public class RuleService {
 		// 参数校验
 		if (ruleDetailForm == null){
 			result.setSuccess(false);
-			result.setMessage(TipMessage.PARAM_NOT_NULL);
+			result.setMessage(TipMessage.PARAM_NULL);
 			return result;
 		}
 		// 构建规则模型
@@ -201,7 +201,7 @@ public class RuleService {
 		// 参数校验
 		if (ruleDetailForm == null){
 			result.setSuccess(false);
-			result.setMessage(TipMessage.PARAM_NOT_NULL);
+			result.setMessage(TipMessage.PARAM_NULL);
 			return result;
 		}
 		if (Strings.isEmpty(ruleDetailForm.getId())){
