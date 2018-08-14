@@ -2,7 +2,9 @@ package bingosoft.hrhelper.controller;
 
 import bingosoft.hrhelper.common.Result;
 import bingosoft.hrhelper.model.Rule;
+import bingosoft.hrhelper.service.ModelService;
 import bingosoft.hrhelper.service.RuleService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +24,13 @@ public class RuleController {
 	Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
     RuleService ruleService;
-
-
+    @Autowired
+    ModelService modelService;
 
     @GetMapping(path = "/add")
     public void addRule(Rule rule){
     	ruleService.addRule(rule);
+    	
     }
 
     /**

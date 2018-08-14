@@ -87,7 +87,6 @@ public class ApproveService {
 	 */
 	public void fullMember(Approve a){
 		try {
-			//
 			MailUtil mu = new MailUtil();
 			String operationName = om.selectByPrimaryKey(a.getId()).getOperationName();
 			mu.setSubject(a.getApproveObject()+operationName);

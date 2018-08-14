@@ -48,4 +48,7 @@ public interface MailMapper {
      * @return
      */
     List<MailListForm> selectListSentApprove(Map<String,String> params) throws SQLException;
+
+	int selectByEidOid(Mail record);
+
 }
