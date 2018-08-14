@@ -17,7 +17,7 @@ public class TipMessage {
     public static final String NO_DATA_CHANGE = "修改失败，没有数据被修改";
     public static final String QUERY_FAIL = "数据获取失败";
 
-    public static final String PARAM_NOT_NULL = "参数不能为空";
+    public static final String PARAM_NULL = "参数不能为空";
     public static final String NAME_NOT_UNIQUE = "名称不唯一";
     public static final String NO_DATA = "没有相关数据";
     public static final String PARAM_ILLEGAL_CHAR = "非法字符";
