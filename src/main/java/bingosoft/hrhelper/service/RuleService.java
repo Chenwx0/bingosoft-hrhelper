@@ -28,8 +28,10 @@ public class RuleService {
 		rule.setCreateTime(new Date());
 		if(rule.getRuleMethod().equals("1")){
 			rule.setEntryDistance(caculateRule_1(rule)); //方法1：入职时长计算
+		}else if(rule.getRuleMethod().equals("2")){
+			rule.setEntryDistance(caculateRule_2(rule)); //方法2：距离合同续签日期计算
 		}else{
-			rule.setSpecialdayDistance(caculateRule_2(rule)); //方法2：距离特殊日期计算
+			rule.setEntryDistance(caculateRule_3(rule)); //方法3：距离转正日期计算
 		}
 
 		rm.insert(rule);
@@ -67,7 +69,7 @@ public class RuleService {
     /**
      * 业务：根据规则进行计算
      * @param rule 
-     * @return 根据该规则，员工距离入职多长时间发送邮件
+     * @return 根据该规则，员工距离合同到期多长时间发送邮件
      */
     public String caculateRule_2(Rule rule){
     	String entry_distance =  "距离"+"合同到期的"+
@@ -83,7 +85,7 @@ public class RuleService {
     /**
      * 业务：根据规则进行计算
      * @param rule 
-     * @return 根据该规则，员工距离入职多长时间发送邮件
+     * @return 根据该规则，员工距离转正多长时间发送邮件
      */
     public String caculateRule_3(Rule rule){
     	String entry_distance =  "距离"+"试用期转正的"+
