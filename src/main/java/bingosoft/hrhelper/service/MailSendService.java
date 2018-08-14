@@ -10,6 +10,8 @@ import java.util.Date;
 
 import java.util.UUID;
 
+import bingosoft.hrhelper.common.Result;
+import bingosoft.hrhelper.common.TipMessage;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +26,7 @@ import bingosoft.hrhelper.mapper.MailMapper;
 import bingosoft.hrhelper.model.AlreadySendMail;
 import bingosoft.hrhelper.model.CancelRecord;
 import bingosoft.hrhelper.model.Mail;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @创建人 zhangyx
@@ -32,6 +35,9 @@ import bingosoft.hrhelper.model.Mail;
  */
 @Service
 public class MailSendService {
+
+	private static final String CANCEL_SUCCESS = "取消发送成功";
+	private static final String CANCEL_FAIL = "取消发送失败";
 
 	Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -116,23 +122,46 @@ public class MailSendService {
 	 * 取消发送邮件
 	 * @param id
 	 */
-	@Test
-	public void cancelSendMail(String id){
+	@Transactional
+	public Result cancelSendMail(String id){
+
+		Result result = new Result();
+
+		// 获取邮件信息
+		Mail mail = null;
+		try {
+			mail = mm.selectByPrimaryKey(id);
+		} catch (SQLException e) {
+			logger.error(CANCEL_FAIL,e);
+			result.setSuccess(false);
+			result.setMessage(CANCEL_FAIL);
+			return result;
+		}
+		if (mail == null){
+			result.setSuccess(false);
+			result.setMessage(TipMessage.NO_DATA);
+			return result;
+		}
 		//将邮件表中该邮件的状态修改 为0：取消发送
-		Mail mail = mm.selectByPrimaryKey(id);
 		mail.setStatus(0);
-		mm.updateByPrimaryKey(mail);
-		
-		//将该邮件添加到已发送邮件中
-		addAlreadySendMail(mail);
-		
-		//将改邮件信息储存到取消发送记录表
-		CancelRecord cr = new CancelRecord();
-		cr.setId(UUID.randomUUID().toString());
-		cr.setOperationId(mail.getOperationId());
-		cr.setPlanSendTime(mail.getPlanSendTime());
-		cr.setRecipientAddress(mail.getRecipientAddress());
-		
-		crm.insert(cr);
+		try {
+			mm.updateByPrimaryKey(mail);
+			//将该邮件添加到已发送邮件中
+			addAlreadySendMail(mail);
+			//将改邮件信息储存到取消发送记录表
+			CancelRecord cr = new CancelRecord();
+			cr.setId(UUID.randomUUID().toString());
+			cr.setOperationId(mail.getOperationId());
+			cr.setPlanSendTime(mail.getPlanSendTime());
+			cr.setRecipientAddress(mail.getRecipientAddress());
+			crm.insert(cr);
+			result.setMessage(CANCEL_SUCCESS);
+		} catch (SQLException e) {
+			logger.error(CANCEL_FAIL,e);
+			result.setSuccess(false);
+			result.setMessage(CANCEL_FAIL);
+		}
+
+		return result;
 	}
 }

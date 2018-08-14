@@ -14,13 +14,13 @@ public interface MailMapper {
 
     int insertSelective(Mail record);
 
-    Mail selectByPrimaryKey(String id);
+    Mail selectByPrimaryKey(String id) throws SQLException;
 
     int updateByPrimaryKeySelective(Mail record) throws SQLException;
 
     int updateByPrimaryKeyWithBLOBs(Mail record);
 
-    int updateByPrimaryKey(Mail record);
+    int updateByPrimaryKey(Mail record)  throws SQLException;
 
     List<Mail> listAll();
 

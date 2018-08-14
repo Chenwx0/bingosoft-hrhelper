@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @创建人 zhangyx
- * @功能描述
+ * @功能描述 规则管理业务控制类
  * @创建时间 2018-07-26 10:54:54
  */
 @RestController
@@ -20,7 +20,9 @@ public class RuleController {
 	Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
     RuleService ruleService;
-    
+
+
+
     @GetMapping(path = "/addRule")
     public void addRule(Rule rule){
     	ruleService.addRule(rule);

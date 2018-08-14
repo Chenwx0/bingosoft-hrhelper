@@ -78,7 +78,8 @@ public class MailController{
      * @param id
      */
     @GetMapping(path = "/cancelSend")
-    public void cancelSendMail(String id){
-    	mailSendService.cancelSendMail(id);
+    public Result cancelSendMail(String id){
+    	Result result = mailSendService.cancelSendMail(id);
+    	return result;
     }
 }
