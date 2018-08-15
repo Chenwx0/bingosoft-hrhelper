@@ -22,4 +22,5 @@ public class TipMessage {
     public static final String NO_DATA = "没有相关数据";
     public static final String PARAM_ILLEGAL_CHAR = "非法字符";
     public static final String DATE_FORMAT_INCORRECT = "时间格式不正确";
+    public static final String UPLOAD_FAIL = "文件上传失败";
 }
