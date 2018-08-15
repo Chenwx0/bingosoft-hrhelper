@@ -109,6 +109,7 @@ public class MailSendService {
 		asm.setSendTime(new Date());
 		asm.setStatus(mail.getStatus());
 		asm.setUpdateBy(mail.getUpdateBy());
+		asm.setEmployeeId(mail.getUpdateBy());
 
 		try {
 			mm.deleteByPrimaryKey(mail.getId());
