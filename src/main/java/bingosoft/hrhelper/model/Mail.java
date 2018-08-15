@@ -23,6 +23,8 @@ public class Mail {
 
     private String employeeId;
 
+    private String ruleId;
+
     private String operationId;
 
     private String approveId;
@@ -115,6 +117,14 @@ public class Mail {
 
     public void setEmployeeId(String employeeId) {
         this.employeeId = employeeId == null ? null : employeeId.trim();
+    }
+
+    public String getRuleId() {
+        return ruleId;
+    }
+
+    public void setRuleId(String ruleId) {
+        this.ruleId = ruleId == null ? null : ruleId.trim();
     }
 
     public String getOperationId() {
