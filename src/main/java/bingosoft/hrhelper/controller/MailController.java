@@ -45,9 +45,9 @@ public class MailController{
      * @param mailId
      * @return 操作结果
      */
-    @DeleteMapping("/del")
-    public Result deleteMail(Integer status, String mailId){
-        Result result = mailService.deleteMail(status, mailId);
+    @DeleteMapping("/{mailId}")
+    public Result deleteMail(@PathVariable String mailId){
+        Result result = mailService.deleteMail(mailId);
         return result;
     }
 
@@ -56,9 +56,9 @@ public class MailController{
      * @param mailIds
      * @return 操作结果
      */
-    @DeleteMapping("/patch_del")
-    public Result patchDeleteMail(Integer status, String[] mailIds){
-        Result result = mailService.patchDeleteMail(status, mailIds);
+    @DeleteMapping
+    public Result patchDeleteMail(String[] mailIds){
+        Result result = mailService.patchDeleteMail(mailIds);
         return result;
     }
 
@@ -67,7 +67,7 @@ public class MailController{
      * @param mail
      * @return 更新结果
      */
-    @PatchMapping("update")
+    @PatchMapping
     public Result updateMail(@RequestBody Mail mail){
         Result result = mailService.updateMail(mail);
         return result;
@@ -77,7 +77,7 @@ public class MailController{
      * 取消发送邮件
      * @param id
      */
-    @GetMapping(path = "/cancelSend")
+    @PatchMapping(path = "/cancel")
     public Result cancelSendMail(String id){
     	Result result = mailSendService.cancelSendMail(id);
     	return result;

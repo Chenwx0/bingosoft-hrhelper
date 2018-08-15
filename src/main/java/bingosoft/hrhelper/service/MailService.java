@@ -42,8 +42,9 @@ public class MailService{
     AlreadySendMailMapper aMailMapper;
 
     /**
+     * 获取邮件列表
      * @param params(status 0-待发送 1-已发送 isSpecial 0-不需审批，其他-需审批)
-     * @return
+     * @return 查询结果对象
      */
     public Result<PageInfo<MailListForm>> pageQueryMailList(Map<String,String> params){
 
@@ -145,7 +146,7 @@ public class MailService{
      * @param mailId
      * @return 操作结果
      */
-    public Result deleteMail(Integer status, String mailId){
+    public Result deleteMail(String mailId){
         Result result = new Result();
         // 参数验证
         if (mailId == null || mailId.length()==0){
@@ -153,40 +154,19 @@ public class MailService{
             result.setMessage(ID_NULL);
             return result;
         }
-        if (status == null){
-            status = 1;
-        }
-        if (status == 0){
-            try{
-                int res = mailMapper.deleteByPrimaryKey(mailId);
-                if (res>0){
-                    result.setMessage(TipMessage.DELETE_SUCCESS);
-                }else{
-                    result.setSuccess(false);
-                    result.setMessage(TipMessage.NO_DATA);
-                }
-            } catch (SQLException e){
+        try{
+            int res = mailMapper.deleteByPrimaryKey(mailId);
+            if (res>0){
+                result.setMessage(TipMessage.DELETE_SUCCESS);
+            }else{
                 result.setSuccess(false);
-                result.setMessage(TipMessage.DELETE_FAIL);
-                logger.error(TipMessage.DELETE_FAIL,e);
+                result.setMessage(TipMessage.NO_DATA);
             }
-        }else if(status == 1){
-            try{
-                int res = aMailMapper.deleteByPrimaryKey(mailId);
-                if (res>0){
-                    result.setMessage(TipMessage.DELETE_SUCCESS);
-                }else{
-                    result.setSuccess(false);
-                    result.setMessage(TipMessage.NO_DATA);
-                }
-            } catch (SQLException e){
-                result.setSuccess(false);
-                result.setMessage(TipMessage.DELETE_FAIL);
-                logger.error(TipMessage.DELETE_FAIL,e);
-            }
+        } catch (SQLException e){
+            result.setSuccess(false);
+            result.setMessage(TipMessage.DELETE_FAIL);
+            logger.error(TipMessage.DELETE_FAIL,e);
         }
-
-
         return result;
     }
 
@@ -196,7 +176,7 @@ public class MailService{
      * @return 操作结果
      */
     @Transactional
-    public Result patchDeleteMail(Integer status, String[] mailIds){
+    public Result patchDeleteMail(String[] mailIds){
         Result result = new Result();
         // 参数验证
         if (mailIds == null || mailIds.length == 0){
@@ -204,31 +184,16 @@ public class MailService{
             result.setMessage(ID_NULL);
             return result;
         }
-        if(status == null){
-            status = 1;
-        }
-        if (status == 0){
-            try{
-                for (String mailId: mailIds) {
-                    mailMapper.deleteByPrimaryKey(mailId);
-                }
-                result.setMessage(TipMessage.DELETE_SUCCESS);
-            } catch (SQLException e){
-                result.setSuccess(false);
-                result.setMessage(TipMessage.DELETE_FAIL);
-                logger.error(TipMessage.DELETE_FAIL,e);
+
+        try{
+            for (String mailId: mailIds) {
+                mailMapper.deleteByPrimaryKey(mailId);
             }
-        }else if (status == 1){
-            try{
-                for (String mailId: mailIds) {
-                    aMailMapper.deleteByPrimaryKey(mailId);
-                }
-                result.setMessage(TipMessage.DELETE_SUCCESS);
-            } catch (SQLException e){
-                result.setSuccess(false);
-                result.setMessage(TipMessage.DELETE_FAIL);
-                logger.error(TipMessage.DELETE_FAIL,e);
-            }
+            result.setMessage(TipMessage.DELETE_SUCCESS);
+        } catch (SQLException e){
+            result.setSuccess(false);
+            result.setMessage(TipMessage.DELETE_FAIL);
+            logger.error(TipMessage.DELETE_FAIL,e);
         }
 
         return result;

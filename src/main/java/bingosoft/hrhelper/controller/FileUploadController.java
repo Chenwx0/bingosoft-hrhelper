@@ -1,12 +1,14 @@
 package bingosoft.hrhelper.controller;
 
+import bingosoft.hrhelper.service.UploadService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import bingosoft.hrhelper.common.*;
+
+import java.io.IOException;
 
 /**
  * @创建人 zhangyx
@@ -16,13 +18,19 @@ import bingosoft.hrhelper.common.*;
 @RestController
 @RequestMapping("file")
 public class FileUploadController {
-	    /**
-	     * 获取邮件列表
-	     * @param params
-	     * @return 查询结果对象
-	     */
-	    @RequestMapping("/upload")
-	    public String upload(MultipartFile file,String attachmentHref,String uploadAddress){
-	        return FileUploadUtil.fileUpload(file,attachmentHref,uploadAddress);
-	    }
+
+	@Autowired
+	UploadService uploadService;
+
+	/**
+	 * 文件上传
+	 * @param file
+	 * @return 文件路径
+	 */
+	@PostMapping("/upload")
+	public Result<String> upload(MultipartFile file){
+
+		Result<String> result = uploadService.upLoadFile(file);
+		return result;
+	}
 }
