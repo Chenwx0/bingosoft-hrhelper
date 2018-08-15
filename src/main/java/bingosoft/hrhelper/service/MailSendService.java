@@ -127,59 +127,13 @@ public class MailSendService {
 		asm.setSendTime(new Date());
 		asm.setStatus(mail.getStatus());
 		asm.setUpdateBy(mail.getUpdateBy());
-		asm.setEmployeeId(mail.getUpdateBy());
+		asm.setEmployeeId(mail.getEmployeeId());
+
 		try {
 			mm.deleteByPrimaryKey(mail.getId());
 		} catch (SQLException e) {
 			logger.error(e.getMessage(),e);
 		}
 		asmm.insert(asm);
-	}
-	
-	/**
-	 * 取消发送邮件
-	 * @param id
-	 */
-	@Transactional
-	public Result cancelSendMail(String id){
-
-		Result result = new Result();
-
-		// 获取邮件信息
-		Mail mail = null;
-		try {
-			mail = mm.selectByPrimaryKey(id);
-		} catch (SQLException e) {
-			logger.error(CANCEL_FAIL,e);
-			result.setSuccess(false);
-			result.setMessage(CANCEL_FAIL);
-			return result;
-		}
-		if (mail == null){
-			result.setSuccess(false);
-			result.setMessage(TipMessage.NO_DATA);
-			return result;
-		}
-		//将邮件表中该邮件的状态修改 为0：取消发送
-		mail.setStatus(0);
-		try {
-			mm.updateByPrimaryKey(mail);
-			//将该邮件添加到已发送邮件中
-			addAlreadySendMail(mail);
-			//将改邮件信息储存到取消发送记录表
-			CancelRecord cr = new CancelRecord();
-			cr.setId(UUID.randomUUID().toString());
-			cr.setOperationId(mail.getOperationId());
-			cr.setPlanSendTime(mail.getPlanSendTime());
-			cr.setRecipientAddress(mail.getRecipientAddress());
-			crm.insert(cr);
-			result.setMessage(CANCEL_SUCCESS);
-		} catch (SQLException e) {
-			logger.error(CANCEL_FAIL,e);
-			result.setSuccess(false);
-			result.setMessage(CANCEL_FAIL);
-		}
-
-		return result;
 	}
 }

@@ -20,7 +20,7 @@ spring:
     poolPreparedStatements: true
     maxOpenPreparedStatements: 20
   jackson:
-    date-format: yyyy-MM-dd HH:mm:ss
+    date-format: yyyy-MM-dd HH:mm
     time-zone: GMT+8
 
 mybatis:

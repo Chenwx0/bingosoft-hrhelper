@@ -306,22 +306,23 @@
     FROM mail_show_info
     <where>
       operationId = #{operationId}
-      <if test="employeeName != null">
+      AND status = 1
+      <if test="employeeName != null and employeeName != ''">
         AND employeeName LIKE "%"#{employeeName}"%"
       </if>
-      <if test="department != null">
+      <if test="department != null and department != ''">
         AND department LIKE "%"#{department}"%"
       </if>
-      <if test="recruitClass != null">
+      <if test="recruitClass != null and recruitClass != ''">
         AND recruitClass = #{recruitClass}
       </if>
-      <if test="entryDayStart != null and entryDayEnd != null">
+      <if test="entryDayStart != null and entryDayStart != '' and entryDayEnd != null and entryDayEnd != ''" >
         AND entryDay BETWEEN #{entryDayStart} AND #{entryDayEnd}
       </if>
-      <if test="contractDayStart != null and contractDayEnd != null">
+      <if test="contractDayStart != null and contractDayStart != '' and contractDayEnd != null and contractDayEnd != ''">
         AND contractDay BETWEEN #{contractDayStart} AND #{contractDayEnd}
       </if>
-      <if test="planFullmenberDayStart != null and planFullmenberDayEnd != null">
+      <if test="planFullmenberDayStart != null and planFullmenberDayStart != '' and planFullmenberDayEnd != null and planFullmenberDayEnd != ''">
         AND planFullmenberDay BETWEEN #{planFullmenberDayStart} AND #{planFullmenberDayEnd}
       </if>
     </where>
@@ -341,22 +342,22 @@
     FROM already_send_mail_show_info
     <where>
       operationId = #{operationId}
-      <if test="employeeName != null">
+      <if test="employeeName != null and employeeName != ''">
         AND employeeName LIKE "%"#{employeeName}"%"
       </if>
-      <if test="department != null">
+      <if test="department != null and department != ''">
         AND department LIKE "%"#{department}"%"
       </if>
-      <if test="recruitClass != null">
+      <if test="recruitClass != null and recruitClass != ''">
         AND recruitClass = #{recruitClass}
       </if>
-      <if test="entryDayStart != null and entryDayEnd != null">
+      <if test="entryDayStart != null and entryDayStart != '' and entryDayEnd != null and entryDayEnd != ''" >
         AND entryDay BETWEEN #{entryDayStart} AND #{entryDayEnd}
       </if>
-      <if test="contractDayStart != null and contractDayEnd != null">
+      <if test="contractDayStart != null and contractDayStart != '' and contractDayEnd != null and contractDayEnd != ''">
         AND contractDay BETWEEN #{contractDayStart} AND #{contractDayEnd}
       </if>
-      <if test="planFullmenberDayStart != null and planFullmenberDayEnd != null">
+      <if test="planFullmenberDayStart != null and planFullmenberDayStart != '' and planFullmenberDayEnd != null and planFullmenberDayEnd != ''">
         AND planFullmenberDay BETWEEN #{planFullmenberDayStart} AND #{planFullmenberDayEnd}
       </if>
     </where>
@@ -375,24 +376,24 @@
     SELECT m.*, a.status approveStatus
     FROM already_send_mail_show_info m, approve a
     <where>
-      m.approve_id = a.id
+      m.approveId = a.id
       AND operationId = #{operationId}
-      <if test="employeeName != null">
+      <if test="employeeName != null and employeeName != ''">
         AND employeeName LIKE "%"#{employeeName}"%"
       </if>
-      <if test="department != null">
+      <if test="department != null and department != ''">
         AND department LIKE "%"#{department}"%"
       </if>
-      <if test="recruitClass != null">
+      <if test="recruitClass != null and recruitClass != ''">
         AND recruitClass = #{recruitClass}
       </if>
-      <if test="entryDayStart != null and entryDayEnd != null">
+      <if test="entryDayStart != null and entryDayStart != '' and entryDayEnd != null and entryDayEnd != ''" >
         AND entryDay BETWEEN #{entryDayStart} AND #{entryDayEnd}
       </if>
-      <if test="contractDayStart != null and contractDayEnd != null">
+      <if test="contractDayStart != null and contractDayStart != '' and contractDayEnd != null and contractDayEnd != ''">
         AND contractDay BETWEEN #{contractDayStart} AND #{contractDayEnd}
       </if>
-      <if test="planFullmenberDayStart != null and planFullmenberDayEnd != null">
+      <if test="planFullmenberDayStart != null and planFullmenberDayStart != '' and planFullmenberDayEnd != null and planFullmenberDayEnd != ''">
         AND planFullmenberDay BETWEEN #{planFullmenberDayStart} AND #{planFullmenberDayEnd}
       </if>
     </where>
