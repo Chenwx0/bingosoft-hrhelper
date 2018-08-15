@@ -32,29 +32,83 @@ public class OperationService {
 
     @Autowired
     OperationMapper operationMapper;
-
-    //添加新业务
+    
+   /**
+    * 增加新业务
+    * @param operation
+    */
     public void addOperation(Operation operation){
-        operation.setId(UUID.randomUUID().toString());
-        operation.setCreateBy(CurrentUser.getUserId());
-        operation.setCreateTime(new Date());
+    	Result<List<OperationMenuForm>> result = new Result<>();
 
-        operationMapper.insert(operation);
+        // 参数校验
+        if (operation == null){
+            result.setSuccess(false);
+            result.setMessage(TipMessage.PARAM_NULL);
+        }
+
+        try{
+        	operation.setId(UUID.randomUUID().toString());
+            operation.setCreateBy(CurrentUser.getUserId());
+            operation.setCreateTime(new Date());
+            operationMapper.insert(operation);
+            result.setMessage(TipMessage.CREATE_SUCCESS);
+        }catch (Exception e){
+            result.setSuccess(false);
+            result.setMessage(TipMessage.CREATE_FAIL);
+            logger.error(TipMessage.CREATE_FAIL,e);
+        }
     }
 
-    //更新业务
+    /**
+     * 更新业务
+     * @param operation
+     */
     public void updateOperation(Operation operation){
-        operation.setUpdateBy(CurrentUser.getUserId());
-        operation.setCreateTime(new Date());
+    	Result<List<OperationMenuForm>> result = new Result<>();
 
-        operationMapper.updateByPrimaryKey(operation);
+        // 参数校验
+        if (operation == null){
+            result.setSuccess(false);
+            result.setMessage(TipMessage.PARAM_NULL);
+        }
+
+        try{
+            operation.setUpdateBy(CurrentUser.getUserId());
+            operation.setCreateTime(new Date());
+            operationMapper.updateByPrimaryKey(operation);
+            result.setMessage(TipMessage.UPDATE_SUCCESS);
+        }catch (Exception e){
+            result.setSuccess(false);
+            result.setMessage(TipMessage.UPDATE_FAIL);
+            logger.error(TipMessage.UPDATE_FAIL,e);
+        }
     }
 
-    //删除业务
+    
+   /**
+    * 删除业务
+    * @param operation
+    */
     public void deleteOperation(Operation operation){
-        operationMapper.deleteByPrimaryKey(operation.getId());
+    	Result<List<OperationMenuForm>> result = new Result<>();
+
+        // 参数校验
+        if (operation == null){
+            result.setSuccess(false);
+            result.setMessage(TipMessage.PARAM_NULL);
+        }
+
+        try{
+        	operationMapper.deleteByPrimaryKey(operation.getId());
+            result.setMessage(TipMessage.DELETE_SUCCESS);
+        }catch (Exception e){
+            result.setSuccess(false);
+            result.setMessage(TipMessage.DELETE_FAIL);
+            logger.error(TipMessage.DELETE_FAIL,e);
+        }
     }
 
+    
     /**
      * 获取业务菜单
      * @param userId

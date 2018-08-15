@@ -1,5 +1,6 @@
 package bingosoft.hrhelper.service;
 
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -62,21 +63,41 @@ public class MailProductService {
 	
 	/**
 	 * 方法：邮件生成主流程。
-	 * 每天晚上2:30更新邮件表    表达式为：cron = "0 30 2 * *
+	 * 每天晚上2:30更新邮件表    表达式为：cron = "0 30 2 * 
+	 * @throws SQLException *
 	 */
 	@Test
 	@Scheduled(cron = "0 0/2 * * * ? ")
-	public void produceMail() throws ParseException{
-		//(1)、删除原生成的邮件
-		mm.deleteAll();
-		//(2)、生成当天新邮件
+	public void produceMail() throws ParseException, SQLException{
+		//(1)、删除离职员工的邮件
+		for(Mail m : mm.listAll()){
+			if(deleteLeaveEmployee(m)){
+				System.out.println("正在删除邮件"+m.toString()+"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^66");
+				mm.deleteByPrimaryKey(m.getId());
+			}
+		}
+		
+		//(2)、对于已"取消发送"的邮件，取消它的生成
+		cancelSend();
+		
+		//(3)、生成当天新邮件
 		for(Employee e : em.listAllEmployee() ){
 			for(Rule r : rm.listAllRule()){
 				setMail(r,e);
 			}
 		}
-		//(3)、对于已"取消发送"的邮件，取消它的生成
-		cancelSend();
+	}
+
+	private boolean deleteLeaveEmployee(Mail m) {
+			for(Employee e : em.listAllEmployee()){
+				//如果邮件对应的员工ID还存在，返回false
+				System.out.println(m.getEmployeeId()+"对比"+e.getId()+"如果相同则返回false不删除");
+				if(m.getEmployeeId().equals(e.getId())){
+					return false;
+				}
+			}
+		//如果邮件对应的员工ID已离职，返回true
+		return true;
 	}
 
 	/**
@@ -90,8 +111,8 @@ public class MailProductService {
 		Mail m = new Mail();
 		//根据规则方法计算邮件拟发送时间
 		setPlanSendTime(r,e,m);
-		//生成判断方式一： (1)、该邮件是否在生成日期区间  (2)、发送次数为1次
-		if(judgeProduce(m)){
+		//生成判断方式一： (1)、该邮件是否在生成日期区间/是否已经生成过了  (2)、发送次数为1次
+		if(judgeExistProduce(r,e,m)){
 			//传入规则和具体员工生成邮件
 			setMailContent(r,e,m);
 			//邮件生成 添加到数据库
@@ -132,6 +153,7 @@ public class MailProductService {
 		m.setSender("人力资源部");
 		m.setSenderAddress("Hr@BingoSoft.com");
 		m.setOperationId(r.getOperationId());
+		m.setEmployeeId(e.getId());
 		m.setStatus(1);//默认为1：待发送。如果管理员点击取消，则变为0。
 		
 		//判断是否为需要工作流或者抄送人的特殊邮件
@@ -338,7 +360,7 @@ public class MailProductService {
 	 * @param m
 	 * @throws ParseException 
 	 */
-	public boolean judgeProduce(Mail m) throws ParseException{
+	public boolean judgeProduce(Rule r,Employee e,Mail m) throws ParseException{
 		//生成"yyyy-MM-dd"的当前时间
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		String nowdayTime = dateFormat.format(new Date());
@@ -352,6 +374,39 @@ public class MailProductService {
 		return compareDay.after(m.getPlanSendTime()) &&
 				   (m.getPlanSendTime().after(today));
 	}
+	
+	//判断1：该 "规则" 对应 "该名员工" 是否已存在；
+	public boolean judgeExistProduce(Rule r,Employee e,Mail m) throws ParseException{
+		//如果该“业务”对应“员工”在邮件表中已存在，则不重复生成。
+		m.setEmployeeId(e.getId());
+		m.setOperationId(r.getOperationId());
+		//如果存在则不判断
+		if(mm.selectByEidOid(m)==0){
+			System.out.println("1:该名员工为"+e.getId()+"该规则为"+r.getOperationId());
+			System.out.println("查询得到的总数"+mm.selectByEidOid(m));
+			return judgeDateProduce(m);
+		}
+		System.out.println("2:该名员工为"+e.getId()+"该规则为"+r.getOperationId());
+		System.out.println("查询得到的总数"+mm.selectByEidOid(m));
+		return false;
+	}
+	
+	//判断2：是否在发送时间；
+	public boolean judgeDateProduce(Mail m) throws ParseException{
+		//生成"yyyy-MM-dd"的当前时间
+				DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+				String nowdayTime = dateFormat.format(new Date());
+				Date today = dateFormat.parse(nowdayTime);
+				//转换为日历类型并加上7天，再转换为普通的Date类型。
+				Calendar c = Calendar.getInstance();
+				c.setTime(today);
+				c.add(Calendar.DAY_OF_MONTH, 7);
+				Date compareDay = c.getTime();
+				//拟发送时间如果比当前时间加七天早，并且比今天晚，返回true
+				return compareDay.after(m.getPlanSendTime()) &&
+						   (m.getPlanSendTime().after(today));
+	}
+
 	
 	/**
 	 * 方法：取消状态为“已取消发送”的邮件的生成。

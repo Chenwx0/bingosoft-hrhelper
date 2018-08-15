@@ -388,4 +388,10 @@
   </select>
 
   <!-- end -->
+  
+  <!-- 邮件生成相关SQL -->
+  <select id="selectByEidOid" resultType="int" parameterType="bingosoft.hrhelper.model.Mail">
+  	SELECT count(*) FROM mail where operation_id =#{operationId} &amp;&amp; employee_id =#{employeeId};
+  </select>
+  
 </mapper>

@@ -3,7 +3,9 @@ package bingosoft.hrhelper.controller;
 import bingosoft.hrhelper.common.Result;
 import bingosoft.hrhelper.form.RuleDetailForm;
 import bingosoft.hrhelper.model.Rule;
+import bingosoft.hrhelper.service.ModelService;
 import bingosoft.hrhelper.service.RuleService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,8 @@ public class RuleController {
 	Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
     RuleService ruleService;
+    @Autowired
+    ModelService modelService;
 
     /**
      * 获取规则列表
@@ -65,6 +69,11 @@ public class RuleController {
     	return result;
     }
     
+    /**
+     * 更新规则
+     * @param ruleId
+     * @return 操作结果
+     */
     @PatchMapping
     public Result updateRule(RuleDetailForm ruleDetailForm){
         Result result = ruleService.updateRule(ruleDetailForm);
