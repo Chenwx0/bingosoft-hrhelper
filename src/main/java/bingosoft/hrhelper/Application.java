@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
 @MapperScan("bingosoft.hrhelper.mapper")
-//@EnableScheduling
+@EnableScheduling
 @EnableTransactionManagement
 public class Application {
     public static void main(String[] args) {

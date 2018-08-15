@@ -153,6 +153,7 @@ public class MailProductService {
 		m.setSender("人力资源部");
 		m.setSenderAddress("Hr@BingoSoft.com");
 		m.setOperationId(r.getOperationId());
+		m.setRuleId(r.getId());
 		m.setEmployeeId(e.getId());
 		m.setStatus(1);//默认为1：待发送。如果管理员点击取消，则变为0。
 		
@@ -379,15 +380,15 @@ public class MailProductService {
 	public boolean judgeExistProduce(Rule r,Employee e,Mail m) throws ParseException{
 		//如果该“业务”对应“员工”在邮件表中已存在，则不重复生成。
 		m.setEmployeeId(e.getId());
-		m.setOperationId(r.getOperationId());
+		m.setRuleId(r.getId());
 		//如果存在则不判断
-		if(mm.selectByEidOid(m)==0){
-			System.out.println("1:该名员工为"+e.getId()+"该规则为"+r.getOperationId());
-			System.out.println("查询得到的总数"+mm.selectByEidOid(m));
+		if(mm.selectByEidRid(m)==0){
+			System.out.println("1:该名员工为"+e.getId()+"该规则为"+r.getId());
+			System.out.println("查询得到的总数"+mm.selectByEidRid(m));
 			return judgeDateProduce(m);
 		}
 		System.out.println("2:该名员工为"+e.getId()+"该规则为"+r.getOperationId());
-		System.out.println("查询得到的总数"+mm.selectByEidOid(m));
+		System.out.println("查询得到的总数"+mm.selectByEidRid(m));
 		return false;
 	}
 	

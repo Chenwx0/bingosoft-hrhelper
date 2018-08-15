@@ -21,11 +21,23 @@ public interface MailMapper {
     int updateByPrimaryKeyWithBLOBs(Mail record);
 
     int updateByPrimaryKey(Mail record)  throws SQLException;
-
+    
+    /**
+     * 遍历所有邮件
+     * @return
+     */
     List<Mail> listAll();
 
+    /**
+     * 删除所有邮件
+     * @return
+     */
     void deleteAll();
 
+    /**
+     * 取消“已取消”邮件的生成
+     * @return
+     */
     void deleteCancelMail(Mail record);
 
     /**
@@ -48,7 +60,18 @@ public interface MailMapper {
      * @return
      */
     List<MailListForm> selectListSentApprove(Map<String,String> params) throws SQLException;
-
-	int selectByEidOid(Mail record);
+    
+    /**
+     * 根据业务ID和员工ID查找总数
+     * @param record
+     * @return
+     */
+	int selectByEidRid(Mail record);
+	
+	/**
+	 * 通过规则删除邮件
+	 * @param rule_id
+	 */
+	void deleteMailByRule(String rule_id);
 
 }
