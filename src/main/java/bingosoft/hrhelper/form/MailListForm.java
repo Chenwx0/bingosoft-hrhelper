@@ -1,5 +1,6 @@
 package bingosoft.hrhelper.form;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import leap.core.doc.annotation.Doc;
 
 import java.util.Date;
@@ -50,10 +51,12 @@ public class MailListForm {
     /**
      * 计划发送时间
      */
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm")
     private Date planSendTime;
     /**
      * 发送时间
      */
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm")
     private Date sendTime;
     /**
      * 业务负责人
@@ -74,14 +77,17 @@ public class MailListForm {
     /**
      * 入职时间
      */
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
     private Date entryDay;
     /**
      * 拟转正时间
      */
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
     private Date planFullmenberDay;
     /**
      * 合同到期时间
      */
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
     private Date contractDay;
     /**
      * 招聘类型
