@@ -222,7 +222,7 @@ public class MailProductService {
 		m.setRecipientAddress(e.getManagerMail());
 		//根据规则方法与员工信息 生成邮件模板
 		m.setMailContent(cmcs.getMailContent(e.getId(), r.getModelId(), DateTransferUtils.dateTimeFormat(m.getPlanSendTime()),"截止日期"));
-	
+		
 		//生成审批内容，设置审批状态为0:待审批
 		String approveId = UUID.randomUUID().toString();
 		m.setApproveId(approveId);

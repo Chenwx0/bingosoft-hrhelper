@@ -60,7 +60,8 @@ public class MailSendService {
 		for(Mail mail : mm.listAll()){
 			//如果当前时间超过拟发送时间
 			System.out.println("一分钟到了__"+new Date());
-			if(new Date().after(mail.getPlanSendTime())){
+			if(ifSend(mail)){
+				
 				//发送邮件
 				sendMail(mail);
 				System.out.println("正在发送"+mail.getMailName()+"到员工"+mail.getRecipient());
@@ -69,11 +70,28 @@ public class MailSendService {
 	}
 	
 	/**
-	 * 获取配置并发送邮件
+	 * 判断是否发送该封邮件
+	 * @param mail
+	 * @return
+	 */
+	public boolean ifSend(Mail mail){
+		//判断： 1、邮件是否状态为“已取消”，如果是则将该邮件添加到已发送表中 2、当前时间是否已经超过了拟发送时间
+		if(new Date().after(mail.getPlanSendTime())){
+			if(mail.getStatus()==0){
+				addAlreadySendMail(mail);
+				return false;
+			}
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * 配置邮件内容并发送邮件
+	 * @param mail
 	 */
 	public void sendMail(Mail mail){
 		try {
-			
 			//设置接收人和内容
 			mu.setSubject(mail.getMailName());
 			mu.setRecipientAddresses(mail.getRecipientAddress()); //设置收件人地址
@@ -110,7 +128,6 @@ public class MailSendService {
 		asm.setStatus(mail.getStatus());
 		asm.setUpdateBy(mail.getUpdateBy());
 		asm.setEmployeeId(mail.getUpdateBy());
-
 		try {
 			mm.deleteByPrimaryKey(mail.getId());
 		} catch (SQLException e) {
