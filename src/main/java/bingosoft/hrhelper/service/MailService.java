@@ -32,6 +32,8 @@ public class MailService{
 
     private static final String ID_NULL = "邮件ID不能为空";
     private static final String OPERATION_ID_NULL = "业务类别ID不能为空";
+    private static final String CANCEL_SUCCESS = "取消成功";
+    private static final String CANCEL_FAIL = "取消失败";
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -155,17 +157,18 @@ public class MailService{
             return result;
         }
         try{
-            int res = mailMapper.deleteByPrimaryKey(mailId);
+            int res = aMailMapper.deleteByPrimaryKey(mailId);
             if (res>0){
                 result.setMessage(TipMessage.DELETE_SUCCESS);
             }else{
                 result.setSuccess(false);
-                result.setMessage(TipMessage.NO_DATA);
+                result.setMessage(TipMessage.NO_DATA_DELETE);
             }
         } catch (SQLException e){
+            logger.error(TipMessage.DELETE_FAIL,e);
             result.setSuccess(false);
             result.setMessage(TipMessage.DELETE_FAIL);
-            logger.error(TipMessage.DELETE_FAIL,e);
+
         }
         return result;
     }
@@ -187,7 +190,7 @@ public class MailService{
 
         try{
             for (String mailId: mailIds) {
-                mailMapper.deleteByPrimaryKey(mailId);
+                aMailMapper.deleteByPrimaryKey(mailId);
             }
             result.setMessage(TipMessage.DELETE_SUCCESS);
         } catch (SQLException e){
@@ -229,6 +232,73 @@ public class MailService{
             result.setMessage(TipMessage.UPDATE_FAIL);
         }
 
+        return result;
+    }
+
+    /**
+     * 取消发送邮件
+     * @param mailId
+     * @return
+     */
+    public Result cancelSend(String mailId){
+
+        Result result = new Result();
+        // 参数校验
+        if (Strings.isEmpty(mailId)){
+            result.setSuccess(false);
+            result.setMessage(ID_NULL);
+            return result;
+        }
+
+        // 构造对象
+        Mail mail = new Mail();
+        mail.setId(mailId);
+        mail.setStatus(0);
+
+        // 执行更新
+        try {
+            mailMapper.updateByPrimaryKeySelective(mail);
+            result.setMessage(CANCEL_SUCCESS);
+        } catch (SQLException e) {
+            logger.error(CANCEL_FAIL, e);
+            result.setSuccess(false);
+            result.setMessage(CANCEL_FAIL);
+        }
+
+        return result;
+    }
+
+    /**
+     * 批量取消发送邮件
+     * @param mailIds
+     * @return 操作结果
+     */
+    @Transactional
+    public Result patchCancelSend(String[] mailIds){
+
+        Result result = new Result();
+        // 参数校验
+        if (mailIds == null || mailIds.length == 0){
+            result.setSuccess(false);
+            result.setMessage(ID_NULL);
+            return result;
+        }
+
+        // 执行更新
+        try {
+            for (int i=0; i<mailIds.length; i++){
+                // 构造对象
+                Mail mail = new Mail();
+                mail.setId(mailIds[i]);
+                mail.setStatus(0);
+                mailMapper.updateByPrimaryKeySelective(mail);
+            }
+            result.setMessage(CANCEL_SUCCESS);
+        } catch (SQLException e) {
+            logger.error(CANCEL_FAIL, e);
+            result.setSuccess(false);
+            result.setMessage(CANCEL_FAIL);
+        }
         return result;
     }
 }

@@ -286,6 +286,7 @@
     FROM mail_show_info
     <where>
       operationId = #{operationId}
+      AND status = 1
       <if test="employeeName != null and employeeName != ''">
         AND employeeName LIKE "%"#{employeeName}"%"
       </if>
