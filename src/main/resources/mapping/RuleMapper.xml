@@ -19,7 +19,7 @@
     <result column="early_day" property="earlyDay" jdbcType="INTEGER" />
     <result column="entry_distance" property="entryDistance" jdbcType="VARCHAR" />
     <result column="specialday_distance" property="specialdayDistance" jdbcType="VARCHAR" />
-    <result column="is_user" property="isUse" jdbcType="INTEGER" />
+    <result column="is_use" property="isUse" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, rule_name, operation_id, model_id, rule_method, sending_minofhour, sending_hourofday, 
