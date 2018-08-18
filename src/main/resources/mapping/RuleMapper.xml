@@ -19,11 +19,12 @@
     <result column="early_day" property="earlyDay" jdbcType="INTEGER" />
     <result column="entry_distance" property="entryDistance" jdbcType="VARCHAR" />
     <result column="specialday_distance" property="specialdayDistance" jdbcType="VARCHAR" />
+    <result column="is_user" property="isUse" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, rule_name, operation_id, model_id, rule_method, sending_minofhour, sending_hourofday, 
     distance_y, distance_m, distance_d, create_by, create_time, update_by, update_time, 
-    early_day, entry_distance, specialday_distance
+    early_day, entry_distance, specialday_distance, is_use
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -41,13 +42,13 @@
       sending_hourofday, distance_y, distance_m, 
       distance_d, create_by, create_time, 
       update_by, update_time, early_day, 
-      entry_distance, specialday_distance)
+      entry_distance, specialday_distance, is_use)
     values (#{id,jdbcType=VARCHAR}, #{ruleName,jdbcType=VARCHAR}, #{operationId,jdbcType=VARCHAR}, 
       #{modelId,jdbcType=VARCHAR}, #{ruleMethod,jdbcType=VARCHAR}, #{sendingMinofhour,jdbcType=INTEGER}, 
       #{sendingHourofday,jdbcType=INTEGER}, #{distanceY,jdbcType=INTEGER}, #{distanceM,jdbcType=INTEGER}, 
       #{distanceD,jdbcType=INTEGER}, #{createBy,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateBy,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{earlyDay,jdbcType=INTEGER}, 
-      #{entryDistance,jdbcType=VARCHAR}, #{specialdayDistance,jdbcType=VARCHAR})
+      #{entryDistance,jdbcType=VARCHAR}, #{specialdayDistance,jdbcType=VARCHAR}, #{isUse,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="bingosoft.hrhelper.model.Rule" >
     insert into rule
@@ -103,6 +104,9 @@
       <if test="specialdayDistance != null" >
         specialday_distance,
       </if>
+      <if test="isUse != null" >
+        is_use,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -155,6 +159,9 @@
       </if>
       <if test="specialdayDistance != null" >
         #{specialdayDistance,jdbcType=VARCHAR},
+      </if>
+      <if test="isUse != null" >
+        #{isUse,jdbcType=INTEGER}
       </if>
     </trim>
   </insert>
@@ -209,6 +216,9 @@
       <if test="specialdayDistance != null" >
         specialday_distance = #{specialdayDistance,jdbcType=VARCHAR},
       </if>
+      <if test="isUse != null" >
+        is_use = #{isUse,jdbcType=INTEGER}
+      </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
@@ -229,7 +239,8 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       early_day = #{earlyDay,jdbcType=INTEGER},
       entry_distance = #{entryDistance,jdbcType=VARCHAR},
-      specialday_distance = #{specialdayDistance,jdbcType=VARCHAR}
+      specialday_distance = #{specialdayDistance,jdbcType=VARCHAR},
+      is_use = #{isUse, jdbcType=INTEGER}
     where id = #{id,jdbcType=VARCHAR}
   </update>
 
@@ -241,7 +252,7 @@
   </select>
   
   <select id="listRuleListForm" parameterType="java.lang.String" resultType="bingosoft.hrhelper.form.RuleListForm">
-    SELECT r.id, r.rule_name ruleName, r.entry_distance ruleSummary, r.update_time updateTime, o.operation_name operationName, u.username principal
+    SELECT r.id, r.rule_name ruleName, r.entry_distance ruleSummary, r.update_time updateTime, r.is_use, o.operation_name operationName, u.username principal
     FROM rule r, operation o, user u
     WHERE r.operation_id = o.id
       AND o.user_id = u.id
@@ -252,7 +263,7 @@
 
   <select id="getRuleDetail" parameterType="java.lang.String" resultType="bingosoft.hrhelper.form.RuleDetailForm">
     SELECT r.id, r.rule_name ruleName, r.rule_method ruleMethod, r.distance_y distanceY, r.distance_m distanceM, r.distance_d distanceD
-    , r.sending_hourofday sendingHourofday, r.sending_minofhour sendingMinofhour, m.model_content modelContent, m.attachment_href attachmentHref, o.id operationId
+    , r.sending_hourofday sendingHourofday, r.sending_minofhour sendingMinofhour, r.is_use, m.model_content modelContent, m.attachment_href attachmentHref, o.id operationId
     FROM rule r, operation o, model m
     WHERE r.operation_id = o.id
       AND r.model_id = m.id

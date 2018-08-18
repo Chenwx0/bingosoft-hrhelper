@@ -37,6 +37,11 @@ public class Rule {
 
     private String specialdayDistance;
 
+    /**
+     * 规则是非启用
+     */
+    private Integer isUse;
+
     public String getId() {
         return id;
     }
@@ -171,5 +176,13 @@ public class Rule {
 
     public void setSpecialdayDistance(String specialdayDistance) {
         this.specialdayDistance = specialdayDistance == null ? null : specialdayDistance.trim();
+    }
+
+    public Integer getIsUse() {
+        return isUse;
+    }
+
+    public void setIsUse(Integer isUse) {
+        this.isUse = isUse;
     }
 }
