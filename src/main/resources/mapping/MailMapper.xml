@@ -292,6 +292,12 @@
     &amp; plan_send_time = #{planSendTime,jdbcType=VARCHAR}
     &amp; recipient_address = #{recipientAddress,jdbcType=VARCHAR}
   </delete>
+  
+  <delete id="deleteMailByRule" parameterType="bingosoft.hrhelper.model.Mail" >
+    delete from mail
+    where rule_id = #{ruleId,jdbcType=VARCHAR}
+  </delete>
+  
 
   <!-- 邮件前端相关操作自定义 -->
   <!-- start -->
@@ -401,7 +407,6 @@
       </otherwise>
     </choose>
   </select>
-
   <!-- end -->
   
   <!-- 邮件生成相关SQL -->

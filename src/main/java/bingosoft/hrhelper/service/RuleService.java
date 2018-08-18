@@ -5,20 +5,30 @@ import bingosoft.hrhelper.common.Result;
 import bingosoft.hrhelper.common.TipMessage;
 import bingosoft.hrhelper.form.RuleDetailForm;
 import bingosoft.hrhelper.form.RuleListForm;
+import bingosoft.hrhelper.mapper.EmployeeMapper;
+import bingosoft.hrhelper.mapper.MailMapper;
 import bingosoft.hrhelper.mapper.ModelMapper;
 import bingosoft.hrhelper.mapper.RuleMapper;
+import bingosoft.hrhelper.model.Employee;
+import bingosoft.hrhelper.model.Mail;
 import bingosoft.hrhelper.model.Model;
 import bingosoft.hrhelper.model.Rule;
+
 import com.sun.xml.internal.bind.v2.model.core.ID;
+
 import leap.lang.Strings;
 import leap.orm.dao.Dao;
+
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -38,14 +48,19 @@ public class RuleService {
 
 	@Autowired
 	RuleMapper ruleMapper ;
-
+	@Autowired
+	MailMapper mailMapper;
 	@Autowired
 	ModelMapper modelMapper ;
+	@Autowired
+	EmployeeMapper employeelMapper ;
+	MailProductService mps;
 
 	/**
 	 * 添加规则
 	 * @param ruleDetailForm
 	 * @return 操作结果
+	 * @throws ParseException
 	 */
 	@Transactional
 	public Result addRule(RuleDetailForm ruleDetailForm){
@@ -85,11 +100,12 @@ public class RuleService {
 		model.setAttachmentHref(ruleDetailForm.getAttachmentHref());
 		model.setCreateBy(CurrentUser.getUserId());
 		model.setCreateTime(new Date());
-
 		// 执行新增
 		try {
 			ruleMapper.insert(rule);
 			modelMapper.insert(model);
+			//增加规则的同时 生成相关邮件
+			addMailByRule(rule);
 			result.setMessage(TipMessage.CREATE_SUCCESS);
 		} catch (SQLException e) {
 			logger.error(TipMessage.CREATE_FAIL, e);
@@ -106,9 +122,7 @@ public class RuleService {
 	 * @return 规则列表
 	 */
 	public Result<List<RuleListForm>> listRule(String operationId){
-
 		Result<List<RuleListForm>> result = new Result<>();
-
 		// 执行查询
 		try {
 			List<RuleListForm> ruleList = ruleMapper.listRuleListForm(operationId);
@@ -118,9 +132,7 @@ public class RuleService {
 			result.setSuccess(false);
 			result.setMessage(TipMessage.QUERY_FAIL);
 		}
-
 		return result;
-
 	}
 
 	/**
@@ -176,6 +188,8 @@ public class RuleService {
 		// 执行删除
 		try {
 			int res = ruleMapper.deleteByPrimaryKey(ruleId);
+			//删除规则的同时 删除相关邮件
+			deleteMailByRule(ruleId);
 			if (res > 0){
 				result.setMessage(TipMessage.DELETE_SUCCESS);
 			}else {
@@ -256,6 +270,60 @@ public class RuleService {
 		return result;
 	}
 
+
+	/**
+	 * 方法：删除规则的同时 删除规则与该相关的待发送邮件；
+	 * @return
+	 * @throws SQLException *
+	 */
+	@SuppressWarnings("rawtypes")
+	public Result addMailByRule(Rule rule){
+		Result result = new Result();
+		// 参数校验
+		if (rule == null){
+			result.setSuccess(false);
+			result.setMessage(TipMessage.PARAM_NULL);
+			return result;
+		}
+		try {
+			for(Employee em : employeelMapper.listAllEmployee()){
+				mps.setMail(rule, em);
+			}
+			result.setMessage(TipMessage.CREATE_SUCCESS);
+		} catch (Exception e) {
+			logger.error(TipMessage.CREATE_FAIL, e);
+			result.setSuccess(false);
+			result.setMessage(TipMessage.CREATE_FAIL);
+		}
+		return result;
+	}
+
+	 /**
+	 * 方法：删除规则的同时 删除规则与该相关的待发送邮件；
+	 * @return
+	 * @throws SQLException *
+	 */
+	@SuppressWarnings("rawtypes")
+	public Result deleteMailByRule(String rule_id){
+		Result result = new Result();
+		// 参数校验
+		if (rule_id == null){
+			result.setSuccess(false);
+			result.setMessage(TipMessage.PARAM_NULL);
+			return result;
+		}
+		try {
+			mailMapper.deleteMailByRule(rule_id);
+			result.setMessage(TipMessage.DELETE_SUCCESS);
+		} catch (Exception e) {
+			logger.error(TipMessage.DELETE_FAIL, e);
+			result.setSuccess(false);
+			result.setMessage(TipMessage.DELETE_FAIL);
+		}
+		return result;
+	}
+
+
     /**
      * 业务：根据规则进行计算
      * @param rule 
@@ -302,40 +370,4 @@ public class RuleService {
     	rule.setRuleMethod("3");
 	  	return entry_distance;
     }
-    
-    
-    
-    /**
-     * 业务：根据规则进行计算
-     * @param rule 
-     * @return 根据该规则，员工距离入职多长时间发送邮件
-     *//*
-    public String caculateRule2(Rule rule){
-
-	  	  Calendar sendTimeUntil = Calendar.getInstance();
-	  	  //获得规则确定的“距离入职后多久发送的日期”(日期)
-	      sendTimeUntil.set(0, 0, 0, 0, 0);
-	        
-	      System.out.println("时间日历"+Calendar.getInstance());
-	      
-	  	  //添加距离入职时间(年) 备注：年限传到数据库自动加1  原因：如果将0年传到数据库，显示年份为0001。
-	  	  sendTimeUntil.add(Calendar.YEAR,rule.getEntryDistanceY()+1);
-	  	  //添加距离入职时间(月)
-	  	  sendTimeUntil.add(Calendar.MONTH,rule.getEntryDistanceM());
-	  	  //添加距离入职时间(日)
-	  	  sendTimeUntil.add(Calendar.DAY_OF_MONTH, rule.getEntryDistanceD());
-	  	  
-	  	  //添加当天准确时间(小时)
-	  	  sendTimeUntil.add(Calendar.HOUR_OF_DAY, rule.getSendingHourofday());
-	  	  //添加当天准确时间(分钟)
-	  	  sendTimeUntil.add(Calendar.MINUTE, rule.getSendingMinofhour());
-	  	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
-	  	  Date date=sendTimeUntil.getTime();
-	  	  
-	  	  System.out.println("得到的日期1——"+date);
-	  	  
-	  	  String dateStr = new SimpleDateFormat("yyyy-MM-dd hh:mm").format(date);
-	  	  
-	  	  return dateStr;
-    }*/
 }
