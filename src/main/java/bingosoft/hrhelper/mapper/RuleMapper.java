@@ -6,6 +6,7 @@ import java.util.List;
 import bingosoft.hrhelper.form.RuleDetailForm;
 import bingosoft.hrhelper.form.RuleListForm;
 import bingosoft.hrhelper.model.Rule;
+
 import org.apache.ibatis.annotations.Param;
 
 public interface RuleMapper {
@@ -36,6 +37,4 @@ public interface RuleMapper {
      * @return 规则详情
      */
 	RuleDetailForm getRuleDetail(@Param("ruleId") String ruleId) throws SQLException;
-
-
 }

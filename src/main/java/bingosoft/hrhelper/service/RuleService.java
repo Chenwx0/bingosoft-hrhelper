@@ -85,6 +85,8 @@ public class RuleService {
 		rule.setOperationId(ruleDetailForm.getOperationId());
 		rule.setCreateBy(CurrentUser.getUserId());
 		rule.setCreateTime(new Date());
+		//设置规则启用状态(0:未启用 1:启用)
+		rule.setIsUse(0);
 		if(rule.getRuleMethod().equals("1")){
 			rule.setEntryDistance(caculateRule_1(rule)); //方法1：入职时长计算
 		}else if(rule.getRuleMethod().equals("2")){
@@ -370,4 +372,36 @@ public class RuleService {
     	rule.setRuleMethod("3");
 	  	return entry_distance;
     }
+    
+    /**
+     * 改变规则启用状态(0:禁用 1:启用)
+     * @param ruleId
+     * @return 
+     * @return
+     */
+	public Result changeStatus(String rule_id) {
+		Result result = new Result();
+		// 参数校验
+		if (rule_id == null){
+			result.setSuccess(false);
+			result.setMessage(TipMessage.PARAM_NULL);
+			return result;
+		}
+		try {
+			Rule record = ruleMapper.selectByPrimaryKey(rule_id);
+			//启用与禁用的转换设置
+			if(record.getIsUse()==0){
+				record.setIsUse(1);
+			}else{
+				record.setIsUse(0);
+			}
+			ruleMapper.updateByPrimaryKey(record);
+			result.setMessage(TipMessage.UPDATE_SUCCESS);
+		} catch (Exception e) {
+			logger.error(TipMessage.UPDATE_FAIL, e);
+			result.setSuccess(false);
+			result.setMessage(TipMessage.UPDATE_FAIL);
+		}
+		return result;
+	}
 }
