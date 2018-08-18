@@ -36,9 +36,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class MailSendService {
 
-	private static final String CANCEL_SUCCESS = "取消发送成功";
-	private static final String CANCEL_FAIL = "取消发送失败";
-
 	Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	MailUtil mu = new MailUtil();

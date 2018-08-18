@@ -9,6 +9,7 @@ import bingosoft.hrhelper.mapper.MailMapper;
 import bingosoft.hrhelper.model.Mail;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.sun.activation.registries.MimeTypeFile;
 import leap.lang.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,7 +82,7 @@ public class MailService{
         }catch (NumberFormatException e){
             logger.error(TipMessage.PARAM_ILLEGAL_CHAR,e);
         }
-        // 筛选日期处理
+  /*      // 筛选日期处理
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Calendar calendar = Calendar.getInstance();
         // 入职日期
@@ -120,7 +121,7 @@ public class MailService{
             result.setSuccess(false);
             result.setMessage(TipMessage.DATE_FORMAT_INCORRECT);
             return result;
-        }
+        }*/
 
         PageHelper.startPage(pageNum, pageSize);
         List<MailListForm> mailListForms = new ArrayList<>();
@@ -299,6 +300,13 @@ public class MailService{
             result.setSuccess(false);
             result.setMessage(CANCEL_FAIL);
         }
+        return result;
+    }
+
+    public Result addAttachment(MimeTypeFile file){
+
+        Result result = new Result();
+
         return result;
     }
 }

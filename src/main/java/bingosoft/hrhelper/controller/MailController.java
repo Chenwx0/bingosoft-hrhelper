@@ -6,11 +6,13 @@ import bingosoft.hrhelper.service.MailSendService;
 import bingosoft.hrhelper.service.MailService;
 
 import leap.web.annotation.Path;
+import org.apache.catalina.filters.HttpHeaderSecurityFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 /**
@@ -20,6 +22,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("mail")
+@CrossOrigin
 public class MailController{
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -34,7 +37,7 @@ public class MailController{
      * @param params
      * @return 查询结果对象
      */
-    @RequestMapping("/list")
+    @PostMapping("/list")
     public Result pageQueryMailList(@RequestBody Map<String,String> params){
         Result result = mailService.pageQueryMailList(params);
         return result;
@@ -92,4 +95,6 @@ public class MailController{
         Result result = mailService.patchCancelSend(mailIds);
         return result;
     }
+
+
 }

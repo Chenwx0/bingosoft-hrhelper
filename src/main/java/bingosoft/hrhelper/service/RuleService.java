@@ -255,7 +255,7 @@ public class RuleService {
 
 		return result;
 	}
-    
+
     /**
      * 业务：根据规则进行计算
      * @param rule 

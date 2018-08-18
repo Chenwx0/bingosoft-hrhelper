@@ -7,10 +7,12 @@ import bingosoft.hrhelper.model.Mail;
 import bingosoft.hrhelper.model.Operation;
 import bingosoft.hrhelper.service.OperationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -18,7 +20,8 @@ import java.util.List;
  * @date 2018-08-06 20:28:28
  */
 @RestController
-@RequestMapping(path = "/operation") 
+@RequestMapping(path = "/operation")
+@CrossOrigin
 public class OperationController {
 
     @Autowired
@@ -44,7 +47,7 @@ public class OperationController {
      * @return 业务信息集合
      */
     @GetMapping("/getOperationMenu")
-    public Result getOperationMenu(){
+    public Result getOperationMenu(HttpServletResponse response){
         String userId = CurrentUser.getUserId();
         Result<List<OperationMenuForm>> result = operationService.getOperationMenu(userId);
         return result;

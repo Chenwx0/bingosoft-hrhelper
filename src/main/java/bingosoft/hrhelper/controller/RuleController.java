@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * @创建人 zhangyx
  * @功能描述 规则管理业务控制类
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping(path = "rule")
+@CrossOrigin
 public class RuleController {
 	Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
@@ -41,8 +44,8 @@ public class RuleController {
      * @param ruleId
      * @return 规则详情
      */
-    @GetMapping("/{ruleId}")
-    public Result getRuleDetail(@PathVariable String ruleId){
+    @GetMapping("/get")
+    public Result getRuleDetail(String ruleId){
         Result result = ruleService.getRuleDetail(ruleId);
         return result;
     }
@@ -63,15 +66,15 @@ public class RuleController {
      * @param ruleId
      * @return 操作结果
      */
-    @DeleteMapping("/{ruleId}")
-    public Result deleteRule(@PathVariable String ruleId){
+    @DeleteMapping("/del")
+    public Result deleteRule(String ruleId){
     	Result result = ruleService.deleteRule(ruleId);
     	return result;
     }
     
     /**
      * 更新规则
-     * @param ruleId
+     * @param ruleDetailForm
      * @return 操作结果
      */
     @PatchMapping
