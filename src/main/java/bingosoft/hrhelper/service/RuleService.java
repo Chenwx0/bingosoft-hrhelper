@@ -60,7 +60,6 @@ public class RuleService {
 	 * 添加规则
 	 * @param ruleDetailForm
 	 * @return 操作结果
-	 * @throws ParseException
 	 */
 	@Transactional
 	public Result addRule(RuleDetailForm ruleDetailForm){

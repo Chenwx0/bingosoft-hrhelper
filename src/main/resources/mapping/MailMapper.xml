@@ -407,10 +407,18 @@
       </otherwise>
     </choose>
   </select>
-  <!-- end -->
-  
+
   <!-- 邮件生成相关SQL -->
   <select id="selectByEidRid" resultType="int" parameterType="bingosoft.hrhelper.model.Mail">
-  	SELECT count(*) FROM mail where rule_id =#{ruleId} &amp;&amp; employee_id =#{employeeId};
+    SELECT count(*) FROM mail where rule_id =#{ruleId} &amp;&amp; employee_id =#{employeeId};
   </select>
+
+  <delete id="deleteByOperationId" parameterType="java.lang.String">
+    delete from mail
+    where operation_id = #{operationId}
+  </delete>
+
+  <!-- end -->
+  
+
 </mapper>

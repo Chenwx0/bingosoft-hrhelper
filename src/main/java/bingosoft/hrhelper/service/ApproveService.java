@@ -1,9 +1,12 @@
 package bingosoft.hrhelper.service;
 
+import java.sql.SQLException;
 import java.util.Date;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.stereotype.Service;
@@ -27,7 +30,8 @@ import bingosoft.hrhelper.model.Operation;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Service
 public class ApproveService {
-	
+
+	Logger logger = LoggerFactory.getLogger(this.getClass());
 	MailUtil mu = new MailUtil();
 	
 	@Autowired
@@ -62,7 +66,12 @@ public class ApproveService {
 	 */
 	public void sendApproveMail(Approve a){
 		//取得该审批对应业务业务
-		String isSpecial = om.selectByPrimaryKey(a.getOperationId()).getIsSpecial();
+		String isSpecial = null;
+		try {
+			isSpecial = om.selectByPrimaryKey(a.getOperationId()).getIsSpecial();
+		} catch (SQLException e) {
+			logger.error(e.getMessage(),e);
+		}
 		//处理转正业务，直接发送下一封邮件
 		if(isSpecial.equals("1")){
 			fullMember(a);

@@ -72,6 +72,12 @@ public interface MailMapper {
 	 * 通过规则删除邮件
 	 * @param rule_id
 	 */
-	void deleteMailByRule(String rule_id);
+	int deleteMailByRule(String rule_id);
 
+    /**
+     * 通过业务ID删除邮件
+     * @param operationId
+     * @return
+     */
+    int deleteByOperationId(String operationId) throws SQLException;
 }

@@ -6,11 +6,9 @@ import bingosoft.hrhelper.form.OperationMenuForm;
 import bingosoft.hrhelper.model.Mail;
 import bingosoft.hrhelper.model.Operation;
 import bingosoft.hrhelper.service.OperationService;
+import leap.web.annotation.RequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -20,26 +18,55 @@ import java.util.List;
  * @date 2018-08-06 20:28:28
  */
 @RestController
-@RequestMapping(path = "/operation")
+@RequestMapping(path = "operation")
 @CrossOrigin
 public class OperationController {
 
     @Autowired
     OperationService operationService;
 
-    @GetMapping(path = "/addOperation")
-    public void addOperation(Operation operation){
-        operationService.addOperation(operation);
+    @PostMapping("/add")
+    public Result addOperation(@RequestBody Operation operation){
+
+        Result result = operationService.addOperation(operation);
+        return result;
     }
 
-    @GetMapping(path = "/deleteOperation")
-    public void deleteOperation(Operation operation){
-        operationService.deleteOperation(operation);
+    @DeleteMapping("/del")
+    public Result deleteOperation(String operationId){
+
+        Result result = operationService.deleteOperation(operationId);
+        return result;
     }
 
-    @GetMapping(path = "/updateOperation")
-    public void updateOperation(Operation operation){
-        operationService.updateOperation(operation);
+    @PatchMapping("/update")
+    public Result updateOperation(@RequestBody Operation operation){
+
+        Result result = operationService.updateOperation(operation);
+        return result;
+    }
+
+    /**
+     * 获取业务列表
+     * @return
+     */
+    @GetMapping("/list")
+    public Result getOperation(){
+
+        Result result = operationService.listOperation();
+        return result;
+    }
+
+    /**
+     * 获取业务详情
+     * @param operationId
+     * @return
+     */
+    @GetMapping("/get")
+    public Result getOperation(String operationId){
+
+        Result result = operationService.getOperation(operationId);
+        return result;
     }
 
     /**
