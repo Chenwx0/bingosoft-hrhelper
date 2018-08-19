@@ -33,6 +33,10 @@ public class RuleListForm {
      * 业务负责人
      */
     private String principal;
+    /**
+     * 规则是非启用
+     */
+    private Integer isUse;
 
     public String getId() {
         return id;
@@ -80,5 +84,13 @@ public class RuleListForm {
 
     public void setPrincipal(String principal) {
         this.principal = principal;
+    }
+
+    public Integer getIsUse() {
+        return isUse;
+    }
+
+    public void setIsUse(Integer isUse) {
+        this.isUse = isUse;
     }
 }

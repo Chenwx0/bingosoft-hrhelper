@@ -27,7 +27,7 @@ public class OperationListForm {
     /**
      * 业务负责人
      */
-    private String pricipal;
+    private String principal;
 
     public String getId() {
         return id;
@@ -61,11 +61,11 @@ public class OperationListForm {
         this.updateTime = updateTime;
     }
 
-    public String getPricipal() {
-        return pricipal;
+    public String getPrincipal() {
+        return principal;
     }
 
-    public void setPricipal(String pricipal) {
-        this.pricipal = pricipal;
+    public void setPrincipal(String principal) {
+        this.principal = principal;
     }
 }

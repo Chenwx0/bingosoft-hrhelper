@@ -3,10 +3,8 @@ package bingosoft.hrhelper.controller;
 import bingosoft.hrhelper.common.CurrentUser;
 import bingosoft.hrhelper.common.Result;
 import bingosoft.hrhelper.form.OperationMenuForm;
-import bingosoft.hrhelper.model.Mail;
 import bingosoft.hrhelper.model.Operation;
 import bingosoft.hrhelper.service.OperationService;
-import leap.web.annotation.RequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

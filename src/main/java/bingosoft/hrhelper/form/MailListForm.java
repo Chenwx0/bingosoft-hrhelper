@@ -94,10 +94,13 @@ public class MailListForm {
      */
     private String recruitClass;
     /**
-     * 审批状态
+     * 审批状态(0-审核中；1-通过；2-未通过)
      */
     private Integer approveStatus;
-
+    /**
+     * 是否已发送 0-待发送 1-已发送
+     */
+    private Integer isSent;
 
     public String getId() {
         return id;
@@ -257,5 +260,13 @@ public class MailListForm {
 
     public void setApproveStatus(Integer approveStatus) {
         this.approveStatus = approveStatus;
+    }
+
+    public Integer getIsSent() {
+        return isSent;
+    }
+
+    public void setIsSent(Integer isSent) {
+        this.isSent = isSent;
     }
 }

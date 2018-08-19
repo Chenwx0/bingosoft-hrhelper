@@ -302,8 +302,8 @@
   <!-- 邮件前端相关操作自定义 -->
   <!-- start -->
   <select id="selectListNotSend" parameterType="java.util.Map" resultType="bingosoft.hrhelper.form.MailListForm">
-    SELECT *
-    FROM mail_show_info
+    SELECT m.*, 0 isSent
+    FROM mail_show_info m
     <where>
       operationId = #{operationId}
       AND status = 1
@@ -338,8 +338,8 @@
   </select>
 
   <select id="selectListsentNoApprove" parameterType="java.util.Map" resultType="bingosoft.hrhelper.form.MailListForm">
-    SELECT *
-    FROM already_send_mail_show_info
+    SELECT m.*, 1 isSent
+    FROM already_send_mail_show_info m
     <where>
       operationId = #{operationId}
       <if test="employeeName != null and employeeName != ''">
@@ -373,7 +373,7 @@
   </select>
 
   <select id="selectListSentApprove" parameterType="java.util.Map" resultType="bingosoft.hrhelper.form.MailListForm">
-    SELECT m.*, a.status approveStatus
+    SELECT m.*, a.status approveStatus, 1 isSent
     FROM already_send_mail_show_info m, approve a
     <where>
       m.approveId = a.id

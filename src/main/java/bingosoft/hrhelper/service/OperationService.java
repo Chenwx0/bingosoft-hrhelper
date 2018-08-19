@@ -58,7 +58,7 @@ public class OperationService {
             result.setMessage(TipMessage.PARAM_NULL);
             return result;
         }
-
+        operation.setIsSpecial("0");
         try{
         	operation.setId(UUID.randomUUID().toString());
             operation.setCreateBy(CurrentUser.getUserId());
@@ -84,6 +84,11 @@ public class OperationService {
 
         // 参数校验
         if (operation == null){
+            result.setSuccess(false);
+            result.setMessage(TipMessage.PARAM_NULL);
+            return result;
+        }
+        if (Strings.isEmpty(operation.getId())){
             result.setSuccess(false);
             result.setMessage(OPERATION_ID_NULL);
             return result;
