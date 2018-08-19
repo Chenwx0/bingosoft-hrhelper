@@ -60,6 +60,17 @@ public class RuleController {
         Result result = ruleService.addRule(ruleDetailForm);
         return result;
     }
+    
+    /**
+     * 启用/禁用 规则
+     * @param ruleId
+     * @return
+     */
+    @PostMapping("/changeStatus")
+    public Result changeStatus(String ruleId){
+    	Result result = ruleService.changeStatus(ruleId);
+		return null;
+    }
 
     /**
      * 删除规则

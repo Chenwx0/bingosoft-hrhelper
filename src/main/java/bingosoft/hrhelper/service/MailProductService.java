@@ -317,7 +317,7 @@ public class MailProductService {
 	}
 	
 	/**
-	 * 方法：邮件拟发送时间计算 方式二：在试用期转正前多久发送
+	 * 方法：邮件拟发送时间计算 方式三：在试用期转正前多久发送
 	 * 确定某一特殊日期 ：rule.getSpecialDay : 格式"yyyy-MM-dd"
 	 * 提前多久：earlyDate
 	 * @param specailDay
@@ -381,14 +381,16 @@ public class MailProductService {
 		//如果该“业务”对应“员工”在邮件表中已存在，则不重复生成。
 		m.setEmployeeId(e.getId());
 		m.setRuleId(r.getId());
+		//如果该规则为“禁用”状态在，则不生成邮件。
+		if(r.getIsUse()==0){
+			return false;
+		}
 		//如果存在则不判断
 		if(mm.selectByEidRid(m)==0){
 			System.out.println("1:该名员工为"+e.getId()+"该规则为"+r.getId());
 			System.out.println("查询得到的总数"+mm.selectByEidRid(m));
 			return judgeDateProduce(m);
 		}
-		System.out.println("2:该名员工为"+e.getId()+"该规则为"+r.getOperationId());
-		System.out.println("查询得到的总数"+mm.selectByEidRid(m));
 		return false;
 	}
 	
