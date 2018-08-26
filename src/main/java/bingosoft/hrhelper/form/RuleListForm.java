@@ -22,6 +22,10 @@ public class RuleListForm {
      */
     private String ruleSummary;
     /**
+     * 规则创建时间
+     */
+    private Date createTime;
+    /**
      * 规则更新时间
      */
     private Date updateTime;
@@ -60,6 +64,14 @@ public class RuleListForm {
 
     public void setRuleSummary(String ruleSummary) {
         this.ruleSummary = ruleSummary;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 
     public Date getUpdateTime() {

@@ -378,16 +378,16 @@ public class RuleService {
      * @return 
      * @return
      */
-	public Result changeStatus(String rule_id) {
+	public Result changeStatus(String ruleId) {
 		Result result = new Result();
 		// 参数校验
-		if (rule_id == null){
+		if (ruleId == null){
 			result.setSuccess(false);
 			result.setMessage(TipMessage.PARAM_NULL);
 			return result;
 		}
 		try {
-			Rule record = ruleMapper.selectByPrimaryKey(rule_id);
+			Rule record = ruleMapper.selectByPrimaryKey(ruleId);
 			//启用与禁用的转换设置
 			if(record.getIsUse()==0){
 				record.setIsUse(1);

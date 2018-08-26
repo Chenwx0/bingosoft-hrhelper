@@ -252,7 +252,7 @@
   </select>
   
   <select id="listRuleListForm" parameterType="java.lang.String" resultType="bingosoft.hrhelper.form.RuleListForm">
-    SELECT r.id, r.rule_name ruleName, r.entry_distance ruleSummary, r.update_time updateTime, r.is_use isUse, o.operation_name operationName, u.username principal
+    SELECT r.id, r.rule_name ruleName, r.entry_distance ruleSummary, r.create_time createTime, r.update_time updateTime, r.is_use isUse, o.operation_name operationName, u.username principal
     FROM rule r, operation o, user u
     WHERE r.operation_id = o.id
       AND o.user_id = u.id

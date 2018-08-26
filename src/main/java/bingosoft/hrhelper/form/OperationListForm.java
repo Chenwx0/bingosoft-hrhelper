@@ -28,6 +28,10 @@ public class OperationListForm {
      * 业务负责人
      */
     private String principal;
+    /**
+     * 业务负责人ID
+     */
+    private String userId;
 
     public String getId() {
         return id;
@@ -67,5 +71,13 @@ public class OperationListForm {
 
     public void setPrincipal(String principal) {
         this.principal = principal;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }

@@ -142,7 +142,7 @@
 	</select>
 
     <select id="listOperation" resultType="bingosoft.hrhelper.form.OperationListForm">
-        SELECT o.id, o.operation_name operationName, o.create_time createTime, o.update_time updateTime, u.username principal
+        SELECT o.id, o.operation_name operationName, o.create_time createTime, o.update_time updateTime, u.username principal, u.id userId
         FROM operation o, user u
         WHERE o.user_id = u.id
     </select>

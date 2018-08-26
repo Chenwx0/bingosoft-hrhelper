@@ -69,7 +69,7 @@ public class RuleController {
     @PostMapping("/changeStatus")
     public Result changeStatus(String ruleId){
     	Result result = ruleService.changeStatus(ruleId);
-		return null;
+		return result;
     }
 
     /**
@@ -89,7 +89,7 @@ public class RuleController {
      * @return 操作结果
      */
     @PatchMapping
-    public Result updateRule(RuleDetailForm ruleDetailForm){
+    public Result updateRule(@RequestBody RuleDetailForm ruleDetailForm){
         Result result = ruleService.updateRule(ruleDetailForm);
         return result;
     }
