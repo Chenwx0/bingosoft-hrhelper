@@ -76,10 +76,7 @@ public class MailProductService {
 				mm.deleteByPrimaryKey(m.getId());
 			}
 		}
-		
-		//(2)、对于已"取消发送"的邮件，取消它的生成
-		cancelSend();
-		
+
 		//(3)、生成当天新邮件
 		for(Employee e : em.listAllEmployee() ){
 			for(Rule r : rm.listAllRule()){
@@ -411,21 +408,7 @@ public class MailProductService {
 	}
 
 	
-	/**
-	 * 方法：取消状态为“已取消发送”的邮件的生成。
-	 */
-	public void cancelSend(){
-		Mail mail = new Mail();
-		for(CancelRecord cr : crm.list()){
-			//在邮件表中删除已取消发送的邮件。
-			mail.setOperationId(cr.getOperationId());
-			mail.setPlanSendTime(cr.getPlanSendTime());
-			mail.setRecipientAddress(cr.getRecipientAddress());
-			mm.deleteCancelMail(mail);
-			//定时清理取消记录表，减少系统计算量。
-			deleteCancelRecord(cr);
-		}
-	}
+
 	
 	/**
 	 * 方法：清理取消记录表
