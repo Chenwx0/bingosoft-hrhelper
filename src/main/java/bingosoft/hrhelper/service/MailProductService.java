@@ -53,8 +53,6 @@ public class MailProductService {
 	@Autowired
 	MailMapper mm;
 	@Autowired
-	CancelRecordMapper crm;
-	@Autowired
 	CreateMailContentService cmcs;
 	@Autowired
 	ApproveMapper am;
@@ -76,8 +74,8 @@ public class MailProductService {
 				mm.deleteByPrimaryKey(m.getId());
 			}
 		}
-
-		//(3)、生成当天新邮件
+		
+		//(2)、生成当天新邮件
 		for(Employee e : em.listAllEmployee() ){
 			for(Rule r : rm.listAllRule()){
 				setMail(r,e);
@@ -408,16 +406,4 @@ public class MailProductService {
 	}
 
 	
-
-	
-	/**
-	 * 方法：清理取消记录表
-	 * @param cr
-	 */
-	public void deleteCancelRecord(CancelRecord cr){
-		//拟发送时间如果在今天之前，表示已不需要判别邮件是否需要发送，则删除该行记录
-		if(cr.getPlanSendTime().before(new Date())){
-			crm.deleteByPrimaryKey(cr.getId());
-		}
-	}
 }
