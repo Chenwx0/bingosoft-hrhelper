@@ -40,6 +40,10 @@ public class RuleDetailForm {
      */
     private Integer sendingMinofhour;
     /**
+     * 规则是否启用 0-禁用 1-启用
+     */
+    private Integer isUse;
+    /**
      * 业务ID
      */
     private String operationId;
@@ -118,6 +122,14 @@ public class RuleDetailForm {
 
     public void setSendingMinofhour(Integer sendingMinofhour) {
         this.sendingMinofhour = sendingMinofhour;
+    }
+
+    public Integer getIsUse() {
+        return isUse;
+    }
+
+    public void setIsUse(Integer isUse) {
+        this.isUse = isUse;
     }
 
     public String getOperationId() {

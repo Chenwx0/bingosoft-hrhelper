@@ -3,6 +3,7 @@ package bingosoft.hrhelper.controller;
 import bingosoft.hrhelper.common.Result;
 import bingosoft.hrhelper.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @功能描述 用户业务控制类
  * @创建时间 2018-08-19 14:39:39
  */
+@CrossOrigin
 @RestController
 @RequestMapping("user")
 public class UserController {
