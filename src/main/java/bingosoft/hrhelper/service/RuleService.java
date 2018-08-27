@@ -10,25 +10,18 @@ import bingosoft.hrhelper.mapper.MailMapper;
 import bingosoft.hrhelper.mapper.ModelMapper;
 import bingosoft.hrhelper.mapper.RuleMapper;
 import bingosoft.hrhelper.model.Employee;
-import bingosoft.hrhelper.model.Mail;
 import bingosoft.hrhelper.model.Model;
 import bingosoft.hrhelper.model.Rule;
 
-import com.sun.xml.internal.bind.v2.model.core.ID;
-
 import leap.lang.Strings;
-import leap.orm.dao.Dao;
 
-import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -54,6 +47,7 @@ public class RuleService {
 	ModelMapper modelMapper ;
 	@Autowired
 	EmployeeMapper employeelMapper ;
+	@Autowired
 	MailProductService mps;
 
 	/**
@@ -71,6 +65,16 @@ public class RuleService {
 			result.setMessage(TipMessage.PARAM_NULL);
 			return result;
 		}
+
+		// 构建模板模型
+		Model model = new Model();
+		model.setId(UUID.randomUUID().toString());
+		model.setModelName(ruleDetailForm.getRuleName() + "模板");
+		model.setModelContent(ruleDetailForm.getModelContent());
+		model.setAttachmentHref(ruleDetailForm.getAttachmentHref());
+		model.setCreateBy(CurrentUser.getUserId());
+		model.setCreateTime(new Date());
+
 		// 构建规则模型
 		Rule rule = new Rule();
 		rule.setId(UUID.randomUUID().toString());
@@ -81,11 +85,12 @@ public class RuleService {
 		rule.setDistanceD(ruleDetailForm.getDistanceD());
 		rule.setSendingHourofday(ruleDetailForm.getSendingHourofday());
 		rule.setSendingMinofhour(ruleDetailForm.getSendingMinofhour());
+		rule.setIsUse(ruleDetailForm.getIsUse());
+		rule.setModelId(model.getId());
 		rule.setOperationId(ruleDetailForm.getOperationId());
 		rule.setCreateBy(CurrentUser.getUserId());
 		rule.setCreateTime(new Date());
-		//设置规则启用状态(0:未启用 1:启用)
-		rule.setIsUse(0);
+
 		if(rule.getRuleMethod().equals("1")){
 			rule.setEntryDistance(caculateRule_1(rule)); //方法1：入职时长计算
 		}else if(rule.getRuleMethod().equals("2")){
@@ -93,14 +98,7 @@ public class RuleService {
 		}else{
 			rule.setEntryDistance(caculateRule_3(rule)); //方法3：距离转正日期计算
 		}
-		// 构建模板模型
-		Model model = new Model();
-		model.setId(UUID.randomUUID().toString());
-		model.setModelName(ruleDetailForm.getRuleName() + "模板");
-		model.setModelContent(ruleDetailForm.getModelContent());
-		model.setAttachmentHref(ruleDetailForm.getAttachmentHref());
-		model.setCreateBy(CurrentUser.getUserId());
-		model.setCreateTime(new Date());
+
 		// 执行新增
 		try {
 			ruleMapper.insert(rule);
@@ -239,9 +237,10 @@ public class RuleService {
 		rule.setDistanceD(ruleDetailForm.getDistanceD());
 		rule.setSendingHourofday(ruleDetailForm.getSendingHourofday());
 		rule.setSendingMinofhour(ruleDetailForm.getSendingMinofhour());
+		rule.setIsUse(ruleDetailForm.getIsUse());
 		rule.setOperationId(ruleDetailForm.getOperationId());
-		rule.setCreateBy(CurrentUser.getUserId());
-		rule.setCreateTime(new Date());
+		rule.setUpdateBy(CurrentUser.getUserId());
+		rule.setUpdateTime(new Date());
 		if(rule.getRuleMethod().equals("1")){
 			rule.setEntryDistance(caculateRule_1(rule)); //方法1：入职时长计算
 		}else if(rule.getRuleMethod().equals("2")){
@@ -383,11 +382,16 @@ public class RuleService {
 		// 参数校验
 		if (ruleId == null){
 			result.setSuccess(false);
-			result.setMessage(TipMessage.PARAM_NULL);
+			result.setMessage(ID_NULL);
 			return result;
 		}
 		try {
 			Rule record = ruleMapper.selectByPrimaryKey(ruleId);
+			if(record==null){
+				result.setSuccess(false);
+				result.setMessage(TipMessage.NO_DATA);
+				return result;
+			}
 			//启用与禁用的转换设置
 			if(record.getIsUse()==0){
 				record.setIsUse(1);

@@ -56,7 +56,7 @@ public class RuleController {
      * @return 操作结果
      */
     @PostMapping
-    public Result addRule(RuleDetailForm ruleDetailForm){
+    public Result addRule(@RequestBody RuleDetailForm ruleDetailForm){
         Result result = ruleService.addRule(ruleDetailForm);
         return result;
     }
@@ -66,7 +66,7 @@ public class RuleController {
      * @param ruleId
      * @return
      */
-    @PostMapping("/changeStatus")
+    @GetMapping("/changeStatus")
     public Result changeStatus(String ruleId){
     	Result result = ruleService.changeStatus(ruleId);
 		return result;

@@ -263,7 +263,7 @@
 
   <select id="getRuleDetail" parameterType="java.lang.String" resultType="bingosoft.hrhelper.form.RuleDetailForm">
     SELECT r.id, r.rule_name ruleName, r.rule_method ruleMethod, r.distance_y distanceY, r.distance_m distanceM, r.distance_d distanceD
-    , r.sending_hourofday sendingHourofday, r.sending_minofhour sendingMinofhour, r.is_use, m.model_content modelContent, m.attachment_href attachmentHref, o.id operationId
+    , r.sending_hourofday sendingHourofday, r.sending_minofhour sendingMinofhour, r.is_use isUse, m.id modelId, m.model_content modelContent, m.attachment_href attachmentHref, o.id operationId
     FROM rule r, operation o, model m
     WHERE r.operation_id = o.id
       AND r.model_id = m.id
