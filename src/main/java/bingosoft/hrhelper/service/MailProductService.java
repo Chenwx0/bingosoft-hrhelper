@@ -53,8 +53,6 @@ public class MailProductService {
 	@Autowired
 	MailMapper mm;
 	@Autowired
-	CancelRecordMapper crm;
-	@Autowired
 	CreateMailContentService cmcs;
 	@Autowired
 	ApproveMapper am;
@@ -77,10 +75,7 @@ public class MailProductService {
 			}
 		}
 		
-		//(2)、对于已"取消发送"的邮件，取消它的生成
-		cancelSend();
-		
-		//(3)、生成当天新邮件
+		//(2)、生成当天新邮件
 		for(Employee e : em.listAllEmployee() ){
 			for(Rule r : rm.listAllRule()){
 				setMail(r,e);
@@ -411,30 +406,4 @@ public class MailProductService {
 	}
 
 	
-	/**
-	 * 方法：取消状态为“已取消发送”的邮件的生成。
-	 */
-	public void cancelSend(){
-		Mail mail = new Mail();
-		for(CancelRecord cr : crm.list()){
-			//在邮件表中删除已取消发送的邮件。
-			mail.setOperationId(cr.getOperationId());
-			mail.setPlanSendTime(cr.getPlanSendTime());
-			mail.setRecipientAddress(cr.getRecipientAddress());
-			mm.deleteCancelMail(mail);
-			//定时清理取消记录表，减少系统计算量。
-			deleteCancelRecord(cr);
-		}
-	}
-	
-	/**
-	 * 方法：清理取消记录表
-	 * @param cr
-	 */
-	public void deleteCancelRecord(CancelRecord cr){
-		//拟发送时间如果在今天之前，表示已不需要判别邮件是否需要发送，则删除该行记录
-		if(cr.getPlanSendTime().before(new Date())){
-			crm.deleteByPrimaryKey(cr.getId());
-		}
-	}
 }
