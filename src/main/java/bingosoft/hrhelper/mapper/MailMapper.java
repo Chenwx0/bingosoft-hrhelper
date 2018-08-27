@@ -48,18 +48,11 @@ public interface MailMapper {
     List<MailListForm> selectListNotSend(Map<String,String> params) throws SQLException;
 
     /**
-     * 查询已发送不需审批邮件列表
+     * 查询已发送邮件列表
      * @param params
      * @return
      */
-    List<MailListForm> selectListsentNoApprove(Map<String,String> params) throws SQLException;
-
-    /**
-     * 查询已发送需审批邮件列表
-     * @param params
-     * @return
-     */
-    List<MailListForm> selectListSentApprove(Map<String,String> params) throws SQLException;
+    List<MailListForm> selectListSent(Map<String,String> params) throws SQLException;
     
     /**
      * 根据业务ID和员工ID查找总数

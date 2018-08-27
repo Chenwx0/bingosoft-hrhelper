@@ -337,46 +337,11 @@
     </choose>
   </select>
 
-  <select id="selectListsentNoApprove" parameterType="java.util.Map" resultType="bingosoft.hrhelper.form.MailListForm">
-    SELECT m.*, 1 isSent
-    FROM already_send_mail_show_info m
-    <where>
-      operationId = #{operationId}
-      <if test="employeeName != null and employeeName != ''">
-        AND employeeName LIKE "%"#{employeeName}"%"
-      </if>
-      <if test="department != null and department != ''">
-        AND department LIKE "%"#{department}"%"
-      </if>
-      <if test="recruitClass != null and recruitClass != ''">
-        AND recruitClass = #{recruitClass}
-      </if>
-      <if test="entryDayStart != null and entryDayStart != '' and entryDayEnd != null and entryDayEnd != ''" >
-        AND entryDay BETWEEN #{entryDayStart} AND #{entryDayEnd}
-      </if>
-      <if test="contractDayStart != null and contractDayStart != '' and contractDayEnd != null and contractDayEnd != ''">
-        AND contractDay BETWEEN #{contractDayStart} AND #{contractDayEnd}
-      </if>
-      <if test="planFullmenberDayStart != null and planFullmenberDayStart != '' and planFullmenberDayEnd != null and planFullmenberDayEnd != ''">
-        AND planFullmenberDay BETWEEN #{planFullmenberDayStart} AND #{planFullmenberDayEnd}
-      </if>
-    </where>
-    ORDER BY
-    <choose>
-      <when test="orderBy != null">
-        ${orderBy}
-      </when>
-      <otherwise>
-        sendTime asc
-      </otherwise>
-    </choose>
-  </select>
-
-  <select id="selectListSentApprove" parameterType="java.util.Map" resultType="bingosoft.hrhelper.form.MailListForm">
+  <select id="selectListSent" parameterType="java.util.Map" resultType="bingosoft.hrhelper.form.MailListForm">
     SELECT m.*, a.status approveStatus, 1 isSent
-    FROM already_send_mail_show_info m, approve a
+    FROM already_send_mail_show_info m LEFT JOIN approve a
+    ON m.approveId = a.id
     <where>
-      m.approveId = a.id
       AND operationId = #{operationId}
       <if test="employeeName != null and employeeName != ''">
         AND employeeName LIKE "%"#{employeeName}"%"

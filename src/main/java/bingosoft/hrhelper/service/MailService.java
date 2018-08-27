@@ -63,12 +63,10 @@ public class MailService{
         int pageNum = 1;
         int pageSize = 20;
         int status = 1;
-        int isSpecial = 0;
         try{
             int pageNumTemp = Integer.parseInt(params.get("pageNum"));
             int pageSizeTemp = Integer.parseInt(params.get("pageSize"));
             int statusTemp = Integer.parseInt(params.get("status"));
-            int isSpecialTemp = Integer.parseInt(params.get("isSpecial"));
             if (pageNumTemp > 0){
                 pageNum = pageNumTemp;
             }
@@ -78,7 +76,6 @@ public class MailService{
             if (status == 0 || status == 1){
                 status = statusTemp;
             }
-            isSpecial = isSpecialTemp;
         }catch (NumberFormatException e){
             logger.error(TipMessage.PARAM_ILLEGAL_CHAR,e);
         }
@@ -88,10 +85,8 @@ public class MailService{
         try{
             if (status == 0){
                 mailListForms = mailMapper.selectListNotSend(params);
-            }else if(status == 1 && isSpecial == 0){
-                mailListForms = mailMapper.selectListsentNoApprove(params);
-            }else if(status == 1 && isSpecial != 0){
-                mailListForms = mailMapper.selectListSentApprove(params);
+            }else {
+                mailListForms = mailMapper.selectListSent(params);
             }
             PageInfo<MailListForm> pageInfo = new PageInfo<>(mailListForms);
             result.setResultEntity(pageInfo);

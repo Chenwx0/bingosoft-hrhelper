@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -32,14 +33,14 @@ import bingosoft.hrhelper.model.MailConfig;
 import bingosoft.hrhelper.model.Operation;
 import bingosoft.hrhelper.model.Rule;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Service
+
 /**
  * @创建人 zhangyx
  * @功能描述 邮件生成服务
  * @创建时间 2018-08-03 14:08:08
  */
+@Service
+@EnableAsync
 public class MailProductService {
 	
 
@@ -64,7 +65,6 @@ public class MailProductService {
 	 * 每天晚上2:30更新邮件表    表达式为：cron = "0 30 2 * 
 	 * @throws SQLException *
 	 */
-	@Test
 	@Scheduled(cron = "0 0/2 * * * ? ")
 	public void produceMail() throws ParseException, SQLException{
 		//(1)、删除离职员工的邮件
