@@ -1,3 +1,4 @@
+
 package bingosoft.hrhelper.service;
 
 import java.sql.SQLException;
@@ -417,6 +418,4 @@ public class MailProductService {
 				return compareDay.after(m.getPlanSendTime()) &&
 						   (m.getPlanSendTime().after(today));
 	}
-
-	
 }

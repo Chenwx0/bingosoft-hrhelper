@@ -18,6 +18,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +40,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @创建时间 2018-08-03 14:08:08
  */
 @Service
+@EnableAsync
 public class MailSendService {
 
 	Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -61,7 +63,6 @@ public class MailSendService {
 	/**
 	 * 需要从Mail表拿到拟运行时间 并监控
 	 */
-	@Test
 	@Scheduled(cron = "0 0/1 * * * ? ")
 	public void sendTimer( ){
 		for(Mail mail : mm.listAll()){
