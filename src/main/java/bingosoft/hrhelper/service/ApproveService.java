@@ -12,13 +12,17 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.stereotype.Service;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import bingosoft.hrhelper.common.DateTransferUtils;
 import bingosoft.hrhelper.common.MailUtil;
+import bingosoft.hrhelper.common.Result;
 import bingosoft.hrhelper.mapper.AlreadySendMailMapper;
 import bingosoft.hrhelper.mapper.ApproveMapper;
+import bingosoft.hrhelper.mapper.EmployeeMapper;
 import bingosoft.hrhelper.mapper.MailMapper;
 import bingosoft.hrhelper.mapper.OperationMapper;
 import bingosoft.hrhelper.model.AlreadySendMail;
 import bingosoft.hrhelper.model.Approve;
+import bingosoft.hrhelper.model.Employee;
 import bingosoft.hrhelper.model.Operation;
 
 /**
@@ -39,7 +43,11 @@ public class ApproveService {
 	@Autowired
 	OperationMapper om;
 	@Autowired
+	EmployeeMapper em;
+	@Autowired
 	AlreadySendMailMapper asmm;
+	@Autowired
+	CreateMailContentService cmcs;
 	
 	// 经理点击按钮的时候，调用approve表中的status更改为0(待审核)/1(已通过)/2(未通过)
 	public boolean sendStatus(Approve a){
@@ -97,10 +105,13 @@ public class ApproveService {
 	public void fullMember(Approve a){
 		try {
 			MailUtil mu = new MailUtil();
+			Employee e = em.selectByPrimaryKey(a.getApproveObject());
 			String operationName = om.selectByPrimaryKey(a.getId()).getOperationName();
-			mu.setSubject(a.getApproveObject()+operationName);
-			mu.setContent("从邮件模板表中得到"); 
-			mu.setRecipientAddresses("18826108872@163.com");
+			mu.setSubject(e.getName()+operationName);
+			//根据规则方法与员工信息 生成邮件模板
+			mu.setContent(cmcs.getMailContent(e.getId(),"转正通过的邮件模板ID", DateTransferUtils.dateTimeFormat(e.getFullmenberDay()),"截止日期"));
+			
+			mu.setRecipientAddresses(e.getMail());
 			mu.sendMail();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -139,5 +150,13 @@ public class ApproveService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * 通过经理姓名检索他的审批历史记录
+	 * @param approve_name
+	 */
+	public Result getHistoryRecord(String approve_name) {
+		return am.getHistoryRecord(approve_name);
 	}
 }

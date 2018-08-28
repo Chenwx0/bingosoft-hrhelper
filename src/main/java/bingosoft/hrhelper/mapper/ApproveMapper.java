@@ -1,5 +1,6 @@
 package bingosoft.hrhelper.mapper;
 
+import bingosoft.hrhelper.common.Result;
 import bingosoft.hrhelper.model.Approve;
 
 public interface ApproveMapper {
@@ -14,4 +15,6 @@ public interface ApproveMapper {
     int updateByPrimaryKeySelective(Approve record);
 
     int updateByPrimaryKey(Approve record);
+
+	Result getHistoryRecord(String approve_name);
 }

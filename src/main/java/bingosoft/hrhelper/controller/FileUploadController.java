@@ -29,7 +29,6 @@ public class FileUploadController {
 	 */
 	@PostMapping("/upload")
 	public Result<String> upload(MultipartFile file){
-
 		Result<String> result = uploadService.upLoadFile(file);
 		return result;
 	}

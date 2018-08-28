@@ -24,6 +24,7 @@ import bingosoft.hrhelper.mapper.EmployeeMapper;
 import bingosoft.hrhelper.mapper.MailMapper;
 import bingosoft.hrhelper.mapper.OperationMapper;
 import bingosoft.hrhelper.mapper.RuleMapper;
+import bingosoft.hrhelper.mapper.UserMapper;
 import bingosoft.hrhelper.model.Approve;
 import bingosoft.hrhelper.model.CancelRecord;
 import bingosoft.hrhelper.model.Employee;
@@ -56,6 +57,8 @@ public class MailProductService {
 	CreateMailContentService cmcs;
 	@Autowired
 	ApproveMapper am;
+	@Autowired
+	UserMapper um;
 	
 	int i=0;
 	
@@ -142,11 +145,21 @@ public class MailProductService {
 	 */
 	public void setMailContent(Rule r,Employee e,Mail m) throws ParseException{
 		
+		//设置邮件发送人信息
+		try {
+			//获取邮件对应的接口人(先获取接口人ID 再获得接口人名称)
+			String user_id = om.selectByPrimaryKey(r.getOperationId()).getUserId();
+			String user_name = um.selectByPrimaryKey(user_id).getUsername();
+			m.setSender(user_name);
+			m.setSenderAddress("Hr@BingoSoft.com");
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} 
+		
 		m.setId(UUID.randomUUID().toString());
 		m.setMailName(r.getRuleName());
 		m.setCreateTime(new Date());
-		m.setSender("人力资源部");
-		m.setSenderAddress("Hr@BingoSoft.com");
 		m.setOperationId(r.getOperationId());
 		m.setRuleId(r.getId());
 		m.setEmployeeId(e.getId());
@@ -200,8 +213,8 @@ public class MailProductService {
 		a.setOperationId(r.getOperationId());
 		a.setStatus(0);
 		a.setCreateTime(new Date());
-		a.setApprover("approver");
-		a.setApproveObject("approveObject");
+		a.setApprover(e.getManager());
+		a.setApproveObject(e.getName());
 		am.insert(a);
 	}
 	

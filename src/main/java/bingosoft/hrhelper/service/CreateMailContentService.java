@@ -5,10 +5,12 @@ import bingosoft.hrhelper.mapper.EmployeeMapper;
 import bingosoft.hrhelper.mapper.ModelMapper;
 import bingosoft.hrhelper.model.Employee;
 import bingosoft.hrhelper.model.Model;
+
 import org.joda.time.DateTime;
 import org.joda.time.Months;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,7 +46,7 @@ public class CreateMailContentService {
     EmployeeMapper employeeMapper;
     @Autowired
     ModelMapper modelMapper;
-
+   
     public String getMailContent(String userId, String mailModelId, String sendTime, String deadDate){
         Employee employee = employeeMapper.selectByPrimaryKey(userId);
         Model model = modelMapper.selectByPrimaryKey(mailModelId);
