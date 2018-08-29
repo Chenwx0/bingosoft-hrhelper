@@ -5,10 +5,12 @@ import bingosoft.hrhelper.mapper.EmployeeMapper;
 import bingosoft.hrhelper.mapper.ModelMapper;
 import bingosoft.hrhelper.model.Employee;
 import bingosoft.hrhelper.model.Model;
+
 import org.joda.time.DateTime;
 import org.joda.time.Months;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +31,8 @@ import java.util.regex.Pattern;
 public class CreateMailContentService {
 
     //定义以“#[XX]#”模式的正则表达式
-    private String regex = "convert#[^*]+#";
+    //字符串以convert#开始，以#结束，不包括#号
+    private String regex = "convert#[^#]+";
 
     //特殊字段
     //工作月份，向上取整
@@ -44,7 +47,7 @@ public class CreateMailContentService {
     EmployeeMapper employeeMapper;
     @Autowired
     ModelMapper modelMapper;
-
+   
     public String getMailContent(String userId, String mailModelId, String sendTime, String deadDate){
         Employee employee = employeeMapper.selectByPrimaryKey(userId);
         Model model = modelMapper.selectByPrimaryKey(mailModelId);
@@ -54,8 +57,9 @@ public class CreateMailContentService {
         //map用来存放邮件模板可直接进行替换的值对
         Map<String, String> map = new HashMap<>();
         while (matcher.find()){
-            String key = matcher.group(0);
-            String value = employee.getValue(key.substring(8,key.length()-1));
+            String key = matcher.group(0) + "#";
+            String keyEntry = formatFiled(key);
+            String value = employee.getValue(keyEntry.substring(8,keyEntry.length()-1));
             if (!value.equals("")){
                 map.put(key,value);
             }
@@ -113,5 +117,20 @@ public class CreateMailContentService {
         date.append("日");
         content = content.replaceAll(sendDate, date.toString());
         return content;
+    }
+
+    private String formatFiled(String oldFiled){
+        String[] params = oldFiled.split("_");
+        if (params.length < 2)
+            return oldFiled;
+        StringBuffer newFiled = new StringBuffer();
+        newFiled.append(params[0]);
+        int i = 1;
+        while (i < params.length){
+            String tmp = params[i];
+            newFiled.append(tmp.substring(0,1).toUpperCase() + tmp.substring(1,tmp.length()));
+            i++;
+        }
+        return newFiled.toString();
     }
 }

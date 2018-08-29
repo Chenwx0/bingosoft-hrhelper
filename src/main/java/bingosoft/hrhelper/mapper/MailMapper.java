@@ -73,4 +73,6 @@ public interface MailMapper {
      * @return
      */
     int deleteByOperationId(String operationId) throws SQLException;
+
+	void deleteByRuleId(String ruleId);
 }

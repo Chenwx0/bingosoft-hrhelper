@@ -13,6 +13,7 @@ import org.apache.commons.logging.LogFactory;
 
 import bingosoft.hrhelper.model.MailConfig;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.Properties;
 
@@ -31,6 +32,10 @@ public class MailUtil {
      * 抄送人地址，多个以","隔开
      */
     private String copyToAddresses;
+    /**
+     * 接口人姓名
+     */
+    private String liaisonOfficer;
     //邮件标题
     private String subject;
     //邮件正文
@@ -44,7 +49,7 @@ public class MailUtil {
     	
     public void setRecipientAddresses(String recipientAddresses) {
         this.recipientAddresses = recipientAddresses;
-    }
+    } 
 
     public void setCopyToAddresses(String copyToAddresses) {
         this.copyToAddresses = copyToAddresses;
@@ -61,6 +66,11 @@ public class MailUtil {
     public void setAttachmentPaths(String[] attachmentPaths) {
         this.attachmentPaths = attachmentPaths;
     }
+
+	public void setLiaisonOfficer(String liaisonOfficer) {
+		this.liaisonOfficer = liaisonOfficer;
+	}
+
     			
     /**
      * 邮件发送
@@ -93,6 +103,16 @@ public class MailUtil {
 	        if(mc.getSenderPassword()==null || mc.getSenderPassword().isEmpty()){
 	            throw new ParamException("发件人密码为空");
 	        }
+	        
+	        //设置自定义发件人昵称----------------------为业务接口人名称
+	        String nick="";  
+	        try {  
+	            nick=javax.mail.internet.MimeUtility.encodeText(liaisonOfficer);  
+	        } catch (UnsupportedEncodingException e) {  
+	            e.printStackTrace();  
+	        }
+	        msg.setFrom(new InternetAddress(nick+" <"+mc.getSenderAddress()+">")); 
+	        
 	        System.out.println(mc.getSenderAccount()+mc.getSenderPassword());
 	        transport.connect(mc.getSenderAccount(), mc.getSenderPassword());
 	        // 发送邮件，并发送到所有收件人地址，message.getAllRecipients() 获取到的是在创建邮件对象时添加的所有收件人, 抄送人, 密送人
@@ -184,5 +204,4 @@ public class MailUtil {
         msg.saveChanges();
         return msg;
     }
-
 }

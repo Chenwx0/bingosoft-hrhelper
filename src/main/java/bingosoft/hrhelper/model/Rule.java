@@ -185,4 +185,19 @@ public class Rule {
     public void setIsUse(Integer isUse) {
         this.isUse = isUse;
     }
+
+	@Override
+	public String toString() {
+		return "Rule [id=" + id + ", ruleName=" + ruleName + ", operationId="
+				+ operationId + ", modelId=" + modelId + ", ruleMethod="
+				+ ruleMethod + ", sendingMinofhour=" + sendingMinofhour
+				+ ", sendingHourofday=" + sendingHourofday + ", distanceY="
+				+ distanceY + ", distanceM=" + distanceM + ", distanceD="
+				+ distanceD + ", createBy=" + createBy + ", createTime="
+				+ createTime + ", updateBy=" + updateBy + ", updateTime="
+				+ updateTime + ", earlyDay=" + earlyDay + ", entryDistance="
+				+ entryDistance + ", specialdayDistance=" + specialdayDistance
+				+ ", isUse=" + isUse + "]";
+	}
+    
 }

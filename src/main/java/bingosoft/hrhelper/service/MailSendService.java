@@ -10,8 +10,10 @@ import java.util.Date;
 
 import java.util.UUID;
 
+import leap.web.security.user.UserManager;
 import bingosoft.hrhelper.common.Result;
 import bingosoft.hrhelper.common.TipMessage;
+
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,9 +26,12 @@ import bingosoft.hrhelper.common.MailUtil;
 import bingosoft.hrhelper.mapper.AlreadySendMailMapper;
 import bingosoft.hrhelper.mapper.CancelRecordMapper;
 import bingosoft.hrhelper.mapper.MailMapper;
+import bingosoft.hrhelper.mapper.OperationMapper;
+import bingosoft.hrhelper.mapper.UserMapper;
 import bingosoft.hrhelper.model.AlreadySendMail;
 import bingosoft.hrhelper.model.CancelRecord;
 import bingosoft.hrhelper.model.Mail;
+
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -49,6 +54,11 @@ public class MailSendService {
 	CancelRecordMapper crm;
 	@Autowired
 	AlreadySendMailMapper asmm;
+	@Autowired
+	OperationMapper om;
+	@Autowired
+	UserMapper um;
+	
 	
 	/**
 	 * 需要从Mail表拿到拟运行时间 并监控
@@ -93,8 +103,14 @@ public class MailSendService {
 			//设置接收人和内容
 			mu.setSubject(mail.getMailName());
 			mu.setRecipientAddresses(mail.getRecipientAddress()); //设置收件人地址
+			mail.setCopyPeopleAddress(mail.getCopyPeopleAddress());
 			mu.setCopyToAddresses(mail.getCopyPeopleAddress());//设置抄送人地址
 			mu.setContent(mail.getMailContent());						  //设置邮件内容
+			
+			//获取邮件对应的接口人(先获取接口人ID 再获得接口人名称)
+			/*String user_id = om.selectByPrimaryKey(mail.getOperationId()).getUserId(); 
+			String user_name = um.selectByPrimaryKey(user_id).getUsername();*/
+			mu.setLiaisonOfficer(mail.getSender());
 			/*mu.setAttachmentPaths(mail.getMailAttachmentPath());*///设置附件路径
 			
 			mu.sendMail();

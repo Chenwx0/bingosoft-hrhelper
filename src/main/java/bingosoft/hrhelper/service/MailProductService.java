@@ -1,3 +1,4 @@
+
 package bingosoft.hrhelper.service;
 
 import java.sql.SQLException;
@@ -12,7 +13,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -25,6 +25,7 @@ import bingosoft.hrhelper.mapper.EmployeeMapper;
 import bingosoft.hrhelper.mapper.MailMapper;
 import bingosoft.hrhelper.mapper.OperationMapper;
 import bingosoft.hrhelper.mapper.RuleMapper;
+import bingosoft.hrhelper.mapper.UserMapper;
 import bingosoft.hrhelper.model.Approve;
 import bingosoft.hrhelper.model.CancelRecord;
 import bingosoft.hrhelper.model.Employee;
@@ -33,14 +34,14 @@ import bingosoft.hrhelper.model.MailConfig;
 import bingosoft.hrhelper.model.Operation;
 import bingosoft.hrhelper.model.Rule;
 
-
+@RunWith(SpringRunner.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Service
 /**
  * @创建人 zhangyx
  * @功能描述 邮件生成服务
  * @创建时间 2018-08-03 14:08:08
  */
-@Service
-@EnableAsync
 public class MailProductService {
 	
 
@@ -57,6 +58,8 @@ public class MailProductService {
 	CreateMailContentService cmcs;
 	@Autowired
 	ApproveMapper am;
+	@Autowired
+	UserMapper um;
 	
 	int i=0;
 	
@@ -65,6 +68,7 @@ public class MailProductService {
 	 * 每天晚上2:30更新邮件表    表达式为：cron = "0 30 2 * 
 	 * @throws SQLException *
 	 */
+	@Test
 	@Scheduled(cron = "0 0/2 * * * ? ")
 	public void produceMail() throws ParseException, SQLException{
 		//(1)、删除离职员工的邮件
@@ -142,11 +146,21 @@ public class MailProductService {
 	 */
 	public void setMailContent(Rule r,Employee e,Mail m) throws ParseException{
 		
+		//设置邮件发送人信息
+		try {
+			//获取邮件对应的接口人(先获取接口人ID 再获得接口人名称)
+			String user_id = om.selectByPrimaryKey(r.getOperationId()).getUserId();
+			String user_name = um.selectByPrimaryKey(user_id).getUsername();
+			m.setSender(user_name);
+			m.setSenderAddress("Hr@BingoSoft.com");
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} 
+		
 		m.setId(UUID.randomUUID().toString());
 		m.setMailName(r.getRuleName());
 		m.setCreateTime(new Date());
-		m.setSender("人力资源部");
-		m.setSenderAddress("Hr@BingoSoft.com");
 		m.setOperationId(r.getOperationId());
 		m.setRuleId(r.getId());
 		m.setEmployeeId(e.getId());
@@ -200,8 +214,8 @@ public class MailProductService {
 		a.setOperationId(r.getOperationId());
 		a.setStatus(0);
 		a.setCreateTime(new Date());
-		a.setApprover("approver");
-		a.setApproveObject("approveObject");
+		a.setApprover(e.getManager());
+		a.setApproveObject(e.getName());
 		am.insert(a);
 	}
 	
@@ -404,6 +418,4 @@ public class MailProductService {
 				return compareDay.after(m.getPlanSendTime()) &&
 						   (m.getPlanSendTime().after(today));
 	}
-
-	
 }
