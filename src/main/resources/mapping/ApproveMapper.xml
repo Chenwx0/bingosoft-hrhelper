@@ -18,11 +18,16 @@
     from approve
     where id = #{id,jdbcType=VARCHAR}
   </select>
-  <select id="getHistoryRecord" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  <select id="getAllHistoryRecord" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
     from approve
     where approver = #{approver,jdbcType=VARCHAR}
+  </select>
+  <select id="getHistoryRecord" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from approve
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from approve

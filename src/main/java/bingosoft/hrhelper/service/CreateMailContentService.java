@@ -60,7 +60,7 @@ public class CreateMailContentService {
             String key = matcher.group(0) + "#";
             String keyEntry = formatFiled(key);
             String value = employee.getValue(keyEntry.substring(8,keyEntry.length()-1));
-            if (!value.equals("")){
+            if (value!=null&&!value.equals("")){
                 map.put(key,value);
             }
         }
