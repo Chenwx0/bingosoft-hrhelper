@@ -4,6 +4,7 @@ import bingosoft.hrhelper.common.CurrentUser;
 import bingosoft.hrhelper.common.Result;
 import bingosoft.hrhelper.form.OperationMenuForm;
 import bingosoft.hrhelper.model.Operation;
+import bingosoft.hrhelper.model.User;
 import bingosoft.hrhelper.service.OperationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -73,8 +74,7 @@ public class OperationController {
      */
     @GetMapping("/getOperationMenu")
     public Result getOperationMenu(HttpServletResponse response){
-        String userId = CurrentUser.getUserId();
-        Result<List<OperationMenuForm>> result = operationService.getOperationMenu(userId);
+        Result<List<OperationMenuForm>> result = operationService.getOperationMenu();
         return result;
     }
 }

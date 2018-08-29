@@ -254,8 +254,22 @@ public class MailListForm {
         this.recruitClass = recruitClass;
     }
 
-    public Integer getApproveStatus() {
-        return approveStatus;
+    public String getApproveStatus() {
+        if (approveStatus!=null){
+            if (approveStatus==0){
+                return "待审核";
+            }else if (approveStatus==1){
+                return "已通过";
+            }else if (approveStatus==2){
+                return "未通过";
+            }else if (approveStatus==3){
+                return "已发送";
+            }else {
+                return "未知";
+            }
+        }else {
+            return null;
+        }
     }
 
     public void setApproveStatus(Integer approveStatus) {

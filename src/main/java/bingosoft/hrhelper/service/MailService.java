@@ -45,8 +45,8 @@ public class MailService{
     AlreadySendMailMapper aMailMapper;
 
     /**
-     * 获取邮件列表
-     * @param params(status 0-待发送 1-已发送 isSpecial 0-不需审批，其他-需审批)
+     * 分页获取邮件列表
+     * @param params(status 0-待发送 1-已发送)
      * @return 查询结果对象
      */
     public Result<PageInfo<MailListForm>> pageQueryMailList(Map<String,String> params){
@@ -63,10 +63,21 @@ public class MailService{
         int pageNum = 1;
         int pageSize = 20;
         int status = 1;
+
+        // 参数类型转换
         try{
-            int pageNumTemp = Integer.parseInt(params.get("pageNum"));
-            int pageSizeTemp = Integer.parseInt(params.get("pageSize"));
-            int statusTemp = Integer.parseInt(params.get("status"));
+            int pageNumTemp = 1;
+            int pageSizeTemp = 20;
+            int statusTemp = 0;
+            if(params.get("pageNum")!=null){
+                pageNumTemp = Integer.parseInt(params.get("pageNum"));
+            }
+            if(params.get("pageSize")!=null){
+                pageSizeTemp = Integer.parseInt(params.get("pageSize"));
+            }
+            if(params.get("status")!=null){
+                statusTemp = Integer.parseInt(params.get("status"));
+            }
             if (pageNumTemp > 0){
                 pageNum = pageNumTemp;
             }
@@ -78,6 +89,9 @@ public class MailService{
             }
         }catch (NumberFormatException e){
             logger.error(TipMessage.PARAM_ILLEGAL_CHAR,e);
+            result.setSuccess(false);
+            result.setMessage(TipMessage.PARAM_ILLEGAL_CHAR);
+            return result;
         }
 
         PageHelper.startPage(pageNum, pageSize);
@@ -98,6 +112,58 @@ public class MailService{
 
         return result;
     }
+
+    /**
+     * 获取邮件列表
+     * @param params(status 0-待发送 1-已发送)
+     * @return 查询结果对象
+     */
+    public Result<List<MailListForm>> queryMailList(Map<String,String> params){
+
+        Result<List<MailListForm>> result = new Result<>();
+
+        // 参数验证
+        String operationId = params.get("operationId");
+        if (Strings.isEmpty(operationId)){
+            result.setSuccess(false);
+            result.setMessage(OPERATION_ID_NULL);
+            return result;
+        }
+        int status = 1;
+
+        // 参数类型转换
+        try{
+            int statusTemp = 0;
+            if(params.get("status")!=null){
+                statusTemp = Integer.parseInt(params.get("status"));
+            }
+            if (status == 0 || status == 1){
+                status = statusTemp;
+            }
+        }catch (NumberFormatException e){
+            logger.error(TipMessage.PARAM_ILLEGAL_CHAR,e);
+            result.setSuccess(false);
+            result.setMessage(TipMessage.PARAM_ILLEGAL_CHAR);
+            return result;
+        }
+
+        List<MailListForm> mailListForms = new ArrayList<>();
+        try{
+            if (status == 0){
+                mailListForms = mailMapper.selectListNotSend(params);
+            }else {
+                mailListForms = mailMapper.selectListSent(params);
+            }
+            result.setResultEntity(mailListForms);
+        }catch (SQLException e){
+            result.setSuccess(false);
+            result.setMessage(TipMessage.QUERY_FAIL);
+            logger.error(TipMessage.QUERY_FAIL,e);
+        }
+
+        return result;
+    }
+
 
     /**
      * 删除邮件

@@ -40,6 +40,9 @@ TaskAsync:
   maxPoolSize: 200
   queueCapacity: 10
 
-#上传目录根路径
+#运行配置
 SystemConfig:
+  #上传目录
   uploadPath: E:\HrhelperUpload\
+  #临时目录
+  tempPath: E:\HrhelperTemp\
