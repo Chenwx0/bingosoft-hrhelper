@@ -42,33 +42,16 @@ public class AttachmentService {
 
     /**
      * 根据邮件id或规则id获取附件
-     * @param type
-     * @param id
+     * @param mailId
+     * @param ruleId
      * @return 查询结果
      */
-    public Result<List<Attachment>> queryAttachment(String type, String id){
+    public Result<List<Attachment>> queryAttachment(String mailId, String ruleId){
 
         Result<List<Attachment>> result = new Result<>();
 
-        // 参数校验
-        if (Strings.isEmpty(id)){
-            result.setSuccess(false);
-            result.setMessage(ID_NULL);
-            return result;
-        }
-        if (Strings.isEmpty(type)){
-            result.setSuccess(false);
-            result.setMessage(ATTACHMENT_TYPE_NULL);
-            return result;
-        }
-        if (!"mail".equals(type) && !"rule".equals(type)){
-            result.setSuccess(false);
-            result.setMessage(ATTACHMENT_TYPE_WRONG);
-            return result;
-        }
-
         try {
-            List<Attachment> list = attachmentMapper.listAttachment(type, id);
+            List<Attachment> list = attachmentMapper.listAttachment(mailId, ruleId);
             if (list.size()>0){
                 result.setResultEntity(list);
             }else{

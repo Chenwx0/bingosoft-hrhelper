@@ -20,14 +20,14 @@ public class AttachmetController {
 
     /**
      * 查询附件
-     * @param type
-     * @param id
+     * @param mailId
+     * @param ruleId
      * @return
      */
     @GetMapping
-    public Result queryAttachment(String type, String id){
+    public Result queryAttachment(String mailId, String ruleId){
 
-        Result result = attachmentService.queryAttachment(type, id);
+        Result result = attachmentService.queryAttachment(mailId, ruleId);
         return result;
     }
 

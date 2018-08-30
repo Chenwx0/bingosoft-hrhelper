@@ -122,14 +122,14 @@
   <select id="listAttachment" resultMap="BaseResultMap">
     SELECT attachment_id, attachment_name ,attachment_path ,create_bycreate_time
     FROM attachment
-    <choose>
-      <when test="type=='mail'.toString()">
-        WHERE mail_id = #{id}
-      </when>
-      <otherwise>
-        WHERE rule_id = #{id}
-      </otherwise>
-    </choose>
+    <where>
+      <if test="mailId != null and mailId != ''">
+        mail_id = #{mailId}
+      </if>
+      <if test="ruleId != null and ruleId != ''">
+        or rule_id = #{ruleId}
+      </if>
+    </where>
   </select>
 
   <!--  自定义代码结束  -->
