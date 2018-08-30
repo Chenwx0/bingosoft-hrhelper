@@ -1,5 +1,7 @@
 package bingosoft.hrhelper.common;
 
+import bingosoft.hrhelper.model.User;
+
 /**
  * @创建人 chenwx
  * @功能描述
@@ -9,5 +11,12 @@ public class CurrentUser {
 
     public static String getUserId(){
         return "1";
+    }
+
+    public static User getCurrentUser(){
+        User user = new User();
+        user.setId("1");
+        user.setIsAdmin(1);
+        return user;
     }
 }

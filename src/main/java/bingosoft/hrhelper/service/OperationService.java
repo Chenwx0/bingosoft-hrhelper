@@ -10,6 +10,7 @@ import bingosoft.hrhelper.mapper.OperationMapper;
 import bingosoft.hrhelper.mapper.RuleMapper;
 import bingosoft.hrhelper.model.Mail;
 import bingosoft.hrhelper.model.Operation;
+import bingosoft.hrhelper.model.User;
 import com.sun.org.apache.xml.internal.resolver.readers.ExtendedXMLCatalogReader;
 import leap.lang.Strings;
 import org.slf4j.Logger;
@@ -140,19 +141,24 @@ public class OperationService {
     
     /**
      * 获取业务菜单
-     * @param userId
      * @return 业务信息集合
      */
-    public Result<List<OperationMenuForm>> getOperationMenu(String userId){
-        Result<List<OperationMenuForm>> result = new Result<>();
+    public Result<List<OperationMenuForm>> getOperationMenu(){
 
-        // 参数校验
-        if (userId == null || userId.length()==0){
+        Result<List<OperationMenuForm>> result = new Result<>();
+        //获取登陆用户
+        User user = CurrentUser.getCurrentUser();
+        //登陆用户校验
+        if (user==null){
             result.setSuccess(false);
-            result.setMessage(USER_ID_NULL);
+            result.setMessage(TipMessage.NOT_LOGIN);
             return result;
         }
-
+        //管理员身份判断
+        String userId = null;
+        if (user.getIsAdmin()!=1){
+            userId = user.getId();
+        }
         try{
             List<OperationMenuForm> operations = operationMapper.getOperationMenu(userId);
             result.setResultEntity(operations);

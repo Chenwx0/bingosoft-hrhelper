@@ -7,6 +7,8 @@ package bingosoft.hrhelper.common;
  */
 public class TipMessage {
 
+    public static final String NOT_LOGIN = "用户未登陆";
+
     public static final String CREATE_SUCCESS = "创建成功";
     public static final String CREATE_FAIL = "创建失败";
     public static final String DELETE_SUCCESS = "删除成功";
@@ -23,4 +25,5 @@ public class TipMessage {
     public static final String PARAM_ILLEGAL_CHAR = "非法字符";
     public static final String DATE_FORMAT_INCORRECT = "时间格式不正确";
     public static final String UPLOAD_FAIL = "文件上传失败";
+    public static final String DOWNLOAD_FAIL = "文件下载失败";
 }
