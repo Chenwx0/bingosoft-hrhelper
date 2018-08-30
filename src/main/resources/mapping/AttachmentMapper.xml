@@ -115,4 +115,22 @@
       mail_id = #{mailId,jdbcType=CHAR}
     where attachment_id = #{attachmentId,jdbcType=CHAR}
   </update>
+
+  <!--  自定义开始  -->
+
+  <!-- 根据邮件id或规则id获取附件 -->
+  <select id="listAttachment" resultMap="BaseResultMap">
+    SELECT attachment_id, attachment_name ,attachment_path ,create_bycreate_time
+    FROM attachment
+    <choose>
+      <when test="type=='mail'.toString()">
+        WHERE mail_id = #{id}
+      </when>
+      <otherwise>
+        WHERE rule_id = #{id}
+      </otherwise>
+    </choose>
+  </select>
+
+  <!--  自定义代码结束  -->
 </mapper>

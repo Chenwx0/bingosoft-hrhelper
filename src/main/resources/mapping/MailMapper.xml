@@ -342,7 +342,8 @@
     FROM already_send_mail_show_info m LEFT JOIN approve a
     ON m.approveId = a.id
     <where>
-      AND operationId = #{operationId}
+      operationId = #{operationId}
+      AND m.sendTime between date_sub(now(),interval 6 month) and now()
       <if test="employeeName != null and employeeName != ''">
         AND employeeName LIKE "%"#{employeeName}"%"
       </if>

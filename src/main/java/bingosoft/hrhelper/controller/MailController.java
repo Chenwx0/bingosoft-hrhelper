@@ -82,7 +82,7 @@ public class MailController{
      * @param mail
      * @return 更新结果
      */
-    @PatchMapping
+    @PatchMapping("/update")
     public Result updateMail(@RequestBody Mail mail){
         Result result = mailService.updateMail(mail);
         return result;

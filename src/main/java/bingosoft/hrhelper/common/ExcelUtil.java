@@ -394,7 +394,7 @@ public class ExcelUtil {
                 cell.setCellStyle(style);
                 cell.setCellValue(mailListForm.getEntryDay());
                 // 招聘类型
-                row.createCell(3).setCellValue(mailListForm.getMailName());
+                row.createCell(3).setCellValue(mailListForm.getRecruitClass());
                 // 邮件主题
                 row.createCell(4).setCellValue(mailListForm.getMailName());
                 // 收件人
