@@ -134,6 +134,7 @@ public class MailSendService {
 		asm.setMailAttachmentPath(mail.getMailAttachmentPath());
 		asm.setMailContent(mail.getMailContent());
 		asm.setMailName(mail.getMailName());
+		asm.setRuleId(mail.getRuleId());
 		asm.setOperationId(mail.getOperationId());
 		asm.setRecipient(mail.getRecipient());
 		asm.setRecipientAddress(mail.getRecipientAddress());

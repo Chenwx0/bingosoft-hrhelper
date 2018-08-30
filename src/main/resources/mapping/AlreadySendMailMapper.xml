@@ -12,6 +12,7 @@
     <result column="copy_people_address" property="copyPeopleAddress" jdbcType="VARCHAR" />
     <result column="mail_attachment_path" property="mailAttachmentPath" jdbcType="VARCHAR" />
     <result column="employee_id" property="employeeId" jdbcType="VARCHAR" />
+    <result column="rule_id" property="ruleId" jdbcType="VARCHAR" />
     <result column="operation_id" property="operationId" jdbcType="VARCHAR" />
     <result column="approve_id" property="approveId" jdbcType="VARCHAR" />
     <result column="status" property="status" jdbcType="INTEGER" />
@@ -25,7 +26,7 @@
   </resultMap>
   <sql id="Base_Column_List" >
     id, mail_name, recipient, recipient_address, sender, sender_address, copy_people, 
-    copy_people_address, mail_attachment_path, employee_id, operation_id, approve_id, 
+    copy_people_address, mail_attachment_path, employee_id, rule_id, operation_id, approve_id,
     status, update_by, create_time, plan_send_time, send_time
   </sql>
   <sql id="Blob_Column_List" >
@@ -47,14 +48,14 @@
     insert into already_send_mail (id, mail_name, recipient, 
       recipient_address, sender, sender_address, 
       copy_people, copy_people_address, mail_attachment_path, 
-      employee_id, operation_id, approve_id, 
+      employee_id, rule_id, operation_id, approve_id,
       status, update_by, create_time, 
       plan_send_time, send_time, mail_content
       )
     values (#{id,jdbcType=VARCHAR}, #{mailName,jdbcType=VARCHAR}, #{recipient,jdbcType=VARCHAR}, 
       #{recipientAddress,jdbcType=VARCHAR}, #{sender,jdbcType=VARCHAR}, #{senderAddress,jdbcType=VARCHAR}, 
       #{copyPeople,jdbcType=VARCHAR}, #{copyPeopleAddress,jdbcType=VARCHAR}, #{mailAttachmentPath,jdbcType=VARCHAR}, 
-      #{employeeId,jdbcType=VARCHAR}, #{operationId,jdbcType=VARCHAR}, #{approveId,jdbcType=VARCHAR}, 
+      #{employeeId,jdbcType=VARCHAR}, #{ruleId,jdbcType=VARCHAR}, #{operationId,jdbcType=VARCHAR}, #{approveId,jdbcType=VARCHAR},
       #{status,jdbcType=INTEGER}, #{updateBy,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{planSendTime,jdbcType=TIMESTAMP}, #{sendTime,jdbcType=TIMESTAMP}, #{mailContent,jdbcType=LONGVARCHAR}
       )
@@ -91,6 +92,9 @@
       </if>
       <if test="employeeId != null" >
         employee_id,
+      </if>
+      <if test="ruleId != null" >
+        rule_id,
       </if>
       <if test="operationId != null" >
         operation_id,
@@ -148,6 +152,9 @@
       <if test="employeeId != null" >
         #{employeeId,jdbcType=VARCHAR},
       </if>
+      <if test="ruleId != null" >
+        #{ruleId,jdbcType=VARCHAR},
+      </if>
       <if test="operationId != null" >
         #{operationId,jdbcType=VARCHAR},
       </if>
@@ -204,6 +211,9 @@
       <if test="employeeId != null" >
         employee_id = #{employeeId,jdbcType=VARCHAR},
       </if>
+      <if test="ruleId != null" >
+        rule_id = #{ruleId,jdbcType=VARCHAR},
+      </if>
       <if test="operationId != null" >
         operation_id = #{operationId,jdbcType=VARCHAR},
       </if>
@@ -242,6 +252,7 @@
       copy_people_address = #{copyPeopleAddress,jdbcType=VARCHAR},
       mail_attachment_path = #{mailAttachmentPath,jdbcType=VARCHAR},
       employee_id = #{employeeId,jdbcType=VARCHAR},
+      rule_id = #{ruleId,jdbcType=VARCHAR},
       operation_id = #{operationId,jdbcType=VARCHAR},
       approve_id = #{approveId,jdbcType=VARCHAR},
       status = #{status,jdbcType=INTEGER},
@@ -263,6 +274,7 @@
       copy_people_address = #{copyPeopleAddress,jdbcType=VARCHAR},
       mail_attachment_path = #{mailAttachmentPath,jdbcType=VARCHAR},
       employee_id = #{employeeId,jdbcType=VARCHAR},
+      rule_id = #{ruleId,jdbcType=VARCHAR},
       operation_id = #{operationId,jdbcType=VARCHAR},
       approve_id = #{approveId,jdbcType=VARCHAR},
       status = #{status,jdbcType=INTEGER},

@@ -98,6 +98,10 @@ public class MailListForm {
      */
     private Integer approveStatus;
     /**
+     * 规则ID
+     */
+    private String ruleId;
+    /**
      * 是否已发送 0-待发送 1-已发送
      */
     private Integer isSent;
@@ -274,6 +278,14 @@ public class MailListForm {
 
     public void setApproveStatus(Integer approveStatus) {
         this.approveStatus = approveStatus;
+    }
+
+    public String getRuleId() {
+        return ruleId;
+    }
+
+    public void setRuleId(String ruleId) {
+        this.ruleId = ruleId;
     }
 
     public Integer getIsSent() {

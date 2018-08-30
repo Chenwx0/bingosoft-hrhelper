@@ -23,6 +23,8 @@ public class AlreadySendMail {
 
     private String employeeId;
 
+    private String ruleId;
+
     private String operationId;
 
     private String approveId;
@@ -117,6 +119,14 @@ public class AlreadySendMail {
 
     public void setEmployeeId(String employeeId) {
         this.employeeId = employeeId == null ? null : employeeId.trim();
+    }
+
+    public String getRuleId() {
+        return ruleId;
+    }
+
+    public void setRuleId(String ruleId) {
+        this.ruleId = ruleId;
     }
 
     public String getOperationId() {
