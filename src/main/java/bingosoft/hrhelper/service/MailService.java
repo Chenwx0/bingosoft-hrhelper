@@ -4,6 +4,7 @@ import bingosoft.hrhelper.common.CurrentUser;
 import bingosoft.hrhelper.common.Result;
 import bingosoft.hrhelper.common.TipMessage;
 import bingosoft.hrhelper.form.MailListForm;
+import bingosoft.hrhelper.form.MailQueryFilter;
 import bingosoft.hrhelper.mapper.AlreadySendMailMapper;
 import bingosoft.hrhelper.mapper.MailMapper;
 import bingosoft.hrhelper.model.Mail;
@@ -46,61 +47,42 @@ public class MailService{
 
     /**
      * 分页获取邮件列表
-     * @param params(status 0-待发送 1-已发送)
-     * @return 查询结果对象
+     * @param mailQueryFilter (status 0-待发送 1-已发送)
+     * @return 查询结果
      */
-    public Result<PageInfo<MailListForm>> pageQueryMailList(Map<String,String> params){
+    public Result<PageInfo<MailListForm>> pageQueryMailList(MailQueryFilter mailQueryFilter){
 
         Result<PageInfo<MailListForm>> result = new Result<>();
 
         // 参数验证
-        String operationId = params.get("operationId");
+        String operationId = mailQueryFilter.getOperationId();
         if (Strings.isEmpty(operationId)){
             result.setSuccess(false);
             result.setMessage(OPERATION_ID_NULL);
             return result;
         }
-        int pageNum = 1;
-        int pageSize = 20;
-        int status = 1;
+        Integer pageNum = mailQueryFilter.getPageNum();
+        Integer pageSize = mailQueryFilter.getPageSize();
+        Integer status = mailQueryFilter.getStatus();
 
-        // 参数类型转换
-        try{
-            int pageNumTemp = 1;
-            int pageSizeTemp = 20;
-            int statusTemp = 0;
-            if(params.get("pageNum")!=null){
-                pageNumTemp = Integer.parseInt(params.get("pageNum"));
-            }
-            if(params.get("pageSize")!=null){
-                pageSizeTemp = Integer.parseInt(params.get("pageSize"));
-            }
-            if(params.get("status")!=null){
-                statusTemp = Integer.parseInt(params.get("status"));
-            }
-            if (pageNumTemp > 0){
-                pageNum = pageNumTemp;
-            }
-            if (pageSize > 0){
-                pageSize = pageSizeTemp;
-            }
-            if (status == 0 || status == 1){
-                status = statusTemp;
-            }
-        }catch (NumberFormatException e){
-            logger.error(TipMessage.PARAM_ILLEGAL_CHAR,e);
-            result.setSuccess(false);
-            result.setMessage(TipMessage.PARAM_ILLEGAL_CHAR);
-            return result;
+        if (pageNum == null || pageNum <= 0){
+            pageNum = 1;
+        }
+        if (pageSize == null || pageSize <= 0){
+            pageSize = 20;
+        }
+        if (status == null || status != 0 && status != 1){
+            status = 0;
         }
 
+        // 分页查询
         PageHelper.startPage(pageNum, pageSize);
         List<MailListForm> mailListForms = new ArrayList<>();
         try{
             if (status == 0){
-                mailListForms = mailMapper.selectListNotSend(params);
+                mailListForms = mailMapper.selectListNotSend(mailQueryFilter);
             }else {
-                mailListForms = mailMapper.selectListSent(params);
+                mailListForms = mailMapper.selectListSent(mailQueryFilter);
             }
             PageInfo<MailListForm> pageInfo = new PageInfo<>(mailListForms);
             result.setResultEntity(pageInfo);
@@ -115,44 +97,31 @@ public class MailService{
 
     /**
      * 获取邮件列表
-     * @param params(status 0-待发送 1-已发送)
-     * @return 查询结果对象
+     * @param mailQueryFilter (status 0-待发送 1-已发送)
+     * @return 查询结果
      */
-    public Result<List<MailListForm>> queryMailList(Map<String,String> params){
+    public Result<List<MailListForm>> queryMailList(MailQueryFilter mailQueryFilter){
 
         Result<List<MailListForm>> result = new Result<>();
 
         // 参数验证
-        String operationId = params.get("operationId");
+        String operationId = mailQueryFilter.getOperationId();
         if (Strings.isEmpty(operationId)){
             result.setSuccess(false);
             result.setMessage(OPERATION_ID_NULL);
             return result;
         }
-        int status = 1;
-
-        // 参数类型转换
-        try{
-            int statusTemp = 0;
-            if(params.get("status")!=null){
-                statusTemp = Integer.parseInt(params.get("status"));
-            }
-            if (status == 0 || status == 1){
-                status = statusTemp;
-            }
-        }catch (NumberFormatException e){
-            logger.error(TipMessage.PARAM_ILLEGAL_CHAR,e);
-            result.setSuccess(false);
-            result.setMessage(TipMessage.PARAM_ILLEGAL_CHAR);
-            return result;
+        Integer status = mailQueryFilter.getStatus();
+        if (status == null || status != 0 && status != 1){
+            status = 0;
         }
 
         List<MailListForm> mailListForms = new ArrayList<>();
         try{
             if (status == 0){
-                mailListForms = mailMapper.selectListNotSend(params);
+                mailListForms = mailMapper.selectListNotSend(mailQueryFilter);
             }else {
-                mailListForms = mailMapper.selectListSent(params);
+                mailListForms = mailMapper.selectListSent(mailQueryFilter);
             }
             result.setResultEntity(mailListForms);
         }catch (SQLException e){

@@ -301,7 +301,7 @@
 
   <!-- 邮件前端相关操作自定义 -->
   <!-- start -->
-  <select id="selectListNotSend" parameterType="java.util.Map" resultType="bingosoft.hrhelper.form.MailListForm">
+  <select id="selectListNotSend" parameterType="bingosoft.hrhelper.form.MailQueryFilter" resultType="bingosoft.hrhelper.form.MailListForm">
     SELECT m.*, 0 isSent
     FROM mail_show_info m
     <where>
@@ -337,7 +337,7 @@
     </choose>
   </select>
 
-  <select id="selectListSent" parameterType="java.util.Map" resultType="bingosoft.hrhelper.form.MailListForm">
+  <select id="selectListSent" parameterType="bingosoft.hrhelper.form.MailQueryFilter" resultType="bingosoft.hrhelper.form.MailListForm">
     SELECT m.*, a.status approveStatus, 1 isSent
     FROM already_send_mail_show_info m LEFT JOIN approve a
     ON m.approveId = a.id

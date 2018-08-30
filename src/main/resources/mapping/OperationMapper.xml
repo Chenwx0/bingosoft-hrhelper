@@ -132,11 +132,9 @@
     <select id="getOperationMenu" parameterType="java.lang.String" resultType="bingosoft.hrhelper.form.OperationMenuForm">
         SELECT id, operation_name operationName, is_special isSpecial
         FROM operation
-        <where>
-          <if test="userId!=null and userId != ''">
-            AND user_id = #{userId,jdbcType=VARCHAR}
-          </if>
-        </where>
+        <if test="userId!=null and userId != ''">
+          WHERE user_id = #{userId,jdbcType=VARCHAR}
+        </if>
     </select>
 
 	<select id="ifSpecial" parameterType="java.lang.String" resultType="java.lang.String">

@@ -35,6 +35,7 @@ public class OperationService {
 
     public static final String USER_ID_NULL = "用户ID不能为空";
     public static final String OPERATION_ID_NULL = "业务ID不能为空";
+    public static final String OPERATION_NAME_NULL = "业务名称不能为空";
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -59,6 +60,12 @@ public class OperationService {
             result.setMessage(TipMessage.PARAM_NULL);
             return result;
         }
+        if (Strings.isEmpty(operation.getOperationName())){
+            result.setSuccess(false);
+            result.setMessage(OPERATION_NAME_NULL);
+            return result;
+        }
+
         operation.setIsSpecial("0");
         try{
         	operation.setId(UUID.randomUUID().toString());
@@ -94,7 +101,11 @@ public class OperationService {
             result.setMessage(OPERATION_ID_NULL);
             return result;
         }
-
+        if (Strings.isEmpty(operation.getOperationName())){
+            result.setSuccess(false);
+            result.setMessage(OPERATION_NAME_NULL);
+            return result;
+        }
         try{
             operation.setUpdateBy(CurrentUser.getUserId());
             operation.setUpdateTime(new Date());

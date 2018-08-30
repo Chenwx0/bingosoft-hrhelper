@@ -1,6 +1,7 @@
 package bingosoft.hrhelper.mapper;
 
 import bingosoft.hrhelper.form.MailListForm;
+import bingosoft.hrhelper.form.MailQueryFilter;
 import bingosoft.hrhelper.model.Mail;
 
 import java.sql.SQLException;
@@ -42,17 +43,19 @@ public interface MailMapper {
 
     /**
      * 查询待发送邮件列表
-     * @param params
+     * @param mailQueryFilter
      * @return
+     * @throws SQLException
      */
-    List<MailListForm> selectListNotSend(Map<String,String> params) throws SQLException;
+    List<MailListForm> selectListNotSend(MailQueryFilter mailQueryFilter) throws SQLException;
 
     /**
      * 查询已发送邮件列表
-     * @param params
+     * @param mailQueryFilter
      * @return
+     * @throws SQLException
      */
-    List<MailListForm> selectListSent(Map<String,String> params) throws SQLException;
+    List<MailListForm> selectListSent(MailQueryFilter mailQueryFilter) throws SQLException;
     
     /**
      * 根据业务ID和员工ID查找总数

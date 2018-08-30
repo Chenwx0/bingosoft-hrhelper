@@ -4,6 +4,7 @@ import bingosoft.hrhelper.common.ExcelUtil;
 import bingosoft.hrhelper.common.Result;
 import bingosoft.hrhelper.common.TipMessage;
 import bingosoft.hrhelper.form.MailListForm;
+import bingosoft.hrhelper.form.MailQueryFilter;
 import bingosoft.hrhelper.model.Mail;
 import bingosoft.hrhelper.service.MailSendService;
 import bingosoft.hrhelper.service.MailService;
@@ -44,13 +45,13 @@ public class MailController{
     ExcelUtil excelUtil;
 
     /**
-     * 获取邮件列表
-     * @param params
-     * @return 查询结果对象
+     * 分页获取邮件列表
+     * @param mailQueryFilter
+     * @return
      */
     @PostMapping("/list")
-    public Result pageQueryMailList(@RequestBody Map<String,String> params){
-        Result result = mailService.pageQueryMailList(params);
+    public Result pageQueryMailList(@RequestBody MailQueryFilter mailQueryFilter){
+        Result result = mailService.pageQueryMailList(mailQueryFilter);
         return result;
     }
 
@@ -108,20 +109,21 @@ public class MailController{
     }
 
     /**
-     * 邮件数据导出
-     * @param params
+     * 邮件列表导出
+     * @param mailQueryFilter
      * @param resp
      * @return
      */
-    @PostMapping("/export")
-    public Result exportMail(Map<String,String> params, HttpServletResponse resp){
+    @GetMapping("/export")
+    public Result exportMail(MailQueryFilter mailQueryFilter, HttpServletResponse resp){
 
         // 根据条件获取数据
-        Result<List<MailListForm>> result = mailService.queryMailList(params);
+        Result<List<MailListForm>> result = mailService.queryMailList(mailQueryFilter);
         if (result.isSuccess()){
-            String operationId = params.get("operationId");
+            String operationId = mailQueryFilter.getOperationId();
+            Integer status = mailQueryFilter.getStatus();
             // 构建exccel文件
-            Result<String> result1 = excelUtil.buildExcel(operationId,result.getResultEntity());
+            Result<String> result1 = excelUtil.buildExcel(operationId,status,result.getResultEntity());
             if (result1.isSuccess()){
                 Result result2 = new Result();
                 // 获取文件路径
@@ -133,16 +135,15 @@ public class MailController{
                 String time = simpleDateFormat.format(new Date());
                 String fileName = "邮件数据导出-" + time + ".xls";
                 // 构建响应对象
-                resp.reset();
-                resp.setContentType("application/octet-stream");
+                resp.setContentType("application/vnd.ms-excel");
                 resp.setCharacterEncoding("utf-8");
                 resp.setContentLength((int) file.length());
                 try {
                     resp.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(fileName,"utf-8"));
                 } catch (UnsupportedEncodingException e) {
-                    logger.error(TipMessage.DOWNLOAD_FAIL,e);
+                    logger.error(TipMessage.EXPORT_FAIL,e);
                     result2.setSuccess(false);
-                    result2.setMessage(TipMessage.DOWNLOAD_FAIL);
+                    result2.setMessage(TipMessage.EXPORT_FAIL );
                     return result2;
                 }
                 // 文件输出
@@ -157,9 +158,9 @@ public class MailController{
                         os.flush();
                     }
                 } catch (IOException e) {
-                    logger.error(TipMessage.DOWNLOAD_FAIL,e);
+                    logger.error(TipMessage.EXPORT_FAIL,e);
                     result2.setSuccess(false);
-                    result2.setMessage(TipMessage.DOWNLOAD_FAIL);
+                    result2.setMessage(TipMessage.EXPORT_FAIL);
                     return result2;
                 } finally {
                     try {

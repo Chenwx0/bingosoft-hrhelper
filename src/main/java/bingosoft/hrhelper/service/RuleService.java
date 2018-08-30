@@ -36,6 +36,7 @@ public class RuleService {
 
 	private static final String ID_NULL = "规则ID不能为空";
 	private static final String MODEL_ID_NULL = "模板ID不能为空";
+	private static final String MODEL_NAME_NULL = "模板名称不能为空";
 
 	Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -63,6 +64,11 @@ public class RuleService {
 		if (ruleDetailForm == null){
 			result.setSuccess(false);
 			result.setMessage(TipMessage.PARAM_NULL);
+			return result;
+		}
+		if (Strings.isEmpty(ruleDetailForm.getRuleName())){
+			result.setSuccess(false);
+			result.setMessage(MODEL_NAME_NULL);
 			return result;
 		}
 
@@ -227,6 +233,12 @@ public class RuleService {
 			result.setMessage(MODEL_ID_NULL);
 			return result;
 		}
+		if (Strings.isEmpty(ruleDetailForm.getRuleName())){
+			result.setSuccess(false);
+			result.setMessage(MODEL_NAME_NULL);
+			return result;
+		}
+
 		// 构建规则模型
 		Rule rule = new Rule();
 		rule.setId(ruleDetailForm.getId());

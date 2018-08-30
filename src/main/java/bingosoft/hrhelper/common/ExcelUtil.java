@@ -33,7 +33,7 @@ public class ExcelUtil {
      * @param list 表格数据
      * @return 文件路径
      */
-    public Result<String> buildExcel(String operationId, List<MailListForm> list){
+    public Result<String> buildExcel(String operationId, Integer status, List<MailListForm> list){
 
         Result<String> result = new Result<>();
         // 参数校验
@@ -41,6 +41,9 @@ public class ExcelUtil {
             result.setSuccess(false);
             result.setMessage("业务Id不能为空");
             return result;
+        }
+        if (status == null || status != 0 && status != 1){
+            status = 0;
         }
         if (list == null || list.size() == 0){
             result.setSuccess(false);
@@ -54,9 +57,9 @@ public class ExcelUtil {
         HSSFWorkbook workbook = new HSSFWorkbook();
         HSSFSheet sheet = workbook.createSheet("邮件信息");
         // 插入表头
-        insertTitle(workbook,sheet,operationId);
+        insertTitle(workbook,sheet,operationId,status);
         // 插入数据
-        insertData(workbook,sheet,list,operationId);
+        insertData(workbook,sheet,list,operationId,status);
         //生成excel文件
         try {
             String filePath = buildExcelFile(fileName, workbook);
@@ -76,7 +79,7 @@ public class ExcelUtil {
      * @param sheet
      * @param operationId
      */
-    private void insertTitle(HSSFWorkbook workbook, HSSFSheet sheet, String operationId){
+    private void insertTitle(HSSFWorkbook workbook, HSSFSheet sheet, String operationId, Integer status){
         HSSFRow row = sheet.createRow(0);
         //设置列宽，setColumnWidth的第二个参数要乘以256，这个参数的单位是1/256个字符宽度
         sheet.setColumnWidth(1,12*256);
@@ -121,13 +124,20 @@ public class ExcelUtil {
             cell.setCellValue("抄送人");
             cell.setCellStyle(style);
 
-            cell = row.createCell(7);
-            cell.setCellValue("审核状态");
-            cell.setCellStyle(style);
+            if (status==1){
+                cell = row.createCell(7);
+                cell.setCellValue("审核状态");
+                cell.setCellStyle(style);
 
-            cell = row.createCell(8);
-            cell.setCellValue("发送时间");
-            cell.setCellStyle(style);
+                cell = row.createCell(8);
+                cell.setCellValue("发送时间");
+                cell.setCellStyle(style);
+            }else{
+                cell = row.createCell(7);
+                cell.setCellValue("发送时间");
+                cell.setCellStyle(style);
+            }
+
         }else if (operationId.equals("2")){// 合同续签
             cell = row.createCell(0);
             cell.setCellValue("员工名称");
@@ -158,13 +168,20 @@ public class ExcelUtil {
             cell.setCellValue("抄送人");
             cell.setCellStyle(style);
 
-            cell = row.createCell(7);
-            cell.setCellValue("审核状态");
-            cell.setCellStyle(style);
+            if (status==1){
+                cell = row.createCell(7);
+                cell.setCellValue("审核状态");
+                cell.setCellStyle(style);
 
-            cell = row.createCell(8);
-            cell.setCellValue("发送时间");
-            cell.setCellStyle(style);
+                cell = row.createCell(8);
+                cell.setCellValue("发送时间");
+                cell.setCellStyle(style);
+            }else{
+                cell = row.createCell(7);
+                cell.setCellValue("发送时间");
+                cell.setCellStyle(style);
+            }
+
         }else if (operationId.equals("3")){// 绩效表填写
             cell = row.createCell(0);
             cell.setCellValue("员工名称");
@@ -269,7 +286,7 @@ public class ExcelUtil {
      * @param list
      * @param operationId
      */
-    private void insertData(HSSFWorkbook workbook, HSSFSheet sheet, List<MailListForm> list, String operationId){
+    private void insertData(HSSFWorkbook workbook, HSSFSheet sheet, List<MailListForm> list, String operationId, Integer status){
         // 设置日期格式
         HSSFCellStyle style = workbook.createCellStyle();
         style.setDataFormat(HSSFDataFormat.getBuiltinFormat("m/d/yy"));
@@ -296,15 +313,27 @@ public class ExcelUtil {
                 row.createCell(5).setCellValue(mailListForm.getRecipient());
                 // 抄送人
                 row.createCell(6).setCellValue(mailListForm.getCopyPeople());
-                // 审核状态
-                row.createCell(7).setCellValue(mailListForm.getApproveStatus());
-                // 发送时间
-                HSSFCell cell3 = row.createCell(8);
-                cell3.setCellStyle(style);
-                if (mailListForm.getSendTime()!=null){
-                    cell3.setCellValue(mailListForm.getSendTime());
+
+                if (status == 1){
+                    // 审核状态
+                    row.createCell(7).setCellValue(mailListForm.getApproveStatus());
+                    // 发送时间
+                    HSSFCell cell3 = row.createCell(8);
+                    cell3.setCellStyle(style);
+                    if (mailListForm.getSendTime()!=null){
+                        cell3.setCellValue(mailListForm.getSendTime());
+                    }else {
+                        cell3.setCellValue(mailListForm.getPlanSendTime());
+                    }
                 }else {
-                    cell3.setCellValue(mailListForm.getPlanSendTime());
+                    // 发送时间
+                    HSSFCell cell3 = row.createCell(7);
+                    cell3.setCellStyle(style);
+                    if (mailListForm.getSendTime()!=null){
+                        cell3.setCellValue(mailListForm.getSendTime());
+                    }else {
+                        cell3.setCellValue(mailListForm.getPlanSendTime());
+                    }
                 }
                 rowNum++;
             }
@@ -329,15 +358,27 @@ public class ExcelUtil {
                 row.createCell(5).setCellValue(mailListForm.getRecipient());
                 // 抄送人
                 row.createCell(6).setCellValue(mailListForm.getCopyPeople());
-                // 审核状态
-                row.createCell(7).setCellValue(mailListForm.getApproveStatus());
-                // 发送时间
-                HSSFCell cell3 = row.createCell(8);
-                cell3.setCellStyle(style);
-                if (mailListForm.getSendTime()!=null){
-                    cell3.setCellValue(mailListForm.getSendTime());
+
+                if (status == 1){
+                    // 审核状态
+                    row.createCell(7).setCellValue(mailListForm.getApproveStatus());
+                    // 发送时间
+                    HSSFCell cell3 = row.createCell(8);
+                    cell3.setCellStyle(style);
+                    if (mailListForm.getSendTime()!=null){
+                        cell3.setCellValue(mailListForm.getSendTime());
+                    }else {
+                        cell3.setCellValue(mailListForm.getPlanSendTime());
+                    }
                 }else {
-                    cell3.setCellValue(mailListForm.getPlanSendTime());
+                    // 发送时间
+                    HSSFCell cell3 = row.createCell(7);
+                    cell3.setCellStyle(style);
+                    if (mailListForm.getSendTime()!=null){
+                        cell3.setCellValue(mailListForm.getSendTime());
+                    }else {
+                        cell3.setCellValue(mailListForm.getPlanSendTime());
+                    }
                 }
                 rowNum++;
             }
@@ -382,13 +423,13 @@ public class ExcelUtil {
                 cell.setCellStyle(style);
                 cell.setCellValue(mailListForm.getEntryDay());
                 // 邮件主题
-                row.createCell(4).setCellValue(mailListForm.getMailName());
+                row.createCell(3).setCellValue(mailListForm.getMailName());
                 // 收件人
-                row.createCell(5).setCellValue(mailListForm.getRecipient());
+                row.createCell(4).setCellValue(mailListForm.getRecipient());
                 // 抄送人
-                row.createCell(6).setCellValue(mailListForm.getCopyPeople());
+                row.createCell(5).setCellValue(mailListForm.getCopyPeople());
                 // 发送时间
-                HSSFCell cell3 = row.createCell(8);
+                HSSFCell cell3 = row.createCell(6);
                 cell3.setCellStyle(style);
                 if (mailListForm.getSendTime()!=null){
                     cell3.setCellValue(mailListForm.getSendTime());
@@ -409,13 +450,13 @@ public class ExcelUtil {
                 cell.setCellStyle(style);
                 cell.setCellValue(mailListForm.getEntryDay());
                 // 邮件主题
-                row.createCell(4).setCellValue(mailListForm.getMailName());
+                row.createCell(3).setCellValue(mailListForm.getMailName());
                 // 收件人
-                row.createCell(5).setCellValue(mailListForm.getRecipient());
+                row.createCell(4).setCellValue(mailListForm.getRecipient());
                 // 抄送人
-                row.createCell(6).setCellValue(mailListForm.getCopyPeople());
+                row.createCell(5).setCellValue(mailListForm.getCopyPeople());
                 // 发送时间
-                HSSFCell cell3 = row.createCell(8);
+                HSSFCell cell3 = row.createCell(6);
                 cell3.setCellStyle(style);
                 if (mailListForm.getSendTime()!=null){
                     cell3.setCellValue(mailListForm.getSendTime());
