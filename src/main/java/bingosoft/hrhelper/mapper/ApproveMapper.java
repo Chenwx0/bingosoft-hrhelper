@@ -1,5 +1,7 @@
 package bingosoft.hrhelper.mapper;
 
+import java.util.List;
+
 import bingosoft.hrhelper.common.Result;
 import bingosoft.hrhelper.model.Approve;
 
@@ -16,5 +18,7 @@ public interface ApproveMapper {
 
     int updateByPrimaryKey(Approve record);
 
-	Result getHistoryRecord(String approve_name);
+	List<Approve> getHistoryRecord(String approve_name);
+
+	List<Approve> getAllHistoryRecord();
 }

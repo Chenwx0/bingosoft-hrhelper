@@ -2,6 +2,7 @@ package bingosoft.hrhelper.service;
 
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -157,6 +158,17 @@ public class ApproveService {
 	 * @param approve_name
 	 */
 	public Result getHistoryRecord(String approve_name) {
-		return am.getHistoryRecord(approve_name);
+		Result<List<Approve>> result = new Result();
+		result.setResultEntity(am.getHistoryRecord(approve_name));
+		return result;
+	}
+	
+	/**
+	 * 获取所有历史记录
+	 */
+	public Result getAllHistoryRecord() {
+		Result<List<Approve>> result = new Result();
+		result.setResultEntity(am.getAllHistoryRecord());
+		return result;
 	}
 }

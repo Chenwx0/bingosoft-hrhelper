@@ -241,8 +241,8 @@ public class MailProductService {
 		a.setOperationId(r.getOperationId());
 		a.setStatus(0);
 		a.setCreateTime(new Date());
-		a.setApprover("approver");
-		a.setApproveObject("approveObject");
+		a.setApprover(e.getManager());
+		a.setApproveObject(e.getName());
 		am.insert(a);
 	}
 	
@@ -337,7 +337,7 @@ public class MailProductService {
 	public Date sendTimeCountMethod_3(Rule r,Employee e) throws ParseException{
 		//流程：Date→Calendar
 		Calendar specailDayCal = Calendar.getInstance();
-		specailDayCal.setTime(e.getFullmenberDay());
+		specailDayCal.setTime(e.getPlanFullmenberDay());
 		// (特殊日期-提前时间) + 当天发送时间(具体到分)
 		specailDayCal.add(Calendar.YEAR, -r.getDistanceY());
 		specailDayCal.add(Calendar.MONTH, -r.getDistanceM());
@@ -409,12 +409,12 @@ public class MailProductService {
 				DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 				String nowdayTime = dateFormat.format(new Date());
 				Date today = dateFormat.parse(nowdayTime);
-				//转换为日历类型并加上7天，再转换为普通的Date类型。
+				//转换为日历类型并加上15天，再转换为普通的Date类型。
 				Calendar c = Calendar.getInstance();
 				c.setTime(today);
-				c.add(Calendar.DAY_OF_MONTH, 7);
+				c.add(Calendar.DAY_OF_MONTH, 15);
 				Date compareDay = c.getTime();
-				//拟发送时间如果比当前时间加七天早，并且比今天晚，返回true
+				//拟发送时间如果比当前时间加十五天早，并且比今天晚，返回true
 				return compareDay.after(m.getPlanSendTime()) &&
 						   (m.getPlanSendTime().after(today));
 	}
