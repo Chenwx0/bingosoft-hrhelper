@@ -3,9 +3,7 @@ package bingosoft.hrhelper.controller;
 import bingosoft.hrhelper.common.Result;
 import bingosoft.hrhelper.service.AttachmentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -13,6 +11,8 @@ import org.springframework.web.multipart.MultipartFile;
  * @功能描述 附件业务控制类
  * @创建时间 2018-08-30
  */
+@RestController
+@RequestMapping("attachment")
 public class AttachmetController {
 
     @Autowired
