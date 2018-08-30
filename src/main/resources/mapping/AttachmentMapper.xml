@@ -120,7 +120,7 @@
 
   <!-- 根据邮件id或规则id获取附件 -->
   <select id="listAttachment" resultMap="BaseResultMap">
-    SELECT attachment_id, attachment_name ,attachment_path ,create_bycreate_time
+    SELECT attachment_id, attachment_name ,attachment_path ,create_by, create_time
     FROM attachment
     <where>
       <if test="mailId != null and mailId != ''">
