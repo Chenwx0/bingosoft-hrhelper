@@ -15,6 +15,7 @@ import bingosoft.hrhelper.model.MailConfig;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -41,7 +42,7 @@ public class MailUtil {
     //邮件正文
     private String content;
     //附件路径
-    private String[] attachmentPaths;
+    private List<String> attachmentPaths;
     //邮件发送记录工具
     public static Log logger = LogFactory.getLog(MailUtil.class);
     //邮件配置对象
@@ -63,7 +64,7 @@ public class MailUtil {
         this.content = content;
     }
 
-    public void setAttachmentPaths(String[] attachmentPaths) {
+    public void setAttachmentPaths(List<String> attachmentPaths) {
         this.attachmentPaths = attachmentPaths;
     }
 
@@ -184,7 +185,7 @@ public class MailUtil {
             throw new ParamException("邮件内容为空");
         }
         mm.addBodyPart(body);     // 如果有多个附件，可以创建多个多次添加
-        if(attachmentPaths!=null && attachmentPaths.length>0){
+        if(attachmentPaths!=null && attachmentPaths.size()>0){
             for (String attachmentPath: attachmentPaths) {
                 // 创建附件"节点"
                 MimeBodyPart attachment = new MimeBodyPart();

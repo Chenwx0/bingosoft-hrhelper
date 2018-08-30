@@ -1,15 +1,14 @@
 package bingosoft.hrhelper.service;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 
 
-
-
-
-
+import java.util.List;
 import java.util.UUID;
 
+import bingosoft.hrhelper.model.Attachment;
 import leap.web.security.user.UserManager;
 import bingosoft.hrhelper.common.Result;
 import bingosoft.hrhelper.common.TipMessage;
@@ -58,6 +57,8 @@ public class MailSendService {
 	OperationMapper om;
 	@Autowired
 	UserMapper um;
+	@Autowired
+	AttachmentService attachmentService;
 	
 	
 	/**
@@ -111,7 +112,13 @@ public class MailSendService {
 			/*String user_id = om.selectByPrimaryKey(mail.getOperationId()).getUserId(); 
 			String user_name = um.selectByPrimaryKey(user_id).getUsername();*/
 			mu.setLiaisonOfficer(mail.getSender());
-			/*mu.setAttachmentPaths(mail.getMailAttachmentPath());*///设置附件路径
+			Result<List<Attachment>> result = attachmentService.queryAttachment(mail.getId(),mail.getRuleId());
+			List<Attachment> attachments = result.getResultEntity();
+			List<String> attachmentPaths = new ArrayList<>();
+			for (Attachment attachment: attachments ) {
+				attachmentPaths.add(attachment.getAttachmentPath());
+			}
+			mu.setAttachmentPaths(attachmentPaths);///设置附件路径
 			
 			mu.sendMail();
 			addAlreadySendMail(mail);
