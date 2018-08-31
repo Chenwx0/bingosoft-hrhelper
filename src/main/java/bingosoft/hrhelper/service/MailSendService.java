@@ -115,11 +115,12 @@ public class MailSendService {
 			Result<List<Attachment>> result = attachmentService.queryAttachment(mail.getId(),mail.getRuleId());
 			List<Attachment> attachments = result.getResultEntity();
 			List<String> attachmentPaths = new ArrayList<>();
-			for (Attachment attachment: attachments ) {
-				attachmentPaths.add(attachment.getAttachmentPath());
+			if (attachmentPaths!=null && attachmentPaths.size()>0){
+				for (Attachment attachment: attachments ) {
+					attachmentPaths.add(attachment.getAttachmentPath());
+				}
+				mu.setAttachmentPaths(attachmentPaths);///设置附件路径
 			}
-			mu.setAttachmentPaths(attachmentPaths);///设置附件路径
-			
 			mu.sendMail();
 			addAlreadySendMail(mail);
 		} catch (Exception e) {
