@@ -132,5 +132,18 @@
     </where>
   </select>
 
+  <!-- 根据附件名字及邮件id或规则id获取附件 -->
+  <select id="getAttachmentByName" resultMap="BaseResultMap">
+    SELECT attachment_id, attachment_name ,attachment_path ,create_by, create_time
+    FROM attachment
+    WHERE
+      attachment_name = #{attachmentName}
+      <if test="type=='mail'.toString()">
+        AND mail_id = #{id}
+      </if>
+      <if test="type=='rule'.toString()">
+        AND rule_id = #{id}
+      </if>
+  </select>
   <!--  自定义代码结束  -->
 </mapper>

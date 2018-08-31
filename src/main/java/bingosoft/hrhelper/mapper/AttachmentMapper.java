@@ -27,4 +27,13 @@ public interface AttachmentMapper {
      * @throws SQLException
      */
     List<Attachment> listAttachment(@Param("mailId") String mailId, @Param("ruleId") String ruleId) throws SQLException;
+
+    /**
+     * 根据附件名字及邮件id或规则id获取附件
+     * @param type
+     * @param id
+     * @param attachmentName
+     * @return
+     */
+    Attachment getAttachmentByName(@Param("type") String type, @Param("id") String id, @Param("attachmentName") String attachmentName);
 }

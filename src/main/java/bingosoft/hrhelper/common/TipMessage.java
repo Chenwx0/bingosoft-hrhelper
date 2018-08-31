@@ -26,4 +26,5 @@ public class TipMessage {
     public static final String DATE_FORMAT_INCORRECT = "时间格式不正确";
     public static final String UPLOAD_FAIL = "文件上传失败";
     public static final String EXPORT_FAIL = "文件导出失败";
+    public static final String DOWNLOAD_FAIL = "下载失败";
 }

@@ -5,6 +5,11 @@ import bingosoft.hrhelper.service.AttachmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * @创建人 chenwx
@@ -13,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @RestController
 @RequestMapping("attachment")
+@CrossOrigin
 public class AttachmetController {
 
     @Autowired
@@ -35,14 +41,31 @@ public class AttachmetController {
      * 添加附件
      * @param type
      * @param id
-     * @param file
+     * @param request
      * @return
      */
     @PostMapping
-    public Result addAttachment(String type, String id, MultipartFile file){
+    public Result addAttachment(String type, String id, HttpServletRequest request){
 
-        Result result = attachmentService.addAttachment(type, id, file);
+        Result result = attachmentService.addAttachment(type, id, request);
         return result;
+    }
+
+    /**
+     * 附件下载
+     * @param attachmentId
+     * @param resp
+     * @return
+     */
+    @GetMapping("/download")
+    public String downloadAttachment(String attachmentId, HttpServletResponse resp){
+
+        Result result = attachmentService.downloadAttachment(attachmentId, resp);
+        if (result.isSuccess()){
+            return null;
+        }else {
+            return result.getMessage();
+        }
     }
 
     /**
